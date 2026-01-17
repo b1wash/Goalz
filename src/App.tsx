@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from "react-router-dom";
+import { BarraNavegacion } from "./componentes/disenyo/Navbar";
+import { Inicio } from "./vistas/Inicio";
+import { Clasificacion } from "./vistas/Clasificacion";
+import { MisPredicciones } from "./vistas/MisPredicciones";
+import { HacerPrediccion } from "./vistas/HacerPrediccion";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  // Datos de ejemplo del usuario (más adelante vendrá de un contexto/API)
+  const usuarioActual = {
+    id: "1",
+    nombre: "Juan Pérez",
+    puntosTotal: 245,
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="min-h-screen">
+      <BarraNavegacion usuarioActual={usuarioActual} />
 
-export default App
+      <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/clasificacion" element={<Clasificacion />} />
+        <Route path="/mis-predicciones" element={<MisPredicciones />} />
+        <Route path="/hacer-prediccion" element={<HacerPrediccion />} />
+      </Routes>
+    </div>
+  );
+};
+
+export default App;
