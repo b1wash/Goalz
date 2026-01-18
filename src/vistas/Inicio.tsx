@@ -1,8 +1,9 @@
+//VISTA PARA INICIO
 export const Inicio = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8 sm:py-12">
-        {/* Hero Section */}
+        {/* HERO SECTION */}
         <div className="bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl shadow-2xl shadow-primary/10 p-6 sm:p-8 lg:p-12 mb-8">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-4 bg-gradient-to-r from-white via-primary to-white bg-clip-text text-transparent">
@@ -14,7 +15,7 @@ export const Inicio = () => {
             </p>
           </div>
 
-          {/* Stats Cards */}
+          {/* PARTIDOS A MOSTRAR*/}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-8 sm:mt-12">
             <div className="group relative overflow-hidden bg-gradient-to-br from-primary to-emerald-600 rounded-2xl p-6 lg:p-8 text-white text-center shadow-lg shadow-primary/30 hover:shadow-2xl hover:shadow-primary/50 hover:scale-105 transition-all duration-300">
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -55,7 +56,7 @@ export const Inicio = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* ACCIONES */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           <div className="group bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-primary/20 p-6 lg:p-8 hover:border-primary/40 transition-all duration-300">
             <div className="flex items-start gap-4">
