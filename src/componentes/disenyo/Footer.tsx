@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
+//AQUI SE HA IPORTADO LA LIBRERIA DE LUCIDE-REACT PARA LOS ICONOS DE LAS REDES SOCIALES
 import { Instagram, Youtube, X } from "lucide-react";
-
 export const Footer = () => {
   const estilosRedesSociales =
     "w-10 h-10 rounded-full bg-dark-card border border-primary/20 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary/40 transition-all hover:scale-110";
@@ -67,40 +67,40 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* COLUMNA 3 REDES SOCIALES (OPCIONAL) */}
+          {/* COLUMNA 3 REDES SOCIALES */}
           <div>
             <h3 className="text-white font-bold text-lg mb-4">Síguenos</h3>
             <div className="flex gap-4">
-              <a
-                href="https://x.com"
+              <Link
+                to="https://x.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={estilosRedesSociales}
                 aria-label="Twitter"
               >
                 <X size={20} strokeWidth={2} />
-              </a>
-              <a
-                href="https://instagram.com"
+              </Link>
+              <Link
+                to="https://instagram.com"
                 rel="noopener noreferrer"
                 className={estilosRedesSociales}
                 aria-label="Instagram"
               >
                 <Instagram size={20} strokeWidth={2} />
-              </a>{" "}
-              <a
-                href="https://youtube.com"
+              </Link>{" "}
+              <Link
+                to="https://youtube.com"
                 rel="noopener noreferrer"
                 className={estilosRedesSociales}
                 aria-label="YouTube"
               >
                 <Youtube size={20} strokeWidth={2} />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* LINEA SEPARADORA */}
+        {/* LINEA PARA SEPARAR */}
         <div className="border-t border-primary/20 pt-6">
           {/* FILA INFERIOR COPYRIGHT */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -108,24 +108,24 @@ export const Footer = () => {
               © {new Date().getFullYear()} GOALZ. Todos los derechos reservados.
             </p>
             <div className="flex gap-6 text-sm">
-              <a
-                href="#"
+              <Link
+                to="#"
                 className="text-gray-400 hover:text-primary transition-colors"
               >
                 Privacidad
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                to="#"
                 className="text-gray-400 hover:text-primary transition-colors"
               >
                 Términos
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                to="#"
                 className="text-gray-400 hover:text-primary transition-colors"
               >
                 Contacto
-              </a>
+              </Link>
             </div>
           </div>
         </div>

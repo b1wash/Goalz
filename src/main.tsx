@@ -6,6 +6,7 @@ import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    {/*EL BROWSER ROUTER CONECTA LA BARRA DE DIRECCIONES DEL NAVEGAODR CON EL CODIGO*/}
     <BrowserRouter>
       <App />
     </BrowserRouter>

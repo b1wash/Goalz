@@ -70,7 +70,7 @@ export const Inicio = () => {
                 <p className="text-gray-400 text-sm lg:text-base mb-4">
                   Revisa tus predicciones anteriores y verifica tus aciertos.
                 </p>
-                <button className="text-primary font-bold text-sm lg:text-base hover:text-emerald-400 hover:underline transition-colors flex items-center gap-2">
+                <button className="text-primary font-bold text-sm lg:text-base hover:text-emerald-400 hover:underline transition-colors flex items-center cursor-pointer gap-2">
                   Ver mis predicciones
                   <span className="group-hover:translate-x-1 transition-transform">
                     →
@@ -92,7 +92,7 @@ export const Inicio = () => {
                 <p className="text-gray-400 text-sm lg:text-base mb-4">
                   Consulta el ranking de los mejores predictores.
                 </p>
-                <button className="text-accent font-bold text-sm lg:text-base hover:text-yellow-400 hover:underline transition-colors flex items-center gap-2">
+                <button className="text-accent font-bold text-sm lg:text-base hover:text-yellow-400 hover:underline transition-colors flex items-center gap-2 cursor-pointer">
                   Ver clasificación
                   <span className="group-hover:translate-x-1 transition-transform">
                     →

@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import { BarraNavegacion } from "./componentes/disenyo/Navbar";
 import { Footer } from "./componentes/disenyo/Footer";
-import { Inicio } from "./vistas/Inicio";
-import { Clasificacion } from "./vistas/Clasificacion";
-import { MisPredicciones } from "./vistas/MisPredicciones";
-import { HacerPrediccion } from "./vistas/HacerPrediccion";
+import { Inicio } from "./paginas/Inicio";
+import { Clasificacion } from "./paginas/Clasificacion";
+import { MisPredicciones } from "./paginas/MisPredicciones";
+import { HacerPrediccion } from "./paginas/HacerPrediccion";
 
 const App = () => {
   //  DATOS DEL USUARIO PARA PORBAR
