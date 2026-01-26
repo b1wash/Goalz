@@ -17,6 +17,7 @@ Aplicación web para realizar predicciones de resultados de partidos de fútbol 
 - [Funcionalidades](#-funcionalidades)
 - [API Endpoints](#-api-endpoints)
 - [Características Técnicas](#-características-técnicas)
+- [Requisitos y Cumplimiento](#-requisitos-y-cumplimiento)
 - [Autor](#-autor)
 
 ## 💻 Requisitos del Sistema
@@ -265,6 +266,34 @@ npm run lint         # Ejecuta el linter
 - ✅ **API REST** con JSON Server
 - ✅ **Responsive Design**
 - ✅ **Variables de entorno**
+
+## ✅ Requisitos y Cumplimiento
+
+Este proyecto ha sido diseñado para cumplir con los objetivos técnicos de la asignatura **DWEC**:
+
+### 1. Requisitos Funcionales Mínimos
+
+- **Estructura SPA**: Navegación completa mediante `React Router DOM`.
+- **Vistas del Sistema**: Implementadas 5 vistas (Inicio, Clasificación, Mis Predicciones, Hacer Predicción, Admin).
+- **Componentes**: Uso de componentes funcionales con separación clara entre `/ui` y `/pages`.
+- **Estado y Lógica**: Gestión mediante `useState` y `useEffect` con tipado estricto.
+- **Formularios**: Validación avanzada y manejo de errores en el envío de predicciones.
+- **Consumo de API**: Integración modular con **JSON Server** mediante servicios tipados.
+
+### 2. Especificación Técnica
+
+- **TypeScript**: Tipado estático en todo el código base (Interfaces y Types).
+- **Tailwind CSS**: Diseño 100% responsive y usable sin librerías externas.
+- **Organización**: Estructura profesional por carpetas (`services`, `hooks`, `context`, `types`).
+- **Control de Versiones**: Gestión total mediante Git/GitHub.
+
+### 🌟 Ampliaciones (Subir Nota)
+
+- [x] **Context API**: Estado global para usuario y puntos en tiempo real.
+- [x] **Custom Hooks**: Abstracción de lógica en `useDarkMode` y `usePredicciones`.
+- [x] **Modo Oscuro**: Tema dual con persistencia y detección de preferencia.
+- [x] **Filtros Avanzados**: Filtrado dinámico en tiempo real en la vista de predicciones.
+- [x] **UX Premium**: Glassmorphism, micro-animaciones y feedback visual de carga.
 
 ## 👤 Autor
 
