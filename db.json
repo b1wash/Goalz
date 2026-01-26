@@ -1,0 +1,159 @@
+{
+  "matches": [
+    {
+      "id": "1",
+      "homeTeam": "Real Madrid",
+      "awayTeam": "FC Barcelona",
+      "date": "2024-04-21T21:00:00.000Z",
+      "matchday": 32,
+      "status": "pending",
+      "result": null
+    },
+    {
+      "id": "2",
+      "homeTeam": "Manchester City",
+      "awayTeam": "Arsenal",
+      "date": "2024-03-31T17:30:00.000Z",
+      "matchday": 30,
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 0
+      }
+    },
+    {
+      "id": "3",
+      "homeTeam": "Atlético Madrid",
+      "awayTeam": "Girona",
+      "date": "2024-04-13T14:00:00.000Z",
+      "matchday": 31,
+      "status": "pending",
+      "result": null
+    },
+    {
+      "id": "4",
+      "homeTeam": "PSG",
+      "awayTeam": "Borussia Dortmund",
+      "date": "2024-05-07T21:00:00.000Z",
+      "matchday": 33,
+      "status": "pending",
+      "result": null
+    },
+    {
+      "id": "5",
+      "homeTeam": "Bayern Munich",
+      "awayTeam": "Real Madrid",
+      "date": "2024-05-01T21:00:00.000Z",
+      "matchday": 32,
+      "status": "finished",
+      "result": {
+        "homeGoals": 2,
+        "awayGoals": 2
+      }
+    },
+    {
+      "id": "6",
+      "homeTeam": "Liverpool",
+      "awayTeam": "Manchester United",
+      "date": "2024-04-07T16:30:00.000Z",
+      "matchday": 30,
+      "status": "finished",
+      "result": {
+        "homeGoals": 3,
+        "awayGoals": 1
+      }
+    }
+  ],
+  "predictions": [
+    {
+      "id": "1",
+      "matchId": "2",
+      "userId": "user1",
+      "prediction": "1",
+      "exactScore": {
+        "home": 2,
+        "away": 1
+      },
+      "points": 0,
+      "createdAt": "2024-03-30T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "matchId": "5",
+      "userId": "user1",
+      "prediction": "X",
+      "exactScore": {
+        "home": 2,
+        "away": 2
+      },
+      "points": 5,
+      "createdAt": "2024-04-30T10:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "matchId": "6",
+      "userId": "user1",
+      "prediction": "1",
+      "exactScore": {
+        "home": 3,
+        "away": 1
+      },
+      "points": 5,
+      "createdAt": "2024-04-06T10:00:00.000Z"
+    },
+    {
+      "id": "4",
+      "matchId": "6",
+      "userId": "user2",
+      "prediction": "2",
+      "exactScore": {
+        "home": 1,
+        "away": 2
+      },
+      "points": 0,
+      "createdAt": "2024-04-06T11:00:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "user1",
+      "name": "Biwash Shrestha",
+      "email": "biwash@goalz.com",
+      "totalPoints": 245,
+      "correctPredictions": 12,
+      "totalPredictions": 25
+    },
+    {
+      "id": "user2",
+      "name": "Carlos Gol",
+      "email": "carlos@goalz.com",
+      "totalPoints": 230,
+      "correctPredictions": 11,
+      "totalPredictions": 24
+    },
+    {
+      "id": "user3",
+      "name": "Ana Portera",
+      "email": "ana@goalz.com",
+      "totalPoints": 260,
+      "correctPredictions": 13,
+      "totalPredictions": 23
+    },
+    {
+      "id": "user4",
+      "name": "Luis Delantero",
+      "email": "luis@goalz.com",
+      "totalPoints": 215,
+      "correctPredictions": 10,
+      "totalPredictions": 26
+    },
+    {
+      "id": "user5",
+      "name": "María Defensa",
+      "email": "maria@goalz.com",
+      "totalPoints": 200,
+      "correctPredictions": 9,
+      "totalPredictions": 22
+    }
+  ]
+}

@@ -1,8 +1,12 @@
 // VISTA PARA HACER UNA PREDICCION
 import { useState } from "react";
 import { partidosMock } from "../utils/mockData";
+import { useApp } from "../contexto/AppContext";
 
 export const HacerPrediccion = () => {
+  // OBTENER FUNCIONES DEL CONTEXTO GLOBAL
+  const { agregarPrediccion, usuarioActual } = useApp();
+
   // ESTADOS DEL FORMULARIO
   const [partidoSeleccionado, setPartidoSeleccionado] = useState("");
   const [prediccion, setPrediccion] = useState<"1" | "X" | "2">("1");
@@ -55,11 +59,29 @@ export const HacerPrediccion = () => {
       return;
     }
 
-    // AQUI SE GUARDARIA LA PREDICCION EN LA BASE DE DATOS
-    console.log("Predicción guardada:", {
-      partidoId: partidoSeleccionado,
-      prediccion,
-      marcador: { local: golesLocal, visitante: golesVisitante },
+    // GUARDAR LA PREDICCION USANDO EL CONTEXTO
+    agregarPrediccion({
+      matchId: partidoSeleccionado,
+      idPartido: partidoSeleccionado,
+      userId: usuarioActual.id,
+      idUsuario: usuarioActual.id,
+      prediction: prediccion,
+      prediccion: prediccion,
+      exactScore: {
+        home: golesLocal,
+        away: golesVisitante,
+        local: golesLocal,
+        visitante: golesVisitante,
+      },
+      marcadorExacto: {
+        home: golesLocal,
+        away: golesVisitante,
+        local: golesLocal,
+        visitante: golesVisitante,
+      },
+      points: null,
+      puntosGanados: null,
+      createdAt: new Date().toISOString(),
     });
 
     // MOSTRAR MENSAJE DE EXITO

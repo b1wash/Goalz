@@ -5,14 +5,11 @@ import { Inicio } from "./paginas/Inicio";
 import { Clasificacion } from "./paginas/Clasificacion";
 import { MisPredicciones } from "./paginas/MisPredicciones";
 import { HacerPrediccion } from "./paginas/HacerPrediccion";
+import { useApp } from "./contexto/AppContext";
 
 const App = () => {
-  //  DATOS DEL USUARIO PARA PORBAR
-  const usuarioActual = {
-    id: "1",
-    nombre: "Biwash Shrestha",
-    puntosTotal: 245,
-  };
+  // OBTENER EL USUARIO ACTUAL DESDE EL CONTEXTO GLOBAL
+  const { usuarioActual } = useApp();
 
   return (
     <div className="min-h-screen flex flex-col">

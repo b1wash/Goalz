@@ -1,12 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
+import type { Usuario } from "../../tipos";
 
 interface BarraNavegacionProps {
-  usuarioActual?: {
-    id: string;
-    nombre: string;
-    puntosTotal: number;
-  };
+  usuarioActual?: Usuario;
 }
 
 export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
@@ -136,7 +133,9 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
                   <div className="relative">
                     <div className="absolute inset-0 bg-primary/30 blur-md rounded-full"></div>
                     <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-lg shadow-lg border-2 border-primary/50">
-                      {usuarioActual.nombre.charAt(0).toUpperCase()}
+                      {(usuarioActual.nombre || usuarioActual.name)
+                        .charAt(0)
+                        .toUpperCase()}
                     </div>
                   </div>
                 </div>
@@ -239,7 +238,9 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
                 <div className="relative">
                   <div className="absolute inset-0 bg-primary/30 blur-md rounded-full"></div>
                   <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-xl shadow-lg">
-                    {usuarioActual.nombre.charAt(0).toUpperCase()}
+                    {(usuarioActual.nombre || usuarioActual.name)
+                      .charAt(0)
+                      .toUpperCase()}
                   </div>
                 </div>
                 <div>

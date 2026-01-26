@@ -4,7 +4,8 @@ import { usuariosMock } from "../utils/mockData";
 export const Clasificacion = () => {
   // ORDENAR USUARIOS POR PUNTOS (DE MAYOR A MENOR)
   const usuariosOrdenados = [...usuariosMock].sort(
-    (a, b) => b.puntosTotal - a.puntosTotal,
+    (a, b) =>
+      (b.puntosTotal ?? b.totalPoints) - (a.puntosTotal ?? a.totalPoints),
   );
 
   // FUNCION PARA OBTENER EL COLOR SEGUN LA POSICION
@@ -74,7 +75,7 @@ export const Clasificacion = () => {
 
                   {/* AVATAR */}
                   <div className="w-20 h-20 mx-auto mb-3 rounded-full bg-white/20 border-4 border-white/40 flex items-center justify-center text-3xl font-black text-white shadow-lg">
-                    {usuario.nombre.charAt(0).toUpperCase()}
+                    {(usuario.nombre || usuario.name).charAt(0).toUpperCase()}
                   </div>
 
                   {/* NOMBRE */}
@@ -140,7 +141,7 @@ export const Clasificacion = () => {
                         posicion,
                       )}`}
                     >
-                      {usuario.nombre.charAt(0).toUpperCase()}
+                      {(usuario.nombre || usuario.name).charAt(0).toUpperCase()}
                     </div>
 
                     {/* NOMBRE */}

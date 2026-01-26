@@ -1,9 +1,18 @@
 // VISTA DE MIS PREDICCIONES
 import { useState } from "react";
-import { prediccionesMock, partidosMock } from "../utils/mockData";
+import { partidosMock } from "../utils/mockData";
 import type { Partido } from "../tipos";
+import { useApp } from "../contexto/AppContext";
 
 export const MisPredicciones = () => {
+  // OBTENER PREDICCIONES DEL CONTEXTO GLOBAL
+  const { predicciones: todasLasPredicciones, usuarioActual } = useApp();
+
+  // FILTRAR SOLO LAS PREDICCIONES DEL USUARIO ACTUAL
+  const prediccionesMock = todasLasPredicciones.filter(
+    (p) => p.idUsuario === usuarioActual.id,
+  );
+
   // FILTRO PARA MOSTRAR DIFERENTES TIPOS DE PREDICCIONES
   const [filtro, setFiltro] = useState<
     "todas" | "acertadas" | "falladas" | "pendientes"
@@ -16,7 +25,7 @@ export const MisPredicciones = () => {
 
   // FILTRAR PREDICCIONES SEGUN EL FILTRO SELECCIONADO
   const prediccionesFiltradas = prediccionesMock.filter((pred) => {
-    const partido = obtenerPartido(pred.idPartido);
+    const partido = obtenerPartido(pred.idPartido || pred.matchId || "");
     if (!partido) return false;
 
     if (filtro === "todas") return true;
