@@ -99,7 +99,9 @@ export const Inicio = () => {
               <div className="relative z-10">
                 <div className="text-4xl lg:text-5xl mb-3">🏆</div>
                 <div className="text-4xl lg:text-5xl font-black mb-2">
-                  {usuarioActual.puntosTotal ?? usuarioActual.totalPoints}
+                  {usuarioActual?.puntosTotal ??
+                    usuarioActual?.totalPoints ??
+                    0}
                 </div>
                 <div className="text-sm lg:text-base font-semibold opacity-90">
                   Tus Puntos

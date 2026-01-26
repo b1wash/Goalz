@@ -78,7 +78,9 @@ export const HacerPrediccion = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validarPrediccion()) {
+    if (!validarPrediccion() || !usuarioActual) {
+      if (!usuarioActual)
+        setError("Debes estar identificado para hacer una predicción");
       return;
     }
 
@@ -88,8 +90,8 @@ export const HacerPrediccion = () => {
       const nuevaPrediccion = {
         matchId: partidoSeleccionado,
         idPartido: partidoSeleccionado, // Compatibilidad
-        userId: usuarioActual.id,
-        idUsuario: usuarioActual.id, // Compatibilidad
+        userId: usuarioActual!.id,
+        idUsuario: usuarioActual!.id, // Compatibilidad
         prediction: prediccion,
         prediccion: prediccion, // Compatibilidad
         exactScore: {

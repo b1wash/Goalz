@@ -1,9 +1,11 @@
 // VISTA DE LA CLASIFICACION DE LOS USUARIOS
 import { useState, useEffect } from "react";
 import { userService } from "../servicios/userService";
+import { useApp } from "../contexto/AppContext";
 import type { Usuario } from "../tipos";
 
 export const Clasificacion = () => {
+  const { usuarioActual } = useApp();
   // ESTADOS
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
@@ -158,7 +160,7 @@ export const Clasificacion = () => {
                 {usuariosOrdenados.map((usuario, index) => {
                   const posicion = index + 1;
                   const esTop3 = posicion <= 3;
-                  const esUsuarioActual = usuario.id === "1"; // TU USUARIO
+                  const esUsuarioActual = usuario.id === usuarioActual?.id;
 
                   return (
                     <div

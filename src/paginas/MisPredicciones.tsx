@@ -25,6 +25,7 @@ export const MisPredicciones = () => {
     const cargarDatos = async () => {
       try {
         setLoading(true);
+        if (!usuarioActual) return;
         // CARGAR PREDICCIONES DEL USUARIO ACTUAL
         const predictionsData = await predictionService.getByUser(
           usuarioActual.id,
@@ -45,7 +46,7 @@ export const MisPredicciones = () => {
     };
 
     cargarDatos();
-  }, [usuarioActual.id]);
+  }, [usuarioActual?.id]);
 
   // FUNCION PARA OBTENER EL PARTIDO DE UNA PREDICCION
   const obtenerPartido = (idPartido: string): Partido | undefined => {

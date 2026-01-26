@@ -2,23 +2,30 @@
 import { api } from "./api";
 import type { Usuario } from "../tipos";
 
+// FUNCION INTERNA PARA MAPEAR DATOS DEL USUARIO (COMPATIBILIDAD)
+const mapUser = (user: any): Usuario => ({
+  ...user,
+  nombre: user.name || user.nombre,
+  puntosTotal: user.totalPoints ?? user.puntosTotal ?? 0,
+});
+
 export const userService = {
   // OBTENER TODOS LOS USUARIOS
   getAll: async (): Promise<Usuario[]> => {
-    return api.get<Usuario[]>("/users");
+    const users = await api.get<any[]>("/users");
+    return users.map(mapUser);
   },
 
   // OBTENER USUARIOS ORDENADOS POR PUNTOS (CLASIFICACION)
   getLeaderboard: async (): Promise<Usuario[]> => {
-    const users = await api.get<Usuario[]>(
-      "/users?_sort=totalPoints&_order=desc",
-    );
-    return users;
+    const users = await api.get<any[]>("/users");
+    return users.map(mapUser);
   },
 
   // OBTENER UN USUARIO POR ID
   getById: async (id: string): Promise<Usuario> => {
-    return api.get<Usuario>(`/users/${id}`);
+    const user = await api.get<any>(`/users/${id}`);
+    return mapUser(user);
   },
 
   // ACTUALIZAR PUNTOS Y ESTADISTICAS DE UN USUARIO
@@ -28,6 +35,7 @@ export const userService = {
       Pick<Usuario, "totalPoints" | "correctPredictions" | "totalPredictions">
     >,
   ): Promise<Usuario> => {
-    return api.patch<Usuario>(`/users/${id}`, data);
+    const user = await api.patch<any>(`/users/${id}`, data);
+    return mapUser(user);
   },
 };

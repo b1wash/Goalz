@@ -83,6 +83,18 @@
         "awayGoals": 1,
         "homeGoals": 2
       }
+    },
+    {
+      "id": "8aa9",
+      "homeTeam": "Oporto",
+      "awayTeam": "Betis",
+      "date": "2026-02-01T11:00:00.000Z",
+      "matchday": 1,
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      }
     }
   ],
   "predictions": [
@@ -144,12 +156,12 @@
       "matchId": "6169",
       "userId": "user1",
       "prediction": "1",
-      "points": null
+      "points": 5
     },
     {
       "id": "93a8",
       "matchId": "4",
-      "userId": "1",
+      "userId": "user1",
       "prediction": "1",
       "exactScore": {
         "home": 1,
@@ -157,6 +169,18 @@
       },
       "points": 5,
       "createdAt": "2026-01-26T18:07:28.943Z"
+    },
+    {
+      "id": "8590",
+      "matchId": "8aa9",
+      "userId": "user1",
+      "prediction": "1",
+      "exactScore": {
+        "home": 1,
+        "away": 0
+      },
+      "points": 5,
+      "createdAt": "2026-01-26T19:17:26.241Z"
     }
   ],
   "users": [
@@ -164,8 +188,8 @@
       "id": "user1",
       "name": "Biwash Shrestha",
       "email": "biwash@goalz.com",
-      "totalPoints": 245,
-      "correctPredictions": 12,
+      "totalPoints": 260,
+      "correctPredictions": 15,
       "totalPredictions": 25
     },
     {

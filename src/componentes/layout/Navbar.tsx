@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { Usuario } from "../../tipos";
 
 interface BarraNavegacionProps {
-  usuarioActual?: Usuario;
+  usuarioActual?: Usuario | null;
 }
 
 export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
