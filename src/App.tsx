@@ -1,10 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import { BarraNavegacion } from "./componentes/disenyo/Navbar";
-import { Footer } from "./componentes/disenyo/Footer";
+import { BarraNavegacion } from "./componentes/layout/Navbar";
+import { Footer } from "./componentes/layout/Footer";
 import { Inicio } from "./paginas/Inicio";
 import { Clasificacion } from "./paginas/Clasificacion";
 import { MisPredicciones } from "./paginas/MisPredicciones";
 import { HacerPrediccion } from "./paginas/HacerPrediccion";
+import { AdminMatches } from "./paginas/AdminMatches";
 import { useApp } from "./contexto/AppContext";
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/clasificacion" element={<Clasificacion />} />
         <Route path="/mis-predicciones" element={<MisPredicciones />} />
         <Route path="/hacer-prediccion" element={<HacerPrediccion />} />
+        <Route path="/admin" element={<AdminMatches />} />
       </Routes>
       <Footer />
     </div>

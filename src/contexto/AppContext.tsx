@@ -19,7 +19,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   // USUARIO ACTUAL (DESPUES VENDRA DE AUTENTICACION)
   const usuarioActual: Usuario = {
-    id: "1",
+    id: "user1",
     name: "Biwash Shrestha",
     nombre: "Biwash Shrestha",
     email: "biwash@goalz.com",

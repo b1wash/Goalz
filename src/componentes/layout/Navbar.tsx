@@ -97,6 +97,23 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
                 </span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
               </NavLink>
+
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `group relative px-4 xl:px-6 py-2.5 rounded-xl font-bold text-sm xl:text-base transition-all duration-300 ${
+                    isActive
+                      ? "bg-primary text-dark-bg shadow-lg shadow-primary/50"
+                      : "text-gray-300 hover:text-white hover:bg-dark-hover"
+                  }`
+                }
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-lg xl:text-xl">🔧</span>
+                  <span>Admin</span>
+                </span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+              </NavLink>
             </div>
 
             {/* ZONA DERECHA */}
@@ -220,6 +237,21 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
             >
               <span className="text-xl">📊</span>
               <span>Mis Predicciones</span>
+            </NavLink>
+
+            <NavLink
+              to="/admin"
+              onClick={() => setMenuAbierto(false)}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3.5 rounded-xl font-bold text-base transition-all duration-200 ${
+                  isActive
+                    ? "bg-primary text-dark-bg shadow-lg shadow-primary/30"
+                    : "bg-dark-bg/50 text-gray-300 hover:bg-dark-hover hover:text-white border border-primary/10"
+                }`
+              }
+            >
+              <span className="text-xl">🔧</span>
+              <span>Admin</span>
             </NavLink>
 
             {/* BOTON CTA MOVIL */}

@@ -6,8 +6,11 @@
       "awayTeam": "FC Barcelona",
       "date": "2024-04-21T21:00:00.000Z",
       "matchday": 32,
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 2,
+        "awayGoals": 1
+      }
     },
     {
       "id": "2",
@@ -27,8 +30,11 @@
       "awayTeam": "Girona",
       "date": "2024-04-13T14:00:00.000Z",
       "matchday": 31,
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 2,
+        "awayGoals": 0
+      }
     },
     {
       "id": "4",
@@ -36,8 +42,11 @@
       "awayTeam": "Borussia Dortmund",
       "date": "2024-05-07T21:00:00.000Z",
       "matchday": 33,
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      }
     },
     {
       "id": "5",
@@ -61,6 +70,18 @@
       "result": {
         "homeGoals": 3,
         "awayGoals": 1
+      }
+    },
+    {
+      "id": "6169",
+      "homeTeam": "Madrid",
+      "awayTeam": "Barcelona",
+      "date": "2026-02-02T09:00:00.000Z",
+      "matchday": 1,
+      "status": "finished",
+      "result": {
+        "awayGoals": 1,
+        "homeGoals": 2
       }
     }
   ],
@@ -112,6 +133,30 @@
       },
       "points": 0,
       "createdAt": "2024-04-06T11:00:00.000Z"
+    },
+    {
+      "id": "96df",
+      "createdAt": "2026-01-26T18:56:54.6208388+01:00",
+      "exactScore": {
+        "home": 2,
+        "away": 1
+      },
+      "matchId": "6169",
+      "userId": "user1",
+      "prediction": "1",
+      "points": null
+    },
+    {
+      "id": "93a8",
+      "matchId": "4",
+      "userId": "1",
+      "prediction": "1",
+      "exactScore": {
+        "home": 1,
+        "away": 0
+      },
+      "points": 5,
+      "createdAt": "2026-01-26T18:07:28.943Z"
     }
   ],
   "users": [

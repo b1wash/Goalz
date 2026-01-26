@@ -1,51 +1,96 @@
 // VISTA DE MIS PREDICCIONES
-import { useState } from "react";
-import { partidosMock } from "../utils/mockData";
-import type { Partido } from "../tipos";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { matchService } from "../servicios/matchService";
+import { predictionService } from "../servicios/predictionService";
+import type { Partido, Prediccion } from "../tipos";
 import { useApp } from "../contexto/AppContext";
+import { PredictionCard } from "../componentes/predictions";
 
 export const MisPredicciones = () => {
-  // OBTENER PREDICCIONES DEL CONTEXTO GLOBAL
-  const { predicciones: todasLasPredicciones, usuarioActual } = useApp();
-
-  // FILTRAR SOLO LAS PREDICCIONES DEL USUARIO ACTUAL
-  const prediccionesMock = todasLasPredicciones.filter(
-    (p) => p.idUsuario === usuarioActual.id,
-  );
+  const { usuarioActual } = useApp();
+  const [todasLasPredicciones, setTodasLasPredicciones] = useState<
+    Prediccion[]
+  >([]);
+  const [todosLosPartidos, setTodosLosPartidos] = useState<Partido[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // FILTRO PARA MOSTRAR DIFERENTES TIPOS DE PREDICCIONES
   const [filtro, setFiltro] = useState<
     "todas" | "acertadas" | "falladas" | "pendientes"
   >("todas");
 
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        setLoading(true);
+        // CARGAR PREDICCIONES DEL USUARIO ACTUAL
+        const predictionsData = await predictionService.getByUser(
+          usuarioActual.id,
+        );
+        setTodasLasPredicciones(predictionsData);
+
+        // CARGAR TODOS LOS PARTIDOS PARA TENER LA INFO
+        const matchesData = await matchService.getAll();
+        setTodosLosPartidos(matchesData);
+
+        setError(null);
+      } catch (err) {
+        setError("Error al cargar tus predicciones");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarDatos();
+  }, [usuarioActual.id]);
+
   // FUNCION PARA OBTENER EL PARTIDO DE UNA PREDICCION
   const obtenerPartido = (idPartido: string): Partido | undefined => {
-    return partidosMock.find((p) => p.id === idPartido);
+    return todosLosPartidos.find((p) => p.id === idPartido);
   };
 
   // FILTRAR PREDICCIONES SEGUN EL FILTRO SELECCIONADO
-  const prediccionesFiltradas = prediccionesMock.filter((pred) => {
-    const partido = obtenerPartido(pred.idPartido || pred.matchId || "");
+  const prediccionesFiltradas = todasLasPredicciones.filter((pred) => {
+    const partidoId = pred.matchId || pred.idPartido;
+    if (!partidoId) return false;
+
+    const partido = obtenerPartido(partidoId);
     if (!partido) return false;
 
     if (filtro === "todas") return true;
-    if (filtro === "pendientes") return partido.estado === "pendiente";
-    if (filtro === "acertadas")
-      return partido.estado === "finalizado" && (pred.puntosGanados ?? 0) > 0;
-    if (filtro === "falladas")
-      return partido.estado === "finalizado" && (pred.puntosGanados ?? 0) === 0;
+
+    const estado = (partido.status || partido.estado) as string;
+    const puntos = pred.points ?? pred.puntosGanados;
+
+    if (filtro === "pendientes")
+      return estado === "pending" || estado === "pendiente";
+
+    const isFinished = estado === "finished" || estado === "finalizado";
+    if (filtro === "acertadas") return isFinished && (puntos ?? 0) > 0;
+    if (filtro === "falladas") return isFinished && (puntos ?? 0) === 0;
     return true;
   });
 
   // CALCULAR ESTADISTICAS
-  const totalPredicciones = prediccionesMock.length;
-  const acertadas = prediccionesMock.filter(
-    (p) => (p.puntosGanados ?? 0) > 0,
+  const totalPredicciones = todasLasPredicciones.length;
+  const acertadas = todasLasPredicciones.filter(
+    (p) => (p.points ?? p.puntosGanados ?? 0) > 0,
   ).length;
-  const puntosTotal = prediccionesMock.reduce(
-    (sum, p) => sum + (p.puntosGanados ?? 0),
+  const puntosTotal = todasLasPredicciones.reduce(
+    (sum, p) => sum + (p.points ?? p.puntosGanados ?? 0),
     0,
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg flex items-center justify-center">
+        <div className="text-white text-2xl font-black animate-spin">⌛</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg py-8">
@@ -59,6 +104,12 @@ export const MisPredicciones = () => {
             Revisa todas tus predicciones y verifica tus aciertos
           </p>
         </div>
+
+        {error && (
+          <div className="mb-8 p-4 bg-danger/10 border border-danger/30 rounded-xl text-danger font-bold text-center">
+            ⚠️ {error}
+          </div>
+        )}
 
         {/* ESTADISTICAS RAPIDAS */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -97,7 +148,7 @@ export const MisPredicciones = () => {
                   : "bg-dark-bg/50 text-gray-400 hover:text-white hover:bg-dark-hover"
               }`}
             >
-              Todas ({prediccionesMock.length})
+              Todas ({todasLasPredicciones.length})
             </button>
             <button
               onClick={() => setFiltro("pendientes")}
@@ -133,9 +184,9 @@ export const MisPredicciones = () => {
         </div>
 
         {/* LISTA DE PREDICCIONES */}
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {prediccionesFiltradas.length === 0 ? (
-            <div className="bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-12 text-center">
+            <div className="col-span-full bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-12 text-center">
               <div className="text-6xl mb-4">🤷‍♂️</div>
               <p className="text-gray-400 text-lg">
                 No tienes predicciones en esta categoría
@@ -143,131 +194,25 @@ export const MisPredicciones = () => {
             </div>
           ) : (
             prediccionesFiltradas.map((prediccion) => {
-              const partido = obtenerPartido(prediccion.idPartido);
+              const partido = obtenerPartido(
+                prediccion.matchId || prediccion.idPartido || "",
+              );
               if (!partido) return null;
 
-              const esPendiente = partido.estado === "pendiente";
-              const acerto = (prediccion.puntosGanados ?? 0) > 0;
-
               return (
-                <div
+                <PredictionCard
                   key={prediccion.id}
-                  className={`bg-dark-card/50 backdrop-blur-sm border rounded-xl p-6 transition-all hover:shadow-xl ${
-                    esPendiente
-                      ? "border-primary/20 hover:border-primary/40"
-                      : acerto
-                        ? "border-primary/40 hover:border-primary/60 shadow-primary/10"
-                        : "border-danger/20 hover:border-danger/40"
-                  }`}
-                >
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                    {/* INFORMACION DEL PARTIDO */}
-                    <div className="flex-1">
-                      {/* FECHA */}
-                      <div className="text-xs text-gray-400 mb-3">
-                        {new Date(partido.fecha).toLocaleDateString("es-ES", {
-                          weekday: "long",
-                          day: "numeric",
-                          month: "long",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </div>
-
-                      {/* EQUIPOS Y RESULTADO */}
-                      <div className="grid grid-cols-3 gap-4 items-center mb-4">
-                        <div className="text-right">
-                          <p className="font-bold text-white text-lg">
-                            {partido.equipoLocal}
-                          </p>
-                        </div>
-                        <div className="text-center">
-                          {partido.resultado ? (
-                            <div className="text-2xl font-black text-primary">
-                              {partido.resultado.golesLocal} -{" "}
-                              {partido.resultado.golesVisitante}
-                            </div>
-                          ) : (
-                            <span className="text-gray-400 font-bold">VS</span>
-                          )}
-                        </div>
-                        <div className="text-left">
-                          <p className="font-bold text-white text-lg">
-                            {partido.equipoVisitante}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* TU PREDICCION */}
-                    <div className="lg:border-l lg:border-primary/20 lg:pl-6">
-                      <div className="bg-dark-bg/50 rounded-lg p-4 min-w-[200px]">
-                        <p className="text-xs text-gray-400 mb-2">
-                          Tu predicción:
-                        </p>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-gray-300">
-                            Resultado:
-                          </span>
-                          <span className="font-bold text-white">
-                            {prediccion.prediccion === "1"
-                              ? "Victoria Local"
-                              : prediccion.prediccion === "X"
-                                ? "Empate"
-                                : "Victoria Visitante"}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-300">
-                            Marcador:
-                          </span>
-                          <span className="font-bold text-primary">
-                            {prediccion.marcadorExacto.local} -{" "}
-                            {prediccion.marcadorExacto.visitante}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* PUNTOS GANADOS */}
-                    <div className="text-center lg:text-right">
-                      {esPendiente ? (
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-warning/10 border border-warning/30 text-warning rounded-lg">
-                          <span className="text-xl">⏳</span>
-                          <span className="font-bold">Pendiente</span>
-                        </div>
-                      ) : acerto ? (
-                        <div className="inline-flex flex-col items-center gap-1">
-                          <div className="text-3xl">✅</div>
-                          <div className="text-2xl font-black text-primary">
-                            +{prediccion.puntosGanados} pts
-                          </div>
-                          <div className="text-xs text-gray-400">
-                            ¡Acertaste!
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="inline-flex flex-col items-center gap-1">
-                          <div className="text-3xl">❌</div>
-                          <div className="text-xl font-bold text-danger">
-                            0 pts
-                          </div>
-                          <div className="text-xs text-gray-400">
-                            No acertaste
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                  prediction={prediccion}
+                  match={partido}
+                />
               );
             })
           )}
         </div>
 
         {/* MENSAJE SI NO HAY PREDICCIONES */}
-        {prediccionesMock.length === 0 && (
-          <div className="bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-12 text-center">
+        {todasLasPredicciones.length === 0 && !loading && (
+          <div className="mt-8 bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-12 text-center">
             <div className="text-6xl mb-4">🎯</div>
             <h3 className="text-2xl font-bold text-white mb-2">
               Aún no has hecho predicciones
@@ -275,12 +220,12 @@ export const MisPredicciones = () => {
             <p className="text-gray-400 mb-6">
               ¡Empieza a predecir resultados y gana puntos!
             </p>
-            <a
-              href="/hacer-prediccion"
-              className="inline-block px-6 py-3 bg-primary text-dark-bg font-bold rounded-lg hover:bg-emerald-400 transition-colors"
+            <Link
+              to="/hacer-prediccion"
+              className="inline-block px-8 py-4 bg-primary text-dark-bg font-black rounded-xl hover:bg-emerald-400 hover:shadow-lg hover:shadow-primary/30 transition-all"
             >
               Hacer mi primera predicción
-            </a>
+            </Link>
           </div>
         )}
       </div>

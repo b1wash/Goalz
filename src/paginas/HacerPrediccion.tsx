@@ -1,13 +1,17 @@
 // VISTA PARA HACER UNA PREDICCION
-import { useState } from "react";
-import { partidosMock } from "../utils/mockData";
+import { useState, useEffect } from "react";
 import { useApp } from "../contexto/AppContext";
+import { matchService } from "../servicios/matchService";
+import { predictionService } from "../servicios/predictionService";
+import type { Partido } from "../tipos";
 
 export const HacerPrediccion = () => {
   // OBTENER FUNCIONES DEL CONTEXTO GLOBAL
   const { agregarPrediccion, usuarioActual } = useApp();
 
-  // ESTADOS DEL FORMULARIO
+  // ESTADOS
+  const [partidos, setPartidos] = useState<Partido[]>([]);
+  const [loading, setLoading] = useState(true);
   const [partidoSeleccionado, setPartidoSeleccionado] = useState("");
   const [prediccion, setPrediccion] = useState<"1" | "X" | "2">("1");
   const [golesLocal, setGolesLocal] = useState(0);
@@ -15,9 +19,28 @@ export const HacerPrediccion = () => {
   const [error, setError] = useState("");
   const [exito, setExito] = useState(false);
 
+  // CARGAR PARTIDOS AL INICIAR
+  useEffect(() => {
+    const cargarPartidos = async () => {
+      try {
+        setLoading(true);
+        const data = await matchService.getAll();
+        setPartidos(data);
+        setError("");
+      } catch (err) {
+        setError("Error al cargar los partidos");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarPartidos();
+  }, []);
+
   // OBTENER SOLO PARTIDOS PENDIENTES
-  const partidosPendientes = partidosMock.filter(
-    (p) => p.estado === "pendiente",
+  const partidosPendientes = partidos.filter(
+    (p) => p.status === "pending" || p.estado === "pendiente",
   );
 
   // VALIDAR QUE LA PREDICCION COINCIDA CON EL MARCADOR
@@ -52,52 +75,86 @@ export const HacerPrediccion = () => {
   };
 
   // MANEJAR EL ENVIO DEL FORMULARIO
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validarPrediccion()) {
       return;
     }
 
-    // GUARDAR LA PREDICCION USANDO EL CONTEXTO
-    agregarPrediccion({
-      matchId: partidoSeleccionado,
-      idPartido: partidoSeleccionado,
-      userId: usuarioActual.id,
-      idUsuario: usuarioActual.id,
-      prediction: prediccion,
-      prediccion: prediccion,
-      exactScore: {
-        home: golesLocal,
-        away: golesVisitante,
-        local: golesLocal,
-        visitante: golesVisitante,
-      },
-      marcadorExacto: {
-        home: golesLocal,
-        away: golesVisitante,
-        local: golesLocal,
-        visitante: golesVisitante,
-      },
-      points: null,
-      puntosGanados: null,
-      createdAt: new Date().toISOString(),
-    });
+    try {
+      setLoading(true);
 
-    // MOSTRAR MENSAJE DE EXITO
-    setExito(true);
-    setTimeout(() => {
-      setExito(false);
-      // RESETEAR FORMULARIO
-      setPartidoSeleccionado("");
-      setPrediccion("1");
-      setGolesLocal(0);
-      setGolesVisitante(0);
-    }, 3000);
+      const nuevaPrediccion = {
+        matchId: partidoSeleccionado,
+        idPartido: partidoSeleccionado, // Compatibilidad
+        userId: usuarioActual.id,
+        idUsuario: usuarioActual.id, // Compatibilidad
+        prediction: prediccion,
+        prediccion: prediccion, // Compatibilidad
+        exactScore: {
+          home: golesLocal,
+          away: golesVisitante,
+          local: golesLocal, // Compatibilidad
+          visitante: golesVisitante, // Compatibilidad
+        },
+        marcadorExacto: {
+          home: golesLocal,
+          away: golesVisitante,
+          local: golesLocal, // Compatibilidad
+          visitante: golesVisitante, // Compatibilidad
+        },
+        points: null,
+        puntosGanados: null, // Compatibilidad
+        createdAt: new Date().toISOString(),
+      };
+
+      // 1. GUARDAR EN LA API
+      await predictionService.create({
+        matchId: nuevaPrediccion.matchId,
+        userId: nuevaPrediccion.userId,
+        prediction: nuevaPrediccion.prediction,
+        exactScore: {
+          home: golesLocal,
+          away: golesVisitante,
+        },
+        points: null,
+        createdAt: nuevaPrediccion.createdAt,
+      });
+
+      // 2. ACTUALIZAR CONTEXTO LOCAL
+      agregarPrediccion(nuevaPrediccion);
+
+      // MOSTRAR MENSAJE DE EXITO
+      setExito(true);
+      setTimeout(() => {
+        setExito(false);
+        // RESETEAR FORMULARIO
+        setPartidoSeleccionado("");
+        setPrediccion("1");
+        setGolesLocal(0);
+        setGolesVisitante(0);
+      }, 3000);
+    } catch (err) {
+      setError("Error al guardar la predicción en el servidor");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // OBTENER PARTIDO SELECCIONADO
-  const partido = partidosMock.find((p) => p.id === partidoSeleccionado);
+  const partido = partidos.find((p) => p.id === partidoSeleccionado);
+
+  if (loading && partidos.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg flex items-center justify-center">
+        <div className="text-white text-2xl font-black animate-pulse">
+          Preparando estadio...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg py-8">
@@ -125,13 +182,15 @@ export const HacerPrediccion = () => {
             <select
               value={partidoSeleccionado}
               onChange={(e) => setPartidoSeleccionado(e.target.value)}
-              className="w-full px-4 py-3 bg-dark-bg border border-primary/20 rounded-lg text-white font-semibold focus:outline-none focus:border-primary transition-colors"
+              disabled={loading}
+              className="w-full px-4 py-3 bg-dark-bg border border-primary/20 rounded-lg text-white font-semibold focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
             >
               <option value="">-- Elige un partido --</option>
               {partidosPendientes.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.equipoLocal} vs {p.equipoVisitante} -{" "}
-                  {new Date(p.fecha).toLocaleDateString("es-ES", {
+                  {p.equipoLocal || p.homeTeam} vs{" "}
+                  {p.equipoVisitante || p.awayTeam} -{" "}
+                  {new Date(p.fecha || p.date).toLocaleDateString("es-ES", {
                     day: "numeric",
                     month: "short",
                     hour: "2-digit",
@@ -148,7 +207,7 @@ export const HacerPrediccion = () => {
               <div className="grid grid-cols-3 gap-4 items-center">
                 <div className="text-right">
                   <p className="font-bold text-white text-xl">
-                    {partido.equipoLocal}
+                    {partido.equipoLocal || partido.homeTeam}
                   </p>
                 </div>
                 <div className="text-center">
@@ -156,7 +215,7 @@ export const HacerPrediccion = () => {
                 </div>
                 <div className="text-left">
                   <p className="font-bold text-white text-xl">
-                    {partido.equipoVisitante}
+                    {partido.equipoVisitante || partido.awayTeam}
                   </p>
                 </div>
               </div>
@@ -172,11 +231,12 @@ export const HacerPrediccion = () => {
               <button
                 type="button"
                 onClick={() => setPrediccion("1")}
+                disabled={loading}
                 className={`py-4 px-6 rounded-xl font-bold text-lg transition-all ${
                   prediccion === "1"
                     ? "bg-primary text-dark-bg shadow-lg shadow-primary/50 scale-105"
                     : "bg-dark-bg border border-primary/20 text-gray-400 hover:border-primary/40 hover:text-white"
-                }`}
+                } disabled:opacity-50`}
               >
                 <div className="text-2xl mb-1">🏠</div>
                 <div>Local</div>
@@ -184,11 +244,12 @@ export const HacerPrediccion = () => {
               <button
                 type="button"
                 onClick={() => setPrediccion("X")}
+                disabled={loading}
                 className={`py-4 px-6 rounded-xl font-bold text-lg transition-all ${
                   prediccion === "X"
                     ? "bg-primary text-dark-bg shadow-lg shadow-primary/50 scale-105"
                     : "bg-dark-bg border border-primary/20 text-gray-400 hover:border-primary/40 hover:text-white"
-                }`}
+                } disabled:opacity-50`}
               >
                 <div className="text-2xl mb-1">🤝</div>
                 <div>Empate</div>
@@ -196,11 +257,12 @@ export const HacerPrediccion = () => {
               <button
                 type="button"
                 onClick={() => setPrediccion("2")}
+                disabled={loading}
                 className={`py-4 px-6 rounded-xl font-bold text-lg transition-all ${
                   prediccion === "2"
                     ? "bg-primary text-dark-bg shadow-lg shadow-primary/50 scale-105"
                     : "bg-dark-bg border border-primary/20 text-gray-400 hover:border-primary/40 hover:text-white"
-                }`}
+                } disabled:opacity-50`}
               >
                 <div className="text-2xl mb-1">✈️</div>
                 <div>Visitante</div>
@@ -223,8 +285,9 @@ export const HacerPrediccion = () => {
                   min="0"
                   max="20"
                   value={golesLocal}
+                  disabled={loading}
                   onChange={(e) => setGolesLocal(parseInt(e.target.value) || 0)}
-                  className="w-full px-4 py-3 bg-dark-bg border border-primary/20 rounded-lg text-white text-2xl font-bold text-center focus:outline-none focus:border-primary transition-colors"
+                  className="w-full px-4 py-3 bg-dark-bg border border-primary/20 rounded-lg text-white text-2xl font-bold text-center focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
                 />
               </div>
               <div>
@@ -236,10 +299,11 @@ export const HacerPrediccion = () => {
                   min="0"
                   max="20"
                   value={golesVisitante}
+                  disabled={loading}
                   onChange={(e) =>
                     setGolesVisitante(parseInt(e.target.value) || 0)
                   }
-                  className="w-full px-4 py-3 bg-dark-bg border border-primary/20 rounded-lg text-white text-2xl font-bold text-center focus:outline-none focus:border-primary transition-colors"
+                  className="w-full px-4 py-3 bg-dark-bg border border-primary/20 rounded-lg text-white text-2xl font-bold text-center focus:outline-none focus:border-primary transition-colors disabled:opacity-50"
                 />
               </div>
             </div>
@@ -275,9 +339,10 @@ export const HacerPrediccion = () => {
           {/* BOTON ENVIAR */}
           <button
             type="submit"
-            className="w-full py-4 bg-gradient-to-r from-primary to-emerald-600 text-dark-bg font-black text-lg rounded-xl shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 hover:scale-105 active:scale-95 transition-all duration-200"
+            disabled={loading}
+            className="w-full py-4 bg-gradient-to-r from-primary to-emerald-600 text-dark-bg font-black text-lg rounded-xl shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:scale-100"
           >
-            🎯 Guardar Predicción
+            {loading ? "Guardando..." : "🎯 Guardar Predicción"}
           </button>
 
           {/* INFORMACION ADICIONAL */}

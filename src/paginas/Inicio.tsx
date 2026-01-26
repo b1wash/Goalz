@@ -1,16 +1,59 @@
-//VISTA PARA INICIO
-import { partidosMock } from "../utils/mockData";
+// VISTA PARA INICIO
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { matchService } from "../servicios/matchService";
+import { useApp } from "../contexto/AppContext";
+import type { Partido } from "../tipos";
+import { MatchCard } from "../componentes/matches";
 
 export const Inicio = () => {
+  const { usuarioActual } = useApp();
+  const [partidos, setPartidos] = useState<Partido[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        setLoading(true);
+        const matchesData = await matchService.getAll();
+        setPartidos(matchesData);
+        setError(null);
+      } catch (err) {
+        setError("Error al cargar los datos de inicio");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarDatos();
+  }, []);
+
   // OBTENER SOLO LOS PARTIDOS PENDIENTES
-  const partidosPendientes = partidosMock.filter(
-    (p) => p.estado === "pendiente",
+  const partidosPendientes = partidos.filter(
+    (p) => p.status === "pending" || p.estado === "pendiente",
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg flex items-center justify-center">
+        <div className="text-white text-2xl font-black animate-pulse">
+          Cargando GOALZ...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8 sm:py-12">
+        {error && (
+          <div className="mb-8 p-4 bg-danger/10 border border-danger/30 rounded-xl text-danger font-bold text-center">
+            ⚠️ {error}
+          </div>
+        )}
+
         {/* HERO SECTION */}
         <div className="bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl shadow-2xl shadow-primary/10 p-6 sm:p-8 lg:p-12 mb-8">
           <div className="text-center">
@@ -30,7 +73,7 @@ export const Inicio = () => {
               <div className="relative z-10">
                 <div className="text-4xl lg:text-5xl mb-3">⚽</div>
                 <div className="text-4xl lg:text-5xl font-black mb-2">
-                  {partidosMock.length}
+                  {partidos.length}
                 </div>
                 <div className="text-sm lg:text-base font-semibold opacity-90">
                   Partidos Totales
@@ -55,7 +98,9 @@ export const Inicio = () => {
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="relative z-10">
                 <div className="text-4xl lg:text-5xl mb-3">🏆</div>
-                <div className="text-4xl lg:text-5xl font-black mb-2">245</div>
+                <div className="text-4xl lg:text-5xl font-black mb-2">
+                  {usuarioActual.puntosTotal ?? usuarioActual.totalPoints}
+                </div>
                 <div className="text-sm lg:text-base font-semibold opacity-90">
                   Tus Puntos
                 </div>
@@ -80,47 +125,23 @@ export const Inicio = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
             {partidosPendientes.slice(0, 4).map((partido) => (
-              <div
-                key={partido.id}
-                className="bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-6 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300"
-              >
-                {/* FECHA */}
-                <div className="text-xs text-gray-400 mb-4">
-                  {new Date(partido.fecha).toLocaleDateString("es-ES", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </div>
-
-                {/* EQUIPOS */}
-                <div className="grid grid-cols-3 gap-4 items-center mb-4">
-                  <div className="text-right">
-                    <p className="font-bold text-white text-lg">
-                      {partido.equipoLocal}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <span className="text-gray-400 font-bold">VS</span>
-                  </div>
-                  <div className="text-left">
-                    <p className="font-bold text-white text-lg">
-                      {partido.equipoVisitante}
-                    </p>
-                  </div>
-                </div>
-
-                {/* BOTON PREDECIR */}
+              <div key={partido.id} className="relative group">
+                <MatchCard match={partido} showResult={false} />
                 <Link
                   to="/hacer-prediccion"
-                  className="block w-full text-center px-4 py-2 bg-primary/10 border border-primary/30 text-primary font-bold rounded-lg hover:bg-primary hover:text-dark-bg transition-all duration-200"
+                  className="mt-4 block w-full text-center px-4 py-3 bg-primary/10 border border-primary/30 text-primary font-bold rounded-xl hover:bg-primary hover:text-dark-bg hover:shadow-lg hover:shadow-primary/30 transition-all duration-200"
                 >
                   Hacer Predicción
                 </Link>
               </div>
             ))}
+            {partidosPendientes.length === 0 && (
+              <div className="col-span-full bg-dark-card/30 border border-primary/10 rounded-2xl p-12 text-center">
+                <p className="text-gray-400 text-lg">
+                  No hay partidos pendientes en este momento.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
