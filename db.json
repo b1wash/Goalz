@@ -25,46 +25,10 @@
       }
     },
     {
-      "id": "179a",
-      "homeTeam": "Fiorentina",
-      "awayTeam": "Malaga",
-      "date": "2026-01-07T22:42:00.000Z",
-      "matchday": 1,
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 0
-      }
-    },
-    {
-      "id": "b728",
-      "homeTeam": "Betis",
-      "awayTeam": "Fiorentina",
-      "date": "2026-01-08T22:48:00.000Z",
-      "matchday": 1,
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 1
-      }
-    },
-    {
-      "id": "e974",
-      "homeTeam": "Madrid",
-      "awayTeam": "Barcelona",
-      "date": "2026-01-09T22:56:00.000Z",
-      "matchday": 1,
-      "status": "finished",
-      "result": {
-        "homeGoals": 0,
-        "awayGoals": 0
-      }
-    },
-    {
-      "id": "9b6f",
-      "homeTeam": "barcelona",
-      "awayTeam": "asdads",
-      "date": "2026-01-03T22:58:00.000Z",
+      "id": "e025",
+      "homeTeam": "Barcelona",
+      "awayTeam": "Betis",
+      "date": "2025-12-30T23:04:00.000Z",
       "matchday": 1,
       "status": "pending",
       "result": null
@@ -108,33 +72,9 @@
       "createdAt": "2026-01-26T22:29:02.052Z"
     },
     {
-      "id": "f896",
-      "matchId": "179a",
-      "idPartido": "179a",
-      "userId": "user1",
-      "idUsuario": "user1",
-      "prediction": "1",
-      "prediccion": "1",
-      "exactScore": {
-        "home": 1,
-        "away": 0,
-        "local": 1,
-        "visitante": 0
-      },
-      "marcadorExacto": {
-        "home": 1,
-        "away": 0,
-        "local": 1,
-        "visitante": 0
-      },
-      "points": 5,
-      "puntosGanados": null,
-      "createdAt": "2026-01-26T22:43:22.977Z"
-    },
-    {
-      "id": "2c46",
-      "matchId": "b728",
-      "idPartido": "b728",
+      "id": "a027",
+      "matchId": "e025",
+      "idPartido": "e025",
       "userId": "user1",
       "idUsuario": "user1",
       "prediction": "X",
@@ -151,33 +91,9 @@
         "local": 1,
         "visitante": 1
       },
-      "points": 5,
+      "points": null,
       "puntosGanados": null,
-      "createdAt": "2026-01-26T22:49:03.407Z"
-    },
-    {
-      "id": "6f11",
-      "matchId": "e974",
-      "idPartido": "e974",
-      "userId": "user1",
-      "idUsuario": "user1",
-      "prediction": "X",
-      "prediccion": "X",
-      "exactScore": {
-        "home": 0,
-        "away": 0,
-        "local": 0,
-        "visitante": 0
-      },
-      "marcadorExacto": {
-        "home": 0,
-        "away": 0,
-        "local": 0,
-        "visitante": 0
-      },
-      "points": 5,
-      "puntosGanados": null,
-      "createdAt": "2026-01-26T22:56:29.079Z"
+      "createdAt": "2026-01-26T23:04:40.568Z"
     }
   ],
   "users": [
