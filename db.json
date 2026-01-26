@@ -95,6 +95,30 @@
         "homeGoals": 1,
         "awayGoals": 0
       }
+    },
+    {
+      "id": "0b65",
+      "homeTeam": "Madrid",
+      "awayTeam": "Sevilla",
+      "date": "2026-12-02T21:00:00.000Z",
+      "matchday": 1,
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      }
+    },
+    {
+      "id": "fe15",
+      "homeTeam": "Juve",
+      "awayTeam": "Madrid",
+      "date": "2025-12-31T20:10:00.000Z",
+      "matchday": 3,
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      }
     }
   ],
   "predictions": [
@@ -181,6 +205,42 @@
       },
       "points": 5,
       "createdAt": "2026-01-26T19:17:26.241Z"
+    },
+    {
+      "id": "5ea8",
+      "matchId": "0b65",
+      "userId": "user1",
+      "prediction": "1",
+      "exactScore": {
+        "home": 1,
+        "away": 0
+      },
+      "points": 5,
+      "createdAt": "2026-01-26T19:21:28.670Z"
+    },
+    {
+      "id": "9392",
+      "matchId": "fe15",
+      "idPartido": "fe15",
+      "userId": "user1",
+      "idUsuario": "user1",
+      "prediction": "1",
+      "prediccion": "1",
+      "exactScore": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": null,
+      "createdAt": "2026-01-26T20:13:33.346Z"
     }
   ],
   "users": [
@@ -188,8 +248,8 @@
       "id": "user1",
       "name": "Biwash Shrestha",
       "email": "biwash@goalz.com",
-      "totalPoints": 260,
-      "correctPredictions": 15,
+      "totalPoints": 270,
+      "correctPredictions": 17,
       "totalPredictions": 25
     },
     {

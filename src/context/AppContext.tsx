@@ -1,4 +1,4 @@
-// CONTEXTO GLOBAL PARA MANEJAR EL ESTADO DE LA APLICACION
+// CONTEXTO GLOBAL PARA MANEJAR EL ESTADO DE LA APLICACION (SESION, PREDICCIONES)
 import {
   createContext,
   useContext,
@@ -6,11 +6,11 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import type { Prediccion, Usuario } from "../tipos";
+import type { Prediccion, Usuario } from "../types";
 import { usePredicciones } from "../hooks/usePredicciones";
-import { userService } from "../servicios/userService";
+import { userService } from "../services/userService";
 
-// DEFINIR LA FORMA DEL CONTEXTO
+// INTERFAZ QUE DEFINE LA ESTRUCTURA DEL VALOR DEL CONTEXTO
 interface AppContextType {
   usuarioActual: Usuario | null;
   predicciones: Prediccion[];
@@ -20,33 +20,34 @@ interface AppContextType {
   recargarUsuario: () => Promise<void>;
 }
 
-// CREAR EL CONTEXTO
+// CREACION DEL CONTENEDOR DEL CONTEXTO
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// PROVEEDOR DEL CONTEXTO
+// COMPONENTE PROVEEDOR (PROVIDER) QUE ENVOLVERA LA APLICACION
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  // ESTADO PARA EL USUARIO ACTUAL
+  // ESTADO QUE ALMACENA LA INFORMACION DEL PERFIL IDENTIFICADO
   const [usuarioActual, setUsuarioActual] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // FUNCION PARA CARGAR LOS DATOS DEL USUARIO DESDE LA API
+  // LOGICA PARA SINCRONIZAR LOS DATOS DEL PERFIL CON EL SERVIDOR
   const recargarUsuario = async () => {
     try {
+      // NOTA: USAMOS UN USUARIO FIJO POR AHORA PARA LA DEMOSTRACION
       const user = await userService.getById("user1");
       setUsuarioActual(user);
     } catch (err) {
-      console.error("Error al cargar el usuario actual:", err);
+      console.error("Error al cargar el perfil del usuario:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // CARGAR AL INICIAR
+  // DISPARAR LA CARGA INICIAL AL MONTAR EL PROVIDER
   useEffect(() => {
     recargarUsuario();
   }, []);
 
-  // USAR EL HOOK DE PREDICCIONES
+  // INTEGRACION CON EL CUSTOM HOOK DE GESTION DE PREDICCIONES
   const {
     predicciones,
     agregarPrediccion,
@@ -65,10 +66,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         recargarUsuario,
       }}
     >
+      {/* EVITAR PARPADEO DURANTE EL PROCESO DE IDENTIFICACION */}
       {!loading && children}
       {loading && (
-        <div className="min-h-screen bg-dark-bg flex items-center justify-center">
-          <div className="text-primary text-2xl animate-pulse font-black">
+        <div className="min-h-screen bg-slate-50 dark:bg-dark-bg flex items-center justify-center">
+          <div className="text-primary text-3xl animate-pulse font-black tracking-widest">
             GOALZ
           </div>
         </div>
@@ -77,11 +79,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// HOOK PARA USAR EL CONTEXTO
+// CONSUMIDOR DEL CONTEXTO (CUSTOM HOOK AGIL)
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error("useApp debe usarse dentro de AppProvider");
+    throw new Error("useApp debe utilizarse dentro de un AppProvider");
   }
   return context;
 };

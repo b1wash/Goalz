@@ -62,11 +62,13 @@ goalz-app/
 │   ├── tipos/
 │   │   └── index.ts
 │   ├── hooks/
-│   │   └── usePredicciones.ts
+│   │   ├── usePredicciones.ts
+│   │   └── useDarkMode.ts
 │   ├── contexto/
 │   │   └── AppContext.tsx
 │   ├── utils/
-│   │   └── mockData.ts
+│   │   ├── pointsCalculator.ts
+│   │   └── validators.ts
 │   ├── App.tsx
 │   ├── main.tsx
 │   └── index.css
@@ -84,45 +86,43 @@ goalz-app/
 
 ### 🏠 Página de Inicio
 
-- Resumen de estadísticas del usuario
+- Resumen de estadísticas del usuario (Puntos, Partidos)
 - Próximos partidos de la jornada
-- Últimos resultados
+- Últimos resultados con diseño dinámico
 
 ### 🏆 Clasificación
 
 - Tabla de usuarios ordenada por puntos
-- Podio con los 3 primeros lugares
+- Podio visual (Top 3) con medallas (🥇, 🥈, 🥉)
 - Muestra: posición, nombre, puntos totales, aciertos
 
 ### 📊 Mis Predicciones
 
 - Historial completo de predicciones del usuario
-- Filtros: Todas / Acertadas / Falladas / Pendientes
+- Filtros dinámicos: Todas / Acertadas / Falladas / Pendientes
 - Muestra: partido, predicción, resultado real, puntos ganados
 
 ### ⚡ Hacer Predicción
 
 - Formulario completo para hacer predicciones
-- Lista de partidos disponibles
-- Validaciones en tiempo real
-- Sistema de puntos:
+- Validación de coherencia entre marcador y resultado (1X2)
+- Sistema de puntos automático:
   - **5 puntos** por acertar el marcador exacto
   - **3 puntos** por acertar el resultado (1, X, 2)
 
 ### 🔧 Panel Admin
 
-- Crear nuevos partidos
-- Actualizar resultados de partidos finalizados
-- Cálculo automático de puntos para todas las predicciones
-- Actualización de estadísticas de usuarios
+- Creación y gestión de nuevos partidos
+- Actualización de resultados en tiempo real
+- Recálculo automático de puntos para toda la base de usuarios
 
-## 🎨 Diseño
+## 🎨 Diseño y UI/UX
 
-- **Responsive**: Diseño adaptable a móvil, tablet y desktop
-- **Dark Mode**: Tema oscuro deportivo
-- **Animaciones**: Transiciones suaves y efectos hover
-- **Glassmorphism**: Efectos de cristal esmerilado
-- **Gradientes**: Colores vibrantes y modernos
+- **📱 Responsive Design**: Adaptado a móvil, tablet y desktop ultrawide.
+- **🌗 Modo Dual Dinámico**: Sistema de cambio de tema (Light/Dark) con persistencia en localStorage y detección de preferencia de sistema.
+- **✨ Micro-interacciones**: Transiciones suaves, efectos glassmorphism y hover premium.
+- **🛡️ Tipado Estricto**: 100% desarrollado con TypeScript.
+- **🧩 Reutilización**: 15+ componentes UI atómicos y modulares.
 
 ## 🔌 API Endpoints
 

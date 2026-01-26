@@ -1,4 +1,4 @@
-import type { Usuario, Partido, Prediccion } from "../tipos";
+import type { Usuario, Partido, Prediccion } from "../types";
 
 // USUARIOS DE EJEMPLO
 export const usuariosMock: Usuario[] = [

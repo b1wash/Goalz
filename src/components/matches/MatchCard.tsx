@@ -1,5 +1,5 @@
 // COMPONENTE PARA MOSTRAR UNA TARJETA DE PARTIDO
-import type { Partido } from "../../tipos";
+import type { Partido } from "../../types";
 import { Badge } from "../ui";
 
 export interface MatchCardProps {

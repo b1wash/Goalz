@@ -13,7 +13,7 @@ export const Card = ({
   hover = false,
 }: CardProps) => {
   const baseStyles =
-    "bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl p-6 shadow-lg";
+    "bg-white dark:bg-dark-card/50 backdrop-blur-sm border border-slate-200 dark:border-primary/20 rounded-2xl p-6 shadow-lg transition-colors duration-300";
   const hoverStyles = hover
     ? "hover:border-primary/40 hover:shadow-xl transition-all duration-300"
     : "";

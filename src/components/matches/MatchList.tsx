@@ -1,5 +1,5 @@
 // COMPONENTE PARA MOSTRAR UNA LISTA DE PARTIDOS
-import type { Partido } from "../../tipos";
+import type { Partido } from "../../types";
 import { MatchCard } from "./MatchCard";
 
 export interface MatchListProps {

@@ -1,5 +1,5 @@
 // COMPONENTE PARA MOSTRAR UNA TARJETA DE PREDICCION
-import type { Prediccion, Partido } from "../../tipos";
+import type { Prediccion, Partido } from "../../types";
 import { Badge } from "../ui";
 
 export interface PredictionCardProps {

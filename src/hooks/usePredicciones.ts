@@ -1,6 +1,6 @@
 // HOOK PERSONALIZADO PARA MANEJAR PREDICCIONES
 import { useState, useEffect } from "react";
-import type { Prediccion } from "../tipos";
+import type { Prediccion } from "../types";
 import { prediccionesMock } from "../utils/mockData";
 
 export const usePredicciones = () => {

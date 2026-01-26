@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* 
+  NOTA: Si ves una advertencia en "@variant" o "@theme", es un error del editor (VS Code) 
+  porque aún no reconoce la sintaxis de Tailwind v4. NO BORRES ESTO o los estilos fallarán.
+*/
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #10b981;
+  --color-secondary: #059669;
+  --color-accent: #fbbf24;
+
+  --color-dark-bg: #0f172a;
+  --color-dark-card: #1e293b;
+  --color-dark-hover: #334155;
+
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+
+  --background-size-200: 200% 200%;
+  --background-position-pos-0: 0% 0%;
+  --background-position-pos-100: 100% 100%;
+}
 /* ESTILOS POR DEFECTO */
 @layer base {
   * {
@@ -15,9 +38,17 @@
       BlinkMacSystemFont,
       "Segoe UI",
       sans-serif;
-    background-color: #0f172a;
-    color: #ffffff;
+    background-color: #f8fafc; /* Light mode background (Slate 50) */
+    color: #0f172a; /* Light mode text (Slate 900) */
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
     min-height: 100vh;
+  }
+
+  html.dark body {
+    background-color: #0f172a; /* Dark mode background */
+    color: #ffffff; /* Dark mode text */
   }
 
   #root {

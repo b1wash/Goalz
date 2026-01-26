@@ -1,8 +1,8 @@
-// SERVICIO PARA GESTIONAR PARTIDOS
+// SERVICIO PARA GESTIONAR LA ENTIDAD DE PARTIDOS (MATCHES)
 import { api } from "./api";
-import type { Partido } from "../tipos";
+import type { Partido } from "../types";
 
-// INTERFAZ PARA CREAR UN PARTIDO (SIN ID)
+// INTERFAZ PARA LA CREACION DE UN NUEVO PARTIDO EN EL SISTEMA
 export interface CrearPartidoDTO {
   homeTeam: string;
   awayTeam: string;
@@ -12,7 +12,7 @@ export interface CrearPartidoDTO {
   result: { homeGoals: number; awayGoals: number } | null;
 }
 
-// INTERFAZ PARA ACTUALIZAR RESULTADO
+// INTERFAZ PARA REGISTRAR EL MARCADOR FINAL DE UN ENCUENTRO
 export interface ActualizarResultadoDTO {
   result: {
     homeGoals: number;
@@ -22,32 +22,32 @@ export interface ActualizarResultadoDTO {
 }
 
 export const matchService = {
-  // OBTENER TODOS LOS PARTIDOS
+  // OBTENER EL LISTADO COMPLETO DE PARTIDOS REGISTRADOS
   getAll: async (): Promise<Partido[]> => {
     return api.get<Partido[]>("/matches");
   },
 
-  // OBTENER SOLO PARTIDOS PENDIENTES
+  // FILTRAR Y OBTENER UNICAMENTE LOS PARTIDOS QUE AUN NO HAN COMENZADO
   getUpcoming: async (): Promise<Partido[]> => {
     return api.get<Partido[]>("/matches?status=pending");
   },
 
-  // OBTENER SOLO PARTIDOS FINALIZADOS
+  // FILTRAR Y OBTENER LOS PARTIDOS QUE YA HAN FINALIZADO
   getFinished: async (): Promise<Partido[]> => {
     return api.get<Partido[]>("/matches?status=finished");
   },
 
-  // OBTENER UN PARTIDO POR ID
+  // OBTENER LA FICHA DETALLADA DE UN PARTIDO POR SU IDENTIFICADOR UNICO
   getById: async (id: string): Promise<Partido> => {
     return api.get<Partido>(`/matches/${id}`);
   },
 
-  // CREAR UN NUEVO PARTIDO
+  // REGISTRAR UN NUEVO PARTIDO EN LA BASE DE DATOS
   create: async (partido: CrearPartidoDTO): Promise<Partido> => {
     return api.post<Partido>("/matches", partido);
   },
 
-  // ACTUALIZAR RESULTADO DE UN PARTIDO
+  // ACTUALIZAR EL MARCADOR Y EL ESTADO DE UN PARTIDO EXISTENTE
   updateResult: async (
     id: string,
     data: ActualizarResultadoDTO,
@@ -55,7 +55,7 @@ export const matchService = {
     return api.patch<Partido>(`/matches/${id}`, data);
   },
 
-  // ELIMINAR UN PARTIDO
+  // ELIMINAR UN REGISTRO DE PARTIDO DEL SISTEMA
   delete: async (id: string): Promise<void> => {
     return api.delete<void>(`/matches/${id}`);
   },

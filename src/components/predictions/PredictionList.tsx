@@ -1,5 +1,5 @@
 // COMPONENTE PARA MOSTRAR UNA LISTA DE PREDICCIONES
-import type { Prediccion, Partido } from "../../tipos";
+import type { Prediccion, Partido } from "../../types";
 import { PredictionCard } from "./PredictionCard";
 
 export interface PredictionListProps {

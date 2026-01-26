@@ -1,8 +1,8 @@
-// SERVICIO PARA GESTIONAR PREDICCIONES
+// SERVICIO PARA GESTIONAR LAS PREDICCIONES DE LOS USUARIOS
 import { api } from "./api";
-import type { Prediccion } from "../tipos";
+import type { Prediccion } from "../types";
 
-// INTERFAZ PARA CREAR UNA PREDICCION (SIN ID)
+// INTERFAZ PARA REGISTRAR UNA NUEVA PREDICCION EN EL SISTEMA
 export interface CrearPrediccionDTO {
   matchId: string;
   userId: string;
@@ -16,37 +16,37 @@ export interface CrearPrediccionDTO {
 }
 
 export const predictionService = {
-  // OBTENER TODAS LAS PREDICCIONES
+  // OBTENER EL LISTADO HISTORICO DE TODAS LAS PREDICCIONES DEL SISTEMA
   getAll: async (): Promise<Prediccion[]> => {
     return api.get<Prediccion[]>("/predictions");
   },
 
-  // OBTENER PREDICCIONES DE UN USUARIO
+  // FILTRAR Y OBTENER LAS PREDICCIONES REALIZADAS POR UN USUARIO ESPECIFICO
   getByUser: async (userId: string): Promise<Prediccion[]> => {
     return api.get<Prediccion[]>(`/predictions?userId=${userId}`);
   },
 
-  // OBTENER PREDICCIONES DE UN PARTIDO
+  // OBTENER TODAS LAS PREDICCIONES ASOCIADAS A UN PARTIDO CONCRETO
   getByMatch: async (matchId: string): Promise<Prediccion[]> => {
     return api.get<Prediccion[]>(`/predictions?matchId=${matchId}`);
   },
 
-  // OBTENER UNA PREDICCION POR ID
+  // OBTENER LOS DETALLES DE UNA PREDICCION MEDIANTE SU ID
   getById: async (id: string): Promise<Prediccion> => {
     return api.get<Prediccion>(`/predictions/${id}`);
   },
 
-  // CREAR UNA NUEVA PREDICCION
+  // CREAR Y GUARDAR UNA NUEVA PREDICCION EN LA BASE DE DATOS
   create: async (prediccion: CrearPrediccionDTO): Promise<Prediccion> => {
     return api.post<Prediccion>("/predictions", prediccion);
   },
 
-  // ACTUALIZAR PUNTOS DE UNA PREDICCION
+  // ASIGNAR O ACTUALIZAR LOS PUNTOS OBTENIDOS POR UNA PREDICCION YA EVALUADA
   updatePoints: async (id: string, points: number): Promise<Prediccion> => {
     return api.patch<Prediccion>(`/predictions/${id}`, { points });
   },
 
-  // ELIMINAR UNA PREDICCION
+  // ELIMINAR UNA PREDICCION DEL REGISTRO
   delete: async (id: string): Promise<void> => {
     return api.delete<void>(`/predictions/${id}`);
   },

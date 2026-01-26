@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-import { BarraNavegacion } from "./componentes/layout/Navbar";
-import { Footer } from "./componentes/layout/Footer";
-import { Inicio } from "./paginas/Inicio";
-import { Clasificacion } from "./paginas/Clasificacion";
-import { MisPredicciones } from "./paginas/MisPredicciones";
-import { HacerPrediccion } from "./paginas/HacerPrediccion";
-import { AdminMatches } from "./paginas/AdminMatches";
-import { useApp } from "./contexto/AppContext";
+import { BarraNavegacion } from "./components/layout/Navbar";
+import { Footer } from "./components/layout/Footer";
+import { Inicio } from "./pages/Inicio";
+import { Clasificacion } from "./pages/Clasificacion";
+import { MisPredicciones } from "./pages/MisPredicciones";
+import { HacerPrediccion } from "./pages/HacerPrediccion";
+import { AdminMatches } from "./pages/AdminMatches";
+import { useApp } from "./context/AppContext";
 
 const App = () => {
   // OBTENER EL USUARIO ACTUAL DESDE EL CONTEXTO GLOBAL

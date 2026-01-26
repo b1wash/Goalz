@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
-import type { Usuario } from "../../tipos";
+import { useDarkMode } from "../../hooks/useDarkMode";
+import type { Usuario } from "../../types";
 
 interface BarraNavegacionProps {
   usuarioActual?: Usuario | null;
@@ -10,10 +11,11 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
   usuarioActual,
 }) => {
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const { isDark, toggleDarkMode } = useDarkMode();
   return (
     <>
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-dark-bg/95 backdrop-blur-lg border-b border-primary/20 shadow-2xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-dark-bg/95 backdrop-blur-lg border-b border-slate-200 dark:border-primary/20 shadow-2xl transition-colors duration-300">
         {/* CONTENEDOR CENTRADO CON MAX-WIDTH OPTIMIZADO PARA ULTRAWIDE EN MI CASO COMO TENGO UN MONITOR DE ULTRA WIDE */}
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex items-center justify-between h-16 lg:h-20 gap-4 lg:gap-8">
@@ -117,10 +119,17 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
             </div>
 
             {/* ZONA DERECHA */}
-
             <div className="flex items-center gap-3 sm:gap-4 lg:gap-6">
-              {/* BOTON CTA PRINCIPAL */}
+              {/* TOGGLE MODO OSCURO */}
+              <button
+                onClick={toggleDarkMode}
+                className="p-2.5 rounded-xl bg-dark-card hover:bg-dark-hover border border-primary/20 text-white transition-all duration-300"
+                aria-label="Cambiar tema"
+              >
+                {isDark ? "☀️" : "🌙"}
+              </button>
 
+              {/* BOTON CTA PRINCIPAL */}
               <Link
                 to="/hacer-prediccion"
                 className="group relative overflow-hidden px-4 sm:px-5 lg:px-6 xl:px-8 py-2 lg:py-2.5 xl:py-3 bg-gradient-to-r from-primary via-emerald-500 to-primary bg-size-200 bg-pos-0 hover:bg-pos-100 text-dark-bg font-black text-xs sm:text-sm lg:text-base rounded-full shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 hover:scale-105 active:scale-95 transition-all duration-300"
