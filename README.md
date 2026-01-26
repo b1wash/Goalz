@@ -270,7 +270,7 @@ npm run lint         # Ejecuta el linter
 ## �👤 Autor
 
 **Biwash Shrestha**  
-📧 Email: biwash@goalz.com  
+📧 Email: biwash@gmail.com  
 🔗 GitHub: [@b1wash](https://github.com/b1wash)
 
 ## 📄 Licencia
