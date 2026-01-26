@@ -6,6 +6,7 @@ import { userService } from "../services/userService";
 import { calcularPuntosGanados } from "../utils/pointsCalculator";
 import { validarDatosPartido, validarGoles } from "../utils/validators";
 import { Card, Button, Badge } from "../components/ui";
+import { useApp } from "../context/AppContext";
 import type {
   Partido,
   DatosFormularioPartido,
@@ -13,11 +14,20 @@ import type {
 } from "../types";
 
 export const AdminMatches = () => {
+  // CONTEXTO DE LA APLICACION
+  const { recargarUsuario } = useApp();
+
   // ESTADOS DE LA PAGINA
   const [partidos, setPartidos] = useState<Partido[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [mensajeEliminacion, setMensajeEliminacion] = useState<string | null>(
+    null,
+  );
+  const [filtroEstado, setFiltroEstado] = useState<
+    "todos" | "pending" | "finished"
+  >("todos");
   const [vistaActual, setVistaActual] = useState<
     "lista" | "crear" | "actualizar"
   >("lista");
@@ -140,6 +150,9 @@ export const AdminMatches = () => {
         formResultado.awayGoals,
       );
 
+      // 3. RECARGAR DATOS DEL USUARIO PARA ACTUALIZAR LOS PUNTOS EN EL NAVBAR
+      await recargarUsuario();
+
       setSuccess("¡Resultado actualizado y puntos repartidos correctamente!");
       setFormResultado({ matchId: "", homeGoals: 0, awayGoals: 0 });
       setVistaActual("lista");
@@ -203,6 +216,45 @@ export const AdminMatches = () => {
     setVistaActual("actualizar");
   };
 
+  // PROCESAR LA ELIMINACION DE UN PARTIDO
+  const handleEliminarPartido = async (partido: Partido) => {
+    // Confirmar antes de eliminar
+    const confirmacion = window.confirm(
+      `¿Estás seguro de eliminar el partido "${partido.homeTeam} vs ${partido.awayTeam}"?\n\n⚠️ Esto también eliminará todas las predicciones asociadas.`,
+    );
+
+    if (!confirmacion) return;
+
+    try {
+      setLoading(true);
+
+      // 1. OBTENER TODAS LAS PREDICCIONES DE ESTE PARTIDO
+      const prediccionesDelPartido = await predictionService.getByMatch(
+        partido.id,
+      );
+
+      // 2. ELIMINAR TODAS LAS PREDICCIONES ASOCIADAS
+      for (const prediccion of prediccionesDelPartido) {
+        await predictionService.delete(prediccion.id);
+      }
+
+      // 3. ELIMINAR EL PARTIDO
+      await matchService.delete(partido.id);
+
+      setMensajeEliminacion(
+        `🗑️ Partido eliminado correctamente. Se eliminaron ${prediccionesDelPartido.length} predicciones asociadas.`,
+      );
+      cargarPartidos();
+
+      setTimeout(() => setMensajeEliminacion(null), 5000);
+    } catch (err) {
+      setError("Error al eliminar el partido");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // RENDERIZADO DE CARGA
   if (loading) {
     return (
@@ -244,6 +296,14 @@ export const AdminMatches = () => {
           </div>
         )}
 
+        {mensajeEliminacion && (
+          <div className="mb-6 p-4 bg-danger/10 border-2 border-danger/30 rounded-xl animate-pulse">
+            <p className="text-danger font-black flex items-center gap-2">
+              <span>🗑️</span> {mensajeEliminacion}
+            </p>
+          </div>
+        )}
+
         {/* NAVEGACION INTERNA DEL PANEL */}
         <div className="flex flex-wrap gap-4 mb-8">
           <Button
@@ -263,60 +323,105 @@ export const AdminMatches = () => {
         {/* SECCION: LISTADO DE PARTIDOS REGISTRADOS */}
         {vistaActual === "lista" && (
           <div className="space-y-4">
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4">
-              BASE DE DATOS DE PARTIDOS
-            </h2>
-            <div className="grid grid-cols-1 gap-4">
-              {partidos.map((partido) => (
-                <Card key={partido.id} hover className="border-primary/20">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                    <div className="flex-1">
-                      <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
-                        JORNADA {partido.matchday} •{" "}
-                        {new Date(partido.date).toLocaleDateString("es-ES")}
-                      </div>
-                      <div className="grid grid-cols-3 gap-8 items-center">
-                        <p className="text-right font-black text-slate-900 dark:text-white text-xl">
-                          {partido.homeTeam}
-                        </p>
-                        <div className="text-center">
-                          {partido.result ? (
-                            <div className="text-3xl font-black text-primary">
-                              {partido.result.homeGoals} -{" "}
-                              {partido.result.awayGoals}
-                            </div>
-                          ) : (
-                            <div className="text-gray-400 font-black border-2 border-gray-200 dark:border-gray-700 rounded-lg py-1">
-                              VS
-                            </div>
-                          )}
-                        </div>
-                        <p className="text-left font-black text-slate-900 dark:text-white text-xl">
-                          {partido.awayTeam}
-                        </p>
-                      </div>
-                    </div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+                BASE DE DATOS DE PARTIDOS
+              </h2>
 
-                    <div className="flex items-center gap-4">
-                      <Badge
-                        text={
-                          partido.status === "finished"
-                            ? "FINALIZADO"
-                            : "PENDIENTE"
-                        }
-                        variant={
-                          partido.status === "finished" ? "success" : "warning"
-                        }
-                      />
-                      {partido.status === "pending" && (
-                        <Button onClick={() => seleccionarPartido(partido)}>
-                          ACTUALIZAR RESULTADO
+              {/* FILTROS POR ESTADO */}
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setFiltroEstado("todos")}
+                  variant={filtroEstado === "todos" ? "primary" : "secondary"}
+                  className="text-sm"
+                >
+                  TODOS ({partidos.length})
+                </Button>
+                <Button
+                  onClick={() => setFiltroEstado("pending")}
+                  variant={filtroEstado === "pending" ? "primary" : "secondary"}
+                  className="text-sm"
+                >
+                  PENDIENTES (
+                  {partidos.filter((p) => p.status === "pending").length})
+                </Button>
+                <Button
+                  onClick={() => setFiltroEstado("finished")}
+                  variant={
+                    filtroEstado === "finished" ? "primary" : "secondary"
+                  }
+                  className="text-sm"
+                >
+                  FINALIZADOS (
+                  {partidos.filter((p) => p.status === "finished").length})
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {partidos
+                .filter(
+                  (partido) =>
+                    filtroEstado === "todos" || partido.status === filtroEstado,
+                )
+                .map((partido) => (
+                  <Card key={partido.id} hover className="border-primary/20">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                      <div className="flex-1">
+                        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                          JORNADA {partido.matchday} •{" "}
+                          {new Date(partido.date).toLocaleDateString("es-ES")}
+                        </div>
+                        <div className="grid grid-cols-3 gap-8 items-center">
+                          <p className="text-right font-black text-slate-900 dark:text-white text-xl">
+                            {partido.homeTeam}
+                          </p>
+                          <div className="text-center">
+                            {partido.result ? (
+                              <div className="text-3xl font-black text-primary">
+                                {partido.result.homeGoals} -{" "}
+                                {partido.result.awayGoals}
+                              </div>
+                            ) : (
+                              <div className="text-gray-400 font-black border-2 border-gray-200 dark:border-gray-700 rounded-lg py-1">
+                                VS
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-left font-black text-slate-900 dark:text-white text-xl">
+                            {partido.awayTeam}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        <Badge
+                          text={
+                            partido.status === "finished"
+                              ? "FINALIZADO"
+                              : "PENDIENTE"
+                          }
+                          variant={
+                            partido.status === "finished"
+                              ? "success"
+                              : "warning"
+                          }
+                        />
+                        {partido.status === "pending" && (
+                          <Button onClick={() => seleccionarPartido(partido)}>
+                            ACTUALIZAR RESULTADO
+                          </Button>
+                        )}
+                        <Button
+                          onClick={() => handleEliminarPartido(partido)}
+                          variant="danger"
+                        >
+                          🗑️ ELIMINAR
                         </Button>
-                      )}
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                ))}
             </div>
           </div>
         )}

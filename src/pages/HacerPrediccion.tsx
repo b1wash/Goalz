@@ -31,6 +31,7 @@ export const HacerPrediccion = () => {
         const data = await matchService.getAll();
         setPartidos(data);
       } catch (err) {
+        console.error("Error al cargar partidos:", err);
         setError("Error al cargar los partidos desde el servidor");
       } finally {
         setLoading(false);
@@ -126,6 +127,7 @@ export const HacerPrediccion = () => {
 
       setTimeout(() => setExito(false), 5000);
     } catch (err) {
+      console.error("Error al guardar predicción:", err);
       setError("Error al guardar la prediccion en el sistema");
     } finally {
       setLoading(false);
@@ -143,10 +145,10 @@ export const HacerPrediccion = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-12 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-300">
       <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* CABECERA */}
-        <div className="mb-10 text-center">
+        <div className="mb-6 text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-4 bg-gradient-to-r from-slate-900 via-primary to-slate-900 dark:from-white dark:via-primary dark:to-white bg-clip-text text-transparent">
             ⚡ Hacer Predicción
           </h1>

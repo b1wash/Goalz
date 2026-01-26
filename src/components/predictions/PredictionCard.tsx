@@ -22,7 +22,7 @@ export const PredictionCard = ({ prediction, match }: PredictionCardProps) => {
   };
 
   return (
-    <div className="bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-6 hover:border-primary/40 transition-all">
+    <div className="bg-dark-card/50 backdrop-blur-sm border border-primary/20 rounded-xl p-4 hover:border-primary/40 transition-all">
       {/* PARTIDO */}
       <div className="mb-4">
         <div className="grid grid-cols-3 gap-2 items-center text-sm">

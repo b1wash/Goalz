@@ -52,7 +52,7 @@ export const Inicio = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg transition-colors duration-300">
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-12">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8">
         {/* MENSAJE DE ERROR GLOBAL */}
         {error && (
           <div className="mb-10 p-6 bg-danger/10 border-2 border-danger/30 rounded-2xl text-danger font-black text-center animate-shake">
@@ -61,12 +61,12 @@ export const Inicio = () => {
         )}
 
         {/* SECCION HERO: BIENVENIDA Y ESTADISTICAS PRINCIPALES */}
-        <Card className="p-8 sm:p-12 lg:p-16 mb-12 relative overflow-hidden group">
+        <Card className="p-6 sm:p-8 lg:p-10 mb-8 relative overflow-hidden group">
           {/* EFECTOS VISUALES DE FONDO EN EL HERO */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] -mr-48 -mt-48 transition-all group-hover:bg-primary/10"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] -ml-48 -mb-48 transition-all group-hover:bg-blue-500/10"></div>
 
-          <div className="relative z-10 text-center mb-12">
+          <div className="relative z-10 text-center mb-8">
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-slate-900 dark:text-white mb-6 tracking-tighter">
               Bievenido a <span className="text-primary italic">GOALZ</span>
             </h1>

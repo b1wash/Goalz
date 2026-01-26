@@ -1,102 +1,6 @@
 {
   "matches": [
     {
-      "id": "1",
-      "homeTeam": "Real Madrid",
-      "awayTeam": "FC Barcelona",
-      "date": "2024-04-21T21:00:00.000Z",
-      "matchday": 32,
-      "status": "finished",
-      "result": {
-        "homeGoals": 2,
-        "awayGoals": 1
-      }
-    },
-    {
-      "id": "2",
-      "homeTeam": "Manchester City",
-      "awayTeam": "Arsenal",
-      "date": "2024-03-31T17:30:00.000Z",
-      "matchday": 30,
-      "status": "finished",
-      "result": {
-        "homeGoals": 0,
-        "awayGoals": 0
-      }
-    },
-    {
-      "id": "3",
-      "homeTeam": "Atlético Madrid",
-      "awayTeam": "Girona",
-      "date": "2024-04-13T14:00:00.000Z",
-      "matchday": 31,
-      "status": "finished",
-      "result": {
-        "homeGoals": 2,
-        "awayGoals": 0
-      }
-    },
-    {
-      "id": "4",
-      "homeTeam": "PSG",
-      "awayTeam": "Borussia Dortmund",
-      "date": "2024-05-07T21:00:00.000Z",
-      "matchday": 33,
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 0
-      }
-    },
-    {
-      "id": "5",
-      "homeTeam": "Bayern Munich",
-      "awayTeam": "Real Madrid",
-      "date": "2024-05-01T21:00:00.000Z",
-      "matchday": 32,
-      "status": "finished",
-      "result": {
-        "homeGoals": 2,
-        "awayGoals": 2
-      }
-    },
-    {
-      "id": "6",
-      "homeTeam": "Liverpool",
-      "awayTeam": "Manchester United",
-      "date": "2024-04-07T16:30:00.000Z",
-      "matchday": 30,
-      "status": "finished",
-      "result": {
-        "homeGoals": 3,
-        "awayGoals": 1
-      }
-    },
-    {
-      "id": "6169",
-      "homeTeam": "Madrid",
-      "awayTeam": "Barcelona",
-      "date": "2026-02-02T09:00:00.000Z",
-      "matchday": 1,
-      "status": "finished",
-      "result": {
-        "awayGoals": 1,
-        "homeGoals": 2
-      }
-    },
-    {
-      "id": "8aa9",
-      "homeTeam": "Oporto",
-      "awayTeam": "Betis",
-      "date": "2026-02-01T11:00:00.000Z",
-      "matchday": 1,
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 0
-      }
-    },
-    {
       "id": "0b65",
       "homeTeam": "Madrid",
       "awayTeam": "Sevilla",
@@ -109,103 +13,64 @@
       }
     },
     {
-      "id": "fe15",
-      "homeTeam": "Juve",
-      "awayTeam": "Madrid",
-      "date": "2025-12-31T20:10:00.000Z",
-      "matchday": 3,
+      "id": "286f",
+      "homeTeam": "Chelsea",
+      "awayTeam": "Barcelona",
+      "date": "2025-12-30T22:28:00.000Z",
+      "matchday": 2,
       "status": "finished",
       "result": {
         "homeGoals": 1,
         "awayGoals": 0
       }
+    },
+    {
+      "id": "179a",
+      "homeTeam": "Fiorentina",
+      "awayTeam": "Malaga",
+      "date": "2026-01-07T22:42:00.000Z",
+      "matchday": 1,
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      }
+    },
+    {
+      "id": "b728",
+      "homeTeam": "Betis",
+      "awayTeam": "Fiorentina",
+      "date": "2026-01-08T22:48:00.000Z",
+      "matchday": 1,
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 1
+      }
+    },
+    {
+      "id": "e974",
+      "homeTeam": "Madrid",
+      "awayTeam": "Barcelona",
+      "date": "2026-01-09T22:56:00.000Z",
+      "matchday": 1,
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 0
+      }
+    },
+    {
+      "id": "9b6f",
+      "homeTeam": "barcelona",
+      "awayTeam": "asdads",
+      "date": "2026-01-03T22:58:00.000Z",
+      "matchday": 1,
+      "status": "pending",
+      "result": null
     }
   ],
   "predictions": [
-    {
-      "id": "1",
-      "matchId": "2",
-      "userId": "user1",
-      "prediction": "1",
-      "exactScore": {
-        "home": 2,
-        "away": 1
-      },
-      "points": 0,
-      "createdAt": "2024-03-30T10:00:00.000Z"
-    },
-    {
-      "id": "2",
-      "matchId": "5",
-      "userId": "user1",
-      "prediction": "X",
-      "exactScore": {
-        "home": 2,
-        "away": 2
-      },
-      "points": 5,
-      "createdAt": "2024-04-30T10:00:00.000Z"
-    },
-    {
-      "id": "3",
-      "matchId": "6",
-      "userId": "user1",
-      "prediction": "1",
-      "exactScore": {
-        "home": 3,
-        "away": 1
-      },
-      "points": 5,
-      "createdAt": "2024-04-06T10:00:00.000Z"
-    },
-    {
-      "id": "4",
-      "matchId": "6",
-      "userId": "user2",
-      "prediction": "2",
-      "exactScore": {
-        "home": 1,
-        "away": 2
-      },
-      "points": 0,
-      "createdAt": "2024-04-06T11:00:00.000Z"
-    },
-    {
-      "id": "96df",
-      "createdAt": "2026-01-26T18:56:54.6208388+01:00",
-      "exactScore": {
-        "home": 2,
-        "away": 1
-      },
-      "matchId": "6169",
-      "userId": "user1",
-      "prediction": "1",
-      "points": 5
-    },
-    {
-      "id": "93a8",
-      "matchId": "4",
-      "userId": "user1",
-      "prediction": "1",
-      "exactScore": {
-        "home": 1,
-        "away": 0
-      },
-      "points": 5,
-      "createdAt": "2026-01-26T18:07:28.943Z"
-    },
-    {
-      "id": "8590",
-      "matchId": "8aa9",
-      "userId": "user1",
-      "prediction": "1",
-      "exactScore": {
-        "home": 1,
-        "away": 0
-      },
-      "points": 5,
-      "createdAt": "2026-01-26T19:17:26.241Z"
-    },
     {
       "id": "5ea8",
       "matchId": "0b65",
@@ -219,9 +84,9 @@
       "createdAt": "2026-01-26T19:21:28.670Z"
     },
     {
-      "id": "9392",
-      "matchId": "fe15",
-      "idPartido": "fe15",
+      "id": "a7fa",
+      "matchId": "286f",
+      "idPartido": "286f",
       "userId": "user1",
       "idUsuario": "user1",
       "prediction": "1",
@@ -240,49 +105,121 @@
       },
       "points": 5,
       "puntosGanados": null,
-      "createdAt": "2026-01-26T20:13:33.346Z"
+      "createdAt": "2026-01-26T22:29:02.052Z"
+    },
+    {
+      "id": "f896",
+      "matchId": "179a",
+      "idPartido": "179a",
+      "userId": "user1",
+      "idUsuario": "user1",
+      "prediction": "1",
+      "prediccion": "1",
+      "exactScore": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": null,
+      "createdAt": "2026-01-26T22:43:22.977Z"
+    },
+    {
+      "id": "2c46",
+      "matchId": "b728",
+      "idPartido": "b728",
+      "userId": "user1",
+      "idUsuario": "user1",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 1,
+        "away": 1,
+        "local": 1,
+        "visitante": 1
+      },
+      "marcadorExacto": {
+        "home": 1,
+        "away": 1,
+        "local": 1,
+        "visitante": 1
+      },
+      "points": 5,
+      "puntosGanados": null,
+      "createdAt": "2026-01-26T22:49:03.407Z"
+    },
+    {
+      "id": "6f11",
+      "matchId": "e974",
+      "idPartido": "e974",
+      "userId": "user1",
+      "idUsuario": "user1",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": null,
+      "createdAt": "2026-01-26T22:56:29.079Z"
     }
   ],
   "users": [
     {
       "id": "user1",
       "name": "Biwash Shrestha",
+      "nombre": "Biwash Shrestha",
       "email": "biwash@goalz.com",
-      "totalPoints": 270,
-      "correctPredictions": 17,
+      "totalPoints": 290,
+      "puntosTotal": 275,
+      "correctPredictions": 21,
       "totalPredictions": 25
     },
     {
       "id": "user2",
-      "name": "Carlos Gol",
-      "email": "carlos@goalz.com",
+      "name": "Kerrly",
+      "nombre": "Kerrly",
+      "email": "kerrly@goalz.com",
       "totalPoints": 230,
+      "puntosTotal": 230,
       "correctPredictions": 11,
       "totalPredictions": 24
     },
     {
       "id": "user3",
-      "name": "Ana Portera",
-      "email": "ana@goalz.com",
-      "totalPoints": 280,
+      "name": "Sergio Muñoz",
+      "nombre": "Sergio Muñoz",
+      "email": "sergio@goalz.com",
+      "totalPoints": 260,
+      "puntosTotal": 260,
       "correctPredictions": 14,
       "totalPredictions": 24
     },
     {
       "id": "user4",
-      "name": "Luis Delantero",
-      "email": "luis@goalz.com",
+      "name": "Esteban Cañamás",
+      "nombre": "Esteban Cañamás",
+      "email": "esteban@goalz.com",
       "totalPoints": 215,
+      "puntosTotal": 215,
       "correctPredictions": 10,
       "totalPredictions": 26
-    },
-    {
-      "id": "user5",
-      "name": "María Defensa",
-      "email": "maria@goalz.com",
-      "totalPoints": 200,
-      "correctPredictions": 9,
-      "totalPredictions": 22
     }
   ]
 }
