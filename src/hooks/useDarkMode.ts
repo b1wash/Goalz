@@ -1,3 +1,4 @@
+// HOOK PARA EL MODO OSCURO
 import { useState, useEffect } from "react";
 
 export const useDarkMode = () => {

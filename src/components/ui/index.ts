@@ -13,3 +13,9 @@ export type { SelectProps } from "./Select";
 
 export { Badge } from "./Badge";
 export type { BadgeProps } from "./Badge";
+
+export { EstadoVacio } from "./EstadoVacio";
+export type { EstadoVacioProps } from "./EstadoVacio";
+
+export { Cargando } from "./Cargando";
+export type { CargandoProps } from "./Cargando";

@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
-/* 
-  NOTA: Si ves una advertencia en "@variant" o "@theme", es un error del editor (VS Code) 
-  porque aún no reconoce la sintaxis de Tailwind v4. NO BORRES ESTO o los estilos fallarán.
-*/
+/* ESTO ES DE TAILWIN V4 Y EL EDITOR TODAVIA NO LO RECONOCE */
 @variant dark (&:where(.dark, .dark *));
 
 @theme {

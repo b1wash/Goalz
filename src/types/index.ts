@@ -8,10 +8,10 @@ export type EstadoPartido = "pending" | "finished" | "pendiente" | "finalizado";
 export interface Usuario {
   id: string;
   name: string;
-  nombre: string; // REQUERIDO PARA COMPATIBILIDAD
+  nombre: string;
   email: string;
   totalPoints: number;
-  puntosTotal: number; // REQUERIDO PARA COMPATIBILIDAD
+  puntosTotal: number;
   correctPredictions: number;
   totalPredictions: number;
 }
@@ -20,47 +20,47 @@ export interface Usuario {
 export interface ResultadoPartido {
   homeGoals: number;
   awayGoals: number;
-  golesLocal: number; // REQUERIDO PARA COMPATIBILIDAD
-  golesVisitante: number; // REQUERIDO PARA COMPATIBILIDAD
+  golesLocal: number;
+  golesVisitante: number;
 }
 
 // DEFINICION DE UN PARTIDO DE FUTBOL (COMPATIBLE CON DB.JSON Y CODIGO EXISTENTE)
 export interface Partido {
   id: string;
   homeTeam: string;
-  equipoLocal: string; // REQUERIDO PARA COMPATIBILIDAD
+  equipoLocal: string;
   awayTeam: string;
-  equipoVisitante: string; // REQUERIDO PARA COMPATIBILIDAD
+  equipoVisitante: string;
   date: string;
-  fecha: string; // REQUERIDO PARA COMPATIBILIDAD
+  fecha: string;
   matchday: number;
   status: "pending" | "finished";
-  estado: "pendiente" | "finalizado"; // REQUERIDO PARA COMPATIBILIDAD
+  estado: "pendiente" | "finalizado";
   result: ResultadoPartido | null;
-  resultado: ResultadoPartido | null; // REQUERIDO PARA COMPATIBILIDAD
+  resultado: ResultadoPartido | null;
 }
 
 // MARCADOR EXACTO DE UNA PREDICCION
 export interface MarcadorExacto {
   home: number;
   away: number;
-  local: number; // REQUERIDO PARA COMPATIBILIDAD
-  visitante: number; // REQUERIDO PARA COMPATIBILIDAD
+  local: number;
+  visitante: number;
 }
 
 // DEFINICION DE UNA PREDICCION (COMPATIBLE CON DB.JSON Y CODIGO EXISTENTE)
 export interface Prediccion {
   id: string;
   matchId: string;
-  idPartido: string; // REQUERIDO PARA COMPATIBILIDAD
+  idPartido: string;
   userId: string;
-  idUsuario: string; // REQUERIDO PARA COMPATIBILIDAD
+  idUsuario: string;
   prediction: TipoPrediccion;
-  prediccion: TipoPrediccion; // REQUERIDO PARA COMPATIBILIDAD
+  prediccion: TipoPrediccion;
   exactScore: MarcadorExacto;
-  marcadorExacto: MarcadorExacto; // REQUERIDO PARA COMPATIBILIDAD
+  marcadorExacto: MarcadorExacto;
   points: number | null;
-  puntosGanados: number | null; // REQUERIDO PARA COMPATIBILIDAD
+  puntosGanados: number | null;
   createdAt: string;
 }
 

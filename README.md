@@ -7,7 +7,36 @@ Aplicación web para realizar predicciones de resultados de partidos de fútbol 
 ![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.18-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-## 🛠️ Tecnologías
+## � Tabla de Contenidos
+
+- [Requisitos del Sistema](#-requisitos-del-sistema)
+- [Tecnologías](#️-tecnologías)
+- [Instalación](#-instalación)
+- [Uso de la Aplicación](#-uso-de-la-aplicación)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Funcionalidades](#-funcionalidades)
+- [API Endpoints](#-api-endpoints)
+- [Características Técnicas](#-características-técnicas)
+- [Troubleshooting](#-troubleshooting)
+- [Autor](#-autor)
+
+## 💻 Requisitos del Sistema
+
+Antes de instalar, asegúrate de tener:
+
+- **Node.js**: v18.0.0 o superior
+- **npm**: v9.0.0 o superior
+- **Git**: Para clonar el repositorio
+- **Navegador moderno**: Chrome, Firefox, Safari o Edge (última versión)
+
+Para verificar tus versiones:
+
+```bash
+node --version
+npm --version
+```
+
+## �🛠️ Tecnologías
 
 - **Vite** - Entorno de desarrollo ultrarrápido
 - **React 18** - Biblioteca UI con componentes funcionales
@@ -43,44 +72,100 @@ La API estará disponible en: **http://localhost:3001**
 goalz-app/
 ├── public/
 ├── src/
-│   ├── componentes/
-│   │   ├── layout/          # Navbar, Footer
-│   │   ├── ui/              # Button, Card, Input, Select, Badge
-│   │   ├── matches/         # MatchCard, MatchList
-│   │   └── predictions/     # PredictionCard, PredictionList
-│   ├── paginas/
-│   │   ├── Inicio.tsx
-│   │   ├── Clasificacion.tsx
-│   │   ├── MisPredicciones.tsx
-│   │   ├── HacerPrediccion.tsx
-│   │   └── AdminMatches.tsx
-│   ├── servicios/
-│   │   ├── api.ts
-│   │   ├── matchService.ts
-│   │   ├── predictionService.ts
-│   │   └── userService.ts
-│   ├── tipos/
-│   │   └── index.ts
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Navbar.tsx              # Barra de navegación responsive
+│   │   │   ├── Footer.tsx              # Pie de página
+│   │   │   ├── ContenedorPagina.tsx    # Wrapper para páginas (nuevos)
+│   │   │   └── index.ts                # Exports centralizados
+│   │   ├── ui/
+│   │   │   ├── Button.tsx              # Botón reutilizable
+│   │   │   ├── Card.tsx                # Tarjeta con estilos
+│   │   │   ├── Input.tsx               # Input de formulario
+│   │   │   ├── Select.tsx              # Select desplegable
+│   │   │   ├── Badge.tsx               # Etiqueta de estado
+│   │   │   ├── Cargando.tsx            # Spinner de carga (nuevo)
+│   │   │   ├── EstadoVacio.tsx         # Componente de estado vacío (nuevo)
+│   │   │   └── index.ts                # Exports centralizados
+│   │   ├── matches/
+│   │   │   ├── MatchCard.tsx           # Tarjeta de partido
+│   │   │   ├── MatchList.tsx           # Lista de partidos
+│   │   │   └── index.ts                # Exports centralizados
+│   │   └── predictions/
+│   │       ├── PredictionCard.tsx      # Tarjeta de predicción
+│   │       ├── PredictionList.tsx      # Lista de predicciones
+│   │       └── index.ts                # Exports centralizados
+│   ├── pages/
+│   │   ├── Inicio.tsx                  # Dashboard principal
+│   │   ├── Clasificacion.tsx           # Ranking de usuarios
+│   │   ├── MisPredicciones.tsx         # Historial de predicciones
+│   │   ├── HacerPrediccion.tsx         # Formulario de predicción
+│   │   └── AdminMatches.tsx            # Panel de administración
+│   ├── services/
+│   │   ├── api.ts                      # Cliente HTTP base
+│   │   ├── matchService.ts             # API de partidos
+│   │   ├── predictionService.ts        # API de predicciones
+│   │   └── userService.ts              # API de usuarios
+│   ├── types/
+│   │   └── index.ts                    # Interfaces TypeScript
 │   ├── hooks/
-│   │   ├── usePredicciones.ts
-│   │   └── useDarkMode.ts
-│   ├── contexto/
-│   │   └── AppContext.tsx
+│   │   ├── usePredicciones.ts          # Hook para predicciones
+│   │   └── useDarkMode.ts              # Hook para modo oscuro
+│   ├── context/
+│   │   └── AppContext.tsx              # Context API global
 │   ├── utils/
-│   │   ├── pointsCalculator.ts
-│   │   └── validators.ts
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── index.css
-├── db.json
-├── .env
-├── .gitignore
-├── package.json
-├── tailwind.config.js
-├── tsconfig.json
-├── vite.config.ts
-└── README.md
+│   │   ├── pointsCalculator.ts         # Cálculo de puntos
+│   │   ├── validators.ts               # Validaciones de formularios
+│   │   └── mockData.ts                 # Datos de prueba
+│   ├── assets/                         # Imágenes y recursos
+│   ├── App.tsx                         # Componente raíz
+│   ├── main.tsx                        # Entry point
+│   └── index.css                       # Estilos globales + Tailwind
+├── db.json                             # Base de datos JSON Server
+├── .env                                # Variables de entorno
+├── .gitignore                          # Archivos ignorados por Git
+├── package.json                        # Dependencias del proyecto
+├── tailwind.config.js                  # Configuración de Tailwind
+├── tsconfig.json                       # Configuración de TypeScript
+├── vite.config.ts                      # Configuración de Vite
+└── README.md                           # Documentación del proyecto
 ```
+
+## 📖 Uso de la Aplicación
+
+### Primera vez usando GOALZ
+
+1. **Inicio de sesión simulado**: La aplicación usa un usuario de prueba (`user1`) automáticamente
+2. **Navega por las secciones** usando la barra superior
+3. **Explora tus estadísticas** en la página de Inicio
+
+### Hacer una predicción
+
+1. Ve a **"Hacer Predicción"** (botón verde "⚡ Predecir Ahora")
+2. Selecciona un partido de la lista desplegable
+3. Elige el resultado (1 = Local, X = Empate, 2 = Visitante)
+4. Ingresa el marcador exacto que predices
+5. Click en **"🚀 ENVIAR PREDICCIÓN"**
+
+> ⚠️ **Nota**: Asegúrate de que el marcador coincida con tu predicción (ej: si pones 2-0, debes elegir "1 - Local")
+
+### Ver tus predicciones
+
+1. Ve a **"Mis Predicciones"**
+2. Usa los filtros para ver:
+   - **Todas**: Historial completo
+   - **Pendientes**: Partidos aún no jugados
+   - **Acertadas**: Predicciones con puntos ✅
+   - **Falladas**: Predicciones sin puntos ❌
+
+### Panel de Administración
+
+> 🔐 Solo para administradores
+
+1. Ve a **"Admin"**
+2. **Crear partido**: Rellena el formulario y click en "Crear Partido"
+3. **Actualizar resultado**: Selecciona partido finalizado, ingresa marcador y click en "Actualizar"
+4. Los puntos se calculan automáticamente para todos los usuarios
 
 ## ✨ Funcionalidades
 
@@ -182,7 +267,63 @@ npm run lint         # Ejecuta el linter
 - ✅ **Responsive Design**
 - ✅ **Variables de entorno**
 
-## 👤 Autor
+## � Troubleshooting
+
+### Problema: No se cargan los partidos
+
+**Solución**:
+
+```bash
+# Verifica que JSON Server esté corriendo
+npm run api
+
+# Si el puerto 3001 está ocupado, cambia el puerto en package.json:
+"api": "json-server --watch db.json --port 3002"
+```
+
+### Problema: Error "Cannot find module"
+
+**Solución**:
+
+```bash
+# Elimina node_modules y reinstala
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Problema: Los estilos no se ven correctamente
+
+**Solución**:
+
+```bash
+# Limpia la caché de Vite y reinicia
+rm -rf node_modules/.vite
+npm run dev
+```
+
+### Problema: Errores de TypeScript en el editor
+
+**Solución**:
+
+- Asegúrate de tener la extensión de TypeScript instalada en tu editor
+- Reinicia el servidor de TypeScript en VS Code: `Ctrl+Shift+P` → "TypeScript: Restart TS Server"
+
+### Problema: "Port 5173 is already in use"
+
+**Solución**:
+
+```bash
+# El puerto está ocupado, Vite usará automáticamente el siguiente disponible (5174, 5175, etc.)
+# O mata el proceso:
+# Windows:
+netstat -ano | findstr :5173
+taskkill /PID <PID> /F
+
+# Mac/Linux:
+lsof -ti:5173 | xargs kill -9
+```
+
+## �👤 Autor
 
 **Biwash Shrestha**  
 📧 Email: biwash@goalz.com  
