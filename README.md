@@ -7,7 +7,7 @@ Aplicación web para realizar predicciones de resultados de partidos de fútbol 
 ![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.18-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-## � Tabla de Contenidos
+## 📋 Tabla de Contenidos
 
 - [Requisitos del Sistema](#-requisitos-del-sistema)
 - [Tecnologías](#️-tecnologías)
@@ -17,7 +17,6 @@ Aplicación web para realizar predicciones de resultados de partidos de fútbol 
 - [Funcionalidades](#-funcionalidades)
 - [API Endpoints](#-api-endpoints)
 - [Características Técnicas](#-características-técnicas)
-- [Troubleshooting](#-troubleshooting)
 - [Autor](#-autor)
 
 ## 💻 Requisitos del Sistema
@@ -36,7 +35,7 @@ node --version
 npm --version
 ```
 
-## �🛠️ Tecnologías
+## 🛠️ Tecnologías
 
 - **Vite** - Entorno de desarrollo ultrarrápido
 - **React 18** - Biblioteca UI con componentes funcionales
@@ -267,15 +266,11 @@ npm run lint         # Ejecuta el linter
 - ✅ **Responsive Design**
 - ✅ **Variables de entorno**
 
-## �👤 Autor
+## 👤 Autor
 
 **Biwash Shrestha**  
 📧 Email: biwash@gmail.com  
 🔗 GitHub: [@b1wash](https://github.com/b1wash)
-
-## 📄 Licencia
-
-MIT License - Siéntete libre de usar este proyecto para aprender y practicar.
 
 ## 🙏 Agradecimientos
 
