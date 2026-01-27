@@ -38,4 +38,10 @@ export const userService = {
     const user = await api.patch<Usuario>(`/users/${id}`, data);
     return mapUser(user);
   },
+
+  // CREAR UN NUEVO USUARIO (REGISTRO)
+  create: async (data: Omit<Usuario, "id">): Promise<Usuario> => {
+    const user = await api.post<Usuario>("/users", data);
+    return mapUser(user);
+  },
 };

@@ -10,6 +10,8 @@ export interface Usuario {
   name: string;
   nombre: string;
   email: string;
+  password: string;
+  role: "admin" | "user";
   totalPoints: number;
   puntosTotal: number;
   correctPredictions: number;

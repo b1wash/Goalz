@@ -1,26 +1,54 @@
 import { Routes, Route } from "react-router-dom";
 import { BarraNavegacion } from "./components/layout/Navbar";
 import { Footer } from "./components/layout/Footer";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { AdminRoute } from "./components/auth/AdminRoute";
 import { Inicio } from "./pages/Inicio";
 import { Clasificacion } from "./pages/Clasificacion";
 import { MisPredicciones } from "./pages/MisPredicciones";
 import { HacerPrediccion } from "./pages/HacerPrediccion";
 import { AdminMatches } from "./pages/AdminMatches";
-import { useApp } from "./context/AppContext";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
 
 const App = () => {
-  // OBTENER EL USUARIO ACTUAL DESDE EL CONTEXTO GLOBAL
-  const { usuarioActual } = useApp();
-
   return (
     <div className="min-h-screen flex flex-col">
-      <BarraNavegacion usuarioActual={usuarioActual} />
+      <BarraNavegacion />
       <Routes>
+        {/* RUTAS PUBLICAS */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/" element={<Inicio />} />
         <Route path="/clasificacion" element={<Clasificacion />} />
-        <Route path="/mis-predicciones" element={<MisPredicciones />} />
-        <Route path="/hacer-prediccion" element={<HacerPrediccion />} />
-        <Route path="/admin" element={<AdminMatches />} />
+
+        {/* RUTAS PROTEGIDAS (REQUIEREN AUTENTICACION) */}
+        <Route
+          path="/mis-predicciones"
+          element={
+            <ProtectedRoute>
+              <MisPredicciones />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/hacer-prediccion"
+          element={
+            <ProtectedRoute>
+              <HacerPrediccion />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* RUTAS DE ADMINISTRADOR (REQUIEREN ROLE ADMIN) */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminMatches />
+            </AdminRoute>
+          }
+        />
       </Routes>
       <Footer />
     </div>

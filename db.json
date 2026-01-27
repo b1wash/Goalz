@@ -25,13 +25,28 @@
       }
     },
     {
-      "id": "e025",
-      "homeTeam": "Barcelona",
-      "awayTeam": "Betis",
-      "date": "2025-12-30T23:04:00.000Z",
+      "id": "08f4",
+      "homeTeam": "Madrid",
+      "awayTeam": "Barcelona",
+      "date": "2026-01-14T15:20:00.000Z",
       "matchday": 1,
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      }
+    },
+    {
+      "id": "f40f",
+      "homeTeam": "Madrid",
+      "awayTeam": "Barcelona",
+      "date": "2025-12-30T15:23:00.000Z",
+      "matchday": 1,
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 0
+      }
     }
   ],
   "predictions": [
@@ -72,28 +87,76 @@
       "createdAt": "2026-01-26T22:29:02.052Z"
     },
     {
-      "id": "a027",
-      "matchId": "e025",
-      "idPartido": "e025",
+      "id": "c7c4",
+      "matchId": "08f4",
+      "idPartido": "08f4",
       "userId": "user1",
       "idUsuario": "user1",
-      "prediction": "X",
-      "prediccion": "X",
+      "prediction": "1",
+      "prediccion": "1",
       "exactScore": {
         "home": 1,
-        "away": 1,
+        "away": 0,
         "local": 1,
-        "visitante": 1
+        "visitante": 0
       },
       "marcadorExacto": {
         "home": 1,
-        "away": 1,
+        "away": 0,
         "local": 1,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": null,
+      "createdAt": "2026-01-27T15:21:21.050Z"
+    },
+    {
+      "id": "fcf9",
+      "matchId": "f40f",
+      "idPartido": "f40f",
+      "userId": "user2",
+      "idUsuario": "user2",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": null,
+      "createdAt": "2026-01-27T15:23:55.352Z"
+    },
+    {
+      "id": "184d",
+      "matchId": "f40f",
+      "idPartido": "f40f",
+      "userId": "user1",
+      "idUsuario": "user1",
+      "prediction": "2",
+      "prediccion": "2",
+      "exactScore": {
+        "home": 0,
+        "away": 1,
+        "local": 0,
         "visitante": 1
       },
-      "points": null,
+      "marcadorExacto": {
+        "home": 0,
+        "away": 1,
+        "local": 0,
+        "visitante": 1
+      },
+      "points": 0,
       "puntosGanados": null,
-      "createdAt": "2026-01-26T23:04:40.568Z"
+      "createdAt": "2026-01-27T15:24:23.894Z"
     }
   ],
   "users": [
@@ -102,6 +165,8 @@
       "name": "Biwash Shrestha",
       "nombre": "Biwash Shrestha",
       "email": "biwash@goalz.com",
+      "password": "admin123",
+      "role": "admin",
       "totalPoints": 290,
       "puntosTotal": 275,
       "correctPredictions": 21,
@@ -112,6 +177,8 @@
       "name": "Kerrly",
       "nombre": "Kerrly",
       "email": "kerrly@goalz.com",
+      "password": "kerrly123",
+      "role": "user",
       "totalPoints": 230,
       "puntosTotal": 230,
       "correctPredictions": 11,
@@ -122,6 +189,8 @@
       "name": "Sergio Muñoz",
       "nombre": "Sergio Muñoz",
       "email": "sergio@goalz.com",
+      "password": "sergio123",
+      "role": "user",
       "totalPoints": 260,
       "puntosTotal": 260,
       "correctPredictions": 14,
@@ -132,10 +201,24 @@
       "name": "Esteban Cañamás",
       "nombre": "Esteban Cañamás",
       "email": "esteban@goalz.com",
+      "password": "esteban123",
+      "role": "user",
       "totalPoints": 215,
       "puntosTotal": 215,
       "correctPredictions": 10,
       "totalPredictions": 26
+    },
+    {
+      "id": "e0a5",
+      "name": "biwwi",
+      "nombre": "biwwi",
+      "email": "123@mail.com",
+      "password": "1234567",
+      "role": "user",
+      "totalPoints": 0,
+      "puntosTotal": 0,
+      "correctPredictions": 0,
+      "totalPredictions": 0
     }
   ]
 }

@@ -1,13 +1,6 @@
 // UTILIDADES PARA EL CALCULO DE PUNTOS
 import type { TipoPrediccion } from "../types";
 
-/**
- * Calcula los puntos ganados por una predicción basada en el resultado real.
- * @param pred - La predicción del usuario (1, X, 2)
- * @param userScore - El marcador exacto predicho por el usuario
- * @param realScore - El marcador real del partido
- * @returns Los puntos ganados (5, 3 o 0)
- */
 export const calcularPuntosGanados = (
   pred: TipoPrediccion,
   userScore: { home: number; away: number },
@@ -31,7 +24,6 @@ export const calcularPuntosGanados = (
   if (pred === resultadoReal) {
     return 3;
   }
-
   // 4. NO ACERTO NADA (0 PUNTOS)
   return 0;
 };

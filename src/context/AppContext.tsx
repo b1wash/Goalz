@@ -18,6 +18,9 @@ interface AppContextType {
   eliminarPrediccion: (id: string) => void;
   obtenerPrediccionesUsuario: (idUsuario: string) => Prediccion[];
   recargarUsuario: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (nombre: string, email: string, password: string) => Promise<void>;
+  logout: () => void;
 }
 
 // CREACION DEL CONTENEDOR DEL CONTEXTO
@@ -29,22 +32,107 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [usuarioActual, setUsuarioActual] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // LOGICA PARA SINCRONIZAR LOS DATOS DEL PERFIL CON EL SERVIDOR
-  const recargarUsuario = async () => {
+  // FUNCION PARA INICIAR SESION
+  const login = async (email: string, password: string) => {
     try {
-      // NOTA: USAMOS UN USUARIO FIJO POR AHORA PARA LA DEMOSTRACION
-      const user = await userService.getById("user1");
-      setUsuarioActual(user);
-    } catch (err) {
-      console.error("Error al cargar el perfil del usuario:", err);
-    } finally {
-      setLoading(false);
+      // OBTENER TODOS LOS USUARIOS
+      const usuarios = await userService.getAll();
+
+      // BUSCAR USUARIO POR EMAIL
+      const usuario = usuarios.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase(),
+      );
+
+      if (!usuario) {
+        throw new Error("No existe ninguna cuenta con ese email.");
+      }
+
+      // VALIDAR CONTRASEÑA
+      if (usuario.password !== password) {
+        throw new Error("Contraseña incorrecta.");
+      }
+
+      // GUARDAR USUARIO EN ESTADO Y LOCALSTORAGE
+      setUsuarioActual(usuario);
+      localStorage.setItem("goalz_user_id", usuario.id);
+    } catch (error) {
+      throw error;
     }
   };
 
-  // DISPARAR LA CARGA INICIAL AL MONTAR EL PROVIDER
+  // FUNCION PARA REGISTRAR NUEVO USUARIO
+  const register = async (nombre: string, email: string, password: string) => {
+    try {
+      // VERIFICAR QUE EL EMAIL NO EXISTA YA
+      const usuarios = await userService.getAll();
+      const emailExiste = usuarios.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase(),
+      );
+
+      if (emailExiste) {
+        throw new Error("Ya existe una cuenta con ese email.");
+      }
+
+      // CREAR NUEVO USUARIO
+      const nuevoUsuario: Omit<Usuario, "id"> = {
+        name: nombre,
+        nombre: nombre,
+        email: email.toLowerCase(),
+        password: password,
+        role: "user", // Por defecto todos son usuarios normales
+        totalPoints: 0,
+        puntosTotal: 0,
+        correctPredictions: 0,
+        totalPredictions: 0,
+      };
+
+      // GUARDAR EN LA API
+      const usuarioCreado = await userService.create(nuevoUsuario);
+
+      // INICIAR SESION AUTOMATICAMENTE
+      setUsuarioActual(usuarioCreado);
+      localStorage.setItem("goalz_user_id", usuarioCreado.id);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // FUNCION PARA CERRAR SESION
+  const logout = () => {
+    setUsuarioActual(null);
+    localStorage.removeItem("goalz_user_id");
+  };
+
+  // LOGICA PARA SINCRONIZAR LOS DATOS DEL PERFIL CON EL SERVIDOR
+  const recargarUsuario = async () => {
+    try {
+      if (usuarioActual) {
+        const user = await userService.getById(usuarioActual.id);
+        setUsuarioActual(user);
+      }
+    } catch (err) {
+      console.error("Error al recargar el perfil del usuario:", err);
+    }
+  };
+
+  // VERIFICAR SI HAY UN USUARIO EN LOCALSTORAGE AL CARGAR LA APP
   useEffect(() => {
-    recargarUsuario();
+    const cargarUsuarioGuardado = async () => {
+      try {
+        const userId = localStorage.getItem("goalz_user_id");
+        if (userId) {
+          const user = await userService.getById(userId);
+          setUsuarioActual(user);
+        }
+      } catch (err) {
+        console.error("Error al cargar sesión guardada:", err);
+        localStorage.removeItem("goalz_user_id");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarUsuarioGuardado();
   }, []);
 
   // INTEGRACION CON EL CUSTOM HOOK DE GESTION DE PREDICCIONES
@@ -64,6 +152,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         eliminarPrediccion,
         obtenerPrediccionesUsuario,
         recargarUsuario,
+        login,
+        register,
+        logout,
       }}
     >
       {/* EVITAR PARPADEO DURANTE EL PROCESO DE IDENTIFICACION */}

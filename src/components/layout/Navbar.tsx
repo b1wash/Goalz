@@ -1,17 +1,24 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDarkMode } from "../../hooks/useDarkMode";
+import { useApp } from "../../context/AppContext";
 import type { Usuario } from "../../types";
 
 interface BarraNavegacionProps {
   usuarioActual?: Usuario | null;
 }
 
-export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
-  usuarioActual,
-}) => {
+export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
+  const { usuarioActual, logout } = useApp();
+  const navigate = useNavigate();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const { isDark, toggleDarkMode } = useDarkMode();
+
+  const handleLogout = () => {
+    logout();
+    setMenuAbierto(false);
+    navigate("/login");
+  };
   return (
     <>
       {/* NAVBAR */}
@@ -100,22 +107,25 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
               </NavLink>
 
-              <NavLink
-                to="/admin"
-                className={({ isActive }) =>
-                  `group relative px-4 xl:px-6 py-2.5 rounded-xl font-bold text-sm xl:text-base transition-all duration-300 ${
-                    isActive
-                      ? "bg-primary text-dark-bg shadow-lg shadow-primary/50"
-                      : "text-slate-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-hover"
-                  }`
-                }
-              >
-                <span className="flex items-center gap-2">
-                  <span className="text-lg xl:text-xl">🔧</span>
-                  <span>Admin</span>
-                </span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
-              </NavLink>
+              {/* ENLACE ADMIN - SOLO VISIBLE PARA ADMINISTRADORES */}
+              {usuarioActual && usuarioActual.role === "admin" && (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) =>
+                    `group relative px-4 xl:px-6 py-2.5 rounded-xl font-bold text-sm xl:text-base transition-all duration-300 ${
+                      isActive
+                        ? "bg-primary text-dark-bg shadow-lg shadow-primary/50"
+                        : "text-slate-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-hover"
+                    }`
+                  }
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-lg xl:text-xl">🔧</span>
+                    <span>Admin</span>
+                  </span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </NavLink>
+              )}
             </div>
 
             {/* ZONA DERECHA */}
@@ -142,7 +152,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
               </Link>
 
               {/* MOSTRAR USUARIO PARA PANTALLA PC */}
-              {usuarioActual && (
+              {usuarioActual ? (
                 <div className="hidden xl:flex items-center gap-4 pl-6 border-l-2 border-primary/30">
                   <div className="text-right">
                     <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
@@ -164,7 +174,25 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
                         .toUpperCase()}
                     </div>
                   </div>
+
+                  {/* BOTON LOGOUT */}
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-danger/10 hover:bg-danger/20 border border-danger/30 hover:border-danger text-danger font-bold text-sm rounded-lg transition-all duration-200 flex items-center gap-2"
+                    title="Cerrar sesión"
+                  >
+                    <span>🚪</span>
+                    <span className="hidden 2xl:inline">Salir</span>
+                  </button>
                 </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="hidden xl:flex items-center gap-2 px-5 py-2.5 bg-slate-200 dark:bg-dark-card hover:bg-slate-300 dark:hover:bg-dark-hover border border-slate-300 dark:border-primary/20 text-slate-900 dark:text-white font-bold text-sm rounded-lg transition-all duration-200"
+                >
+                  <span>🔐</span>
+                  <span>Iniciar Sesión</span>
+                </Link>
               )}
 
               {/* BOTON HAMBURGUESA MOVIL */}
@@ -248,20 +276,23 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
               <span>Mis Predicciones</span>
             </NavLink>
 
-            <NavLink
-              to="/admin"
-              onClick={() => setMenuAbierto(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3.5 rounded-xl font-bold text-base transition-all duration-200 ${
-                  isActive
-                    ? "bg-primary text-dark-bg shadow-lg shadow-primary/30"
-                    : "bg-slate-100 dark:bg-dark-bg/50 text-slate-700 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-dark-hover hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-primary/10"
-                }`
-              }
-            >
-              <span className="text-xl">🔧</span>
-              <span>Admin</span>
-            </NavLink>
+            {/* ENLACE ADMIN MOVIL - SOLO VISIBLE PARA ADMINISTRADORES */}
+            {usuarioActual && usuarioActual.role === "admin" && (
+              <NavLink
+                to="/admin"
+                onClick={() => setMenuAbierto(false)}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3.5 rounded-xl font-bold text-base transition-all duration-200 ${
+                    isActive
+                      ? "bg-primary text-dark-bg shadow-lg shadow-primary/30"
+                      : "bg-slate-100 dark:bg-dark-bg/50 text-slate-700 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-dark-hover hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-primary/10"
+                  }`
+                }
+              >
+                <span className="text-xl">🔧</span>
+                <span>Admin</span>
+              </NavLink>
+            )}
 
             {/* BOTON CTA MOVIL */}
             <Link
@@ -274,26 +305,46 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = ({
             </Link>
 
             {/* INFO USUARIO MOVIL */}
-            {usuarioActual && (
-              <div className="flex items-center gap-3 px-4 py-4 mt-4 bg-slate-100 dark:bg-dark-bg/50 rounded-xl border-2 border-slate-300 dark:border-primary/20">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary/30 blur-md rounded-full"></div>
-                  <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-xl shadow-lg">
-                    {(usuarioActual.nombre || usuarioActual.name)
-                      .charAt(0)
-                      .toUpperCase()}
+            {usuarioActual ? (
+              <>
+                <div className="flex items-center gap-3 px-4 py-4 mt-4 bg-slate-100 dark:bg-dark-bg/50 rounded-xl border-2 border-slate-300 dark:border-primary/20">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-primary/30 blur-md rounded-full"></div>
+                    <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-xl shadow-lg">
+                      {(usuarioActual.nombre || usuarioActual.name)
+                        .charAt(0)
+                        .toUpperCase()}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">
+                      {usuarioActual.nombre}
+                    </p>
+                    <p className="text-xs font-semibold text-primary flex items-center gap-1">
+                      <span className="text-accent">⭐</span>
+                      {usuarioActual.puntosTotal} puntos
+                    </p>
                   </div>
                 </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">
-                    {usuarioActual.nombre}
-                  </p>
-                  <p className="text-xs font-semibold text-primary flex items-center gap-1">
-                    <span className="text-accent">⭐</span>
-                    {usuarioActual.puntosTotal} puntos
-                  </p>
-                </div>
-              </div>
+
+                {/* BOTON LOGOUT MOVIL */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-4 mt-2 bg-danger/10 hover:bg-danger/20 border-2 border-danger/30 hover:border-danger text-danger font-black text-base rounded-xl transition-all duration-200"
+                >
+                  <span className="text-xl">🚪</span>
+                  <span>CERRAR SESIÓN</span>
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setMenuAbierto(false)}
+                className="flex items-center justify-center gap-2 w-full px-4 py-4 mt-4 bg-slate-200 dark:bg-dark-card hover:bg-slate-300 dark:hover:bg-dark-hover border-2 border-slate-300 dark:border-primary/20 text-slate-900 dark:text-white font-black text-base rounded-xl transition-all duration-200"
+              >
+                <span className="text-xl">🔐</span>
+                <span>INICIAR SESIÓN</span>
+              </Link>
             )}
           </div>
         </div>
