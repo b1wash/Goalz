@@ -1,8 +1,8 @@
 # ⚽ GOALZ - Quiniela de Fútbol
 
-Aplicación web para realizar predicciones de resultados de partidos de fútbol y competir con amigos mediante un sistema de puntos.
+Aplicación web moderna para realizar predicciones de resultados de partidos de fútbol y competir con amigos mediante un sistema de puntos.
 
-![Goalz Banner](https://img.shields.io/badge/React-19.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.18-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
@@ -15,19 +15,16 @@ Aplicación web para realizar predicciones de resultados de partidos de fútbol 
 - [Uso de la Aplicación](#-uso-de-la-aplicación)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Funcionalidades](#-funcionalidades)
+- [Panel de Administración](#-panel-de-administración)
 - [API Endpoints](#-api-endpoints)
 - [Características Técnicas](#-características-técnicas)
-- [Requisitos y Cumplimiento](#-requisitos-y-cumplimiento)
 - [Autor](#-autor)
 
 ## 💻 Requisitos del Sistema
 
-Antes de instalar, asegúrate de tener:
-
 - **Node.js**: v18.0.0 o superior
 - **npm**: v9.0.0 o superior
-- **Git**: Para clonar el repositorio
-- **Navegador moderno**: Chrome, Firefox, Safari o Edge (última versión)
+- **Navegador moderno**: Chrome, Firefox, Safari o Edge
 
 Para verificar tus versiones:
 
@@ -38,13 +35,14 @@ npm --version
 
 ## 🛠️ Tecnologías
 
-- **Vite** - Entorno de desarrollo ultrarrápido
-- **React 18** - Biblioteca UI con componentes funcionales
+- **React 19** - Biblioteca UI con componentes funcionales
 - **TypeScript** - Tipado estático para mayor seguridad
+- **Vite** - Entorno de desarrollo ultrarrápido
 - **Tailwind CSS** - Framework CSS utility-first
 - **React Router DOM** - Navegación SPA
 - **JSON Server** - API REST simulada
-- **Git/GitHub** - Control de versiones
+- **Context API** - Gestión de estado global
+- **LocalStorage** - Persistencia de datos del cliente
 
 ## 🚀 Instalación
 
@@ -63,224 +61,273 @@ npm run api
 npm run dev
 ```
 
-La app estará disponible en: **http://localhost:5173**  
-La API estará disponible en: **http://localhost:3001**
+**URLs de acceso:**
+
+- Aplicación: http://localhost:5173
+- API REST: http://localhost:3001
 
 ## 📂 Estructura del Proyecto
 
 ```
 goalz-app/
-├── public/                 # Recursos estáticos (imágenes, logos)
 ├── src/
 │   ├── components/
-│   │   ├── auth/           # ✅ NUEVO: Protección de rutas
-│   │   │   ├── AdminRoute.tsx      # Protección para administradores
-│   │   │   └── ProtectedRoute.tsx  # Protección para usuarios logueados
-│   │   ├── layout/         # Estructura general (Navbar, Footer)
+│   │   ├── auth/              # Protección de rutas
+│   │   │   ├── AdminRoute.tsx        # Solo administradores
+│   │   │   └── ProtectedRoute.tsx    # Usuarios autenticados
+│   │   ├── layout/            # Estructura general
 │   │   │   ├── Navbar.tsx
-│   │   │   ├── Footer.tsx
-│   │   │   └── ContenedorPagina.tsx
-│   │   ├── matches/        # Componentes de partidos
-│   │   ├── predictions/    # Componentes de predicciones
-│   │   └── ui/             # Componentes atómicos (Botones, Cards, Inputs)
-│   ├── pages/              # Vistas completas de la aplicación
-│   │   ├── Inicio.tsx
-│   │   ├── Clasificacion.tsx
-│   │   ├── MisPredicciones.tsx
-│   │   ├── HacerPrediccion.tsx
-│   │   ├── AdminMatches.tsx
-│   │   ├── Login.tsx       # ✅ Pantalla de acceso
-│   │   └── Register.tsx    # ✅ Pantalla de registro
-│   ├── services/           # Comunicación con la API (Fetch)
-│   │   ├── api.ts          # Cliente base
+│   │   │   └── Footer.tsx
+│   │   ├── matches/           # Componentes de partidos
+│   │   ├── predictions/       # Componentes de predicciones
+│   │   └── ui/                # Componentes atómicos reutilizables
+│   ├── pages/                 # Vistas principales
+│   │   ├── Inicio.tsx         # Dashboard personalizado
+│   │   ├── Clasificacion.tsx  # Ranking de jugadores
+│   │   ├── MisPredicciones.tsx # Historial con paginación
+│   │   ├── HacerPrediccion.tsx # Formulario de predicción
+│   │   ├── AdminMatches.tsx    # Panel de gestión con tabs
+│   │   ├── Login.tsx
+│   │   └── Register.tsx
+│   ├── services/              # Comunicación con API
+│   │   ├── api.ts
 │   │   ├── matchService.ts
 │   │   ├── predictionService.ts
 │   │   └── userService.ts
-│   ├── types/              # Definiciones de TypeScript (Interfaces)
-│   ├── hooks/              # Lógica reutilizable (Modo oscuro, Predicciones)
-│   ├── context/            # Estado global (Sesión, Datos globales)
-│   ├── utils/              # Funciones auxiliares (Cálculos, Validaciones)
-│   ├── App.tsx             # Enrutador y estructura raíz
-│   └── main.tsx            # Punto de entrada de la aplicación
-├── db.json                 # Base de datos simulada (JSON Server)
-├── tailwind.config.js      # Configuración de diseño
-└── package.json            # Dependencias y scripts
+│   ├── context/               # Estado global (Sesión, Usuario)
+│   │   └── AppContext.tsx
+│   ├── hooks/                 # Custom Hooks
+│   │   ├── useDarkMode.ts
+│   │   └── usePredicciones.ts
+│   ├── types/                 # Definiciones TypeScript
+│   ├── utils/                 # Funciones auxiliares
+│   ├── App.tsx
+│   └── main.tsx
+├── db.json                     # Base de datos simulada
+├── tailwind.config.js
+└── package.json
 ```
 
 ## 📖 Uso de la Aplicación
 
-### Primera vez usando GOALZ
+### 🔐 Sistema de Autenticación
 
-1. **Inicio de sesión real**: La aplicación cuenta con un sistema de login. Puedes usar los emails de prueba o registrarte.
-2. **Registro de usuarios**: Puedes crear tu propia cuenta desde la página de registro.
-3. **Navega por las secciones** usando la barra superior.
-4. **Explora tus estadísticas** en la página de Inicio.
+#### Login
 
-### Hacer una predicción
+- Accede con email y contraseña
+- Sesión persistente con LocalStorage
+- Redirección automática según rol
 
-1. Ve a **"Hacer Predicción"** (botón verde "⚡ Predecir Ahora")
-2. Selecciona un partido de la lista desplegable
-3. Elige el resultado (1 = Local, X = Empate, 2 = Visitante)
-4. Ingresa el marcador exacto que predices
-5. Click en **"🚀 ENVIAR PREDICCIÓN"**
+**Usuarios de prueba:**
 
-> ⚠️ **Nota**: Asegúrate de que el marcador coincida con tu predicción (ej: si pones 2-0, debes elegir "1 - Local")
+- **Admin**: `user1@ejemplo.com` / `password123`
+- **Usuario**: `user2@ejemplo.com` / `password123`
 
-### Ver tus predicciones
+#### Registro
 
-1. Ve a **"Mis Predicciones"**
-2. Usa los filtros para ver:
-   - **Todas**: Historial completo
-   - **Pendientes**: Partidos aún no jugados
-   - **Acertadas**: Predicciones con puntos ✅
-   - **Falladas**: Predicciones sin puntos ❌
+- Crea tu propia cuenta
+- Validación de email único
+- Contraseña segura obligatoria
 
-### Gestión de Cuentas
+### ⚽ Hacer Predicciones
 
-1. **Login**: Accede con email y contraseña.
-2. **Registro**: Crea una cuenta nueva con nombre, email y contraseña.
-3. **Logout**: Cierra sesión de forma segura desde el Navbar.
+1. Click en **"⚡ Predecir Ahora"**
+2. Selecciona un partido pendiente
+3. Elige el resultado (1=Local, X=Empate, 2=Visitante)
+4. Ingresa el marcador exacto
+5. Envía tu predicción
 
-### Panel de Administración
+**Sistema de puntos:**
 
-> 🔐 Solo accesible para usuarios con el rol `admin`.
+- 🎯 **5 puntos** → Marcador exacto
+- ✅ **3 puntos** → Resultado correcto (1X2)
+- ❌ **0 puntos** → Predicción incorrecta
 
-1. Ve a **"Admin"**
-2. **Crear partido**: Rellena el formulario y click en "Crear Partido"
-3. **Actualizar resultado**: Selecciona partido finalizado, ingresa marcador y click en "Actualizar"
-4. Los puntos se calculan automáticamente para todos los usuarios
+### 📊 Ver Predicciones
 
-## ✨ Funcionalidades
-
-### 🏠 Página de Inicio
-
-- Resumen de estadísticas del usuario (Puntos, Partidos)
-- Próximos partidos de la jornada
-- Últimos resultados con diseño dinámico
+- **Paginación:** 9 predicciones por página
+- **Filtros dinámicos:**
+  - Todas
+  - Pendientes
+  - Acertadas
+  - Falladas
 
 ### 🏆 Clasificación
 
-- Tabla de usuarios ordenada por puntos
-- Podio visual (Top 3) con medallas (🥇, 🥈, 🥉)
-- Muestra: posición, nombre, puntos totales, aciertos
+- Podio visual del Top 3
+- Tabla completa ordenada por puntos
+- Estadísticas de cada jugador
+- **Los admins NO aparecen** (solo gestionan)
 
-### 📊 Mis Predicciones
+## 🔧 Panel de Administración
 
-- Historial completo de predicciones del usuario
-- Filtros dinámicos: Todas / Acertadas / Falladas / Pendientes
-- Muestra: partido, predicción, resultado real, puntos ganados
+> 🔐 **Acceso exclusivo para rol `admin`**
 
-### ⚡ Hacer Predicción
+### 📊 Dashboard
 
-- Formulario completo para hacer predicciones
-- Validación de coherencia entre marcador y resultado (1X2)
-- Sistema de puntos automático:
-  - **5 puntos** por acertar el marcador exacto
-  - **3 puntos** por acertar el resultado (1, X, 2)
+- Resumen de métricas del sistema
+- Total de partidos, jugadores y predicciones
+- Tasa de acierto global
+- Próximos 5 partidos pendientes
+- Top 5 clasificación en tiempo real
 
-### 🔧 Panel Admin
+### ⚽ Gestión de Partidos
 
-- Creación y gestión de nuevos partidos
-- Actualización de resultados en tiempo real
-- Recálculo automático de puntos para toda la base de usuarios
+- **Lista completa** con filtros (Todos/Pendientes/Finalizados)
+- **Crear partidos** nuevos
+- **Actualizar resultados** con distribución automática de puntos
+- **Eliminar partidos** (incluyendo predicciones asociadas)
 
-## 🎨 Diseño y UI/UX
+### 👥 Gestión de Usuarios
 
-- **📱 Responsive Design**: Adaptado a móvil, tablet y desktop ultrawide.
-- **🌗 Modo Dual Dinámico**: Sistema de cambio de tema (Light/Dark) con persistencia en localStorage y detección de preferencia de sistema.
-- **✨ Micro-interacciones**: Transiciones suaves, efectos glassmorphism y hover premium.
-- **🛡️ Tipado Estricto**: 100% desarrollado con TypeScript.
-- **🧩 Reutilización**: 15+ componentes UI atómicos y modulares.
+- Lista de todos los usuarios registrados
+- Identificación de roles (Admin/Jugador)
+- Visualización de puntos por jugador
+- **Eliminar usuarios** (con sus predicciones)
+
+### 📈 Estadísticas Generales
+
+- Total de predicciones realizadas
+- Predicciones acertadas
+- Tasa de acierto global
+- Estado del sistema completo
+
+### ⚙️ Características del Admin
+
+**El administrador es un GESTOR puro:**
+
+- ❌ NO aparece en clasificación
+- ❌ NO puede hacer predicciones
+- ❌ NO se le muestran puntos
+- ✅ Acceso al panel de 4 secciones
+- ✅ Gestión completa de partidos
+- ✅ Gestión completa de usuarios
+- ✅ Vista de métricas globales
+
+## ✨ Funcionalidades
+
+### 🏠 Inicio (Personalizado por Rol)
+
+**Para Jugadores:**
+
+- Tus puntos totales
+- Próximos partidos con botón de predicción
+- Acceso rápido a "Mis Predicciones"
+
+**Para Admins:**
+
+- Total de jugadores activos
+- Próximos partidos (sin botón de predicción)
+- Acceso rápido al "Panel de Gestión"
+
+### 🏆 Clasificación Compacta
+
+- Podio visual premium (Top 3)
+- Tabla optimizada con menos espacio
+- Solo muestra jugadores (admins filtrados)
+- Posición, nombre, puntos, aciertos
+
+### 📊 Mis Predicciones (con Paginación)
+
+- **9 predicciones por página**
+- Navegación con botones numéricos
+- Filtros que resetean la paginación
+- Diseño optimizado y compacto
+
+### ⚡ Hacer Predicción (Formulario Compacto)
+
+- Formulario reducido en tamaño
+- Validación de coherencia
+- Feedback visual de errores
+- **Bloqueado para admins**
 
 ## 🔌 API Endpoints
 
 ### Partidos
 
-- `GET /matches` - Obtener todos los partidos
-- `GET /matches?status=pending` - Obtener partidos pendientes
-- `GET /matches/:id` - Obtener un partido por ID
-- `POST /matches` - Crear un nuevo partido
-- `PATCH /matches/:id` - Actualizar resultado de un partido
+```
+GET    /matches              # Todos los partidos
+GET    /matches/:id          # Partido específico
+POST   /matches              # Crear partido (admin)
+PATCH  /matches/:id          # Actualizar resultado (admin)
+DELETE /matches/:id          # Eliminar partido (admin)
+```
 
 ### Predicciones
 
-- `GET /predictions` - Obtener todas las predicciones
-- `GET /predictions?userId=:userId` - Obtener predicciones de un usuario
-- `GET /predictions?matchId=:matchId` - Obtener predicciones de un partido
-- `POST /predictions` - Crear una nueva predicción
-- `PATCH /predictions/:id` - Actualizar puntos de una predicción
+```
+GET    /predictions                    # Todas las predicciones
+GET    /predictions?userId=:id         # Por usuario
+GET    /predictions?matchId=:id        # Por partido
+POST   /predictions                    # Crear predicción
+PATCH  /predictions/:id                # Actualizar puntos
+DELETE /predictions/:id                # Eliminar predicción
+```
 
 ### Usuarios
 
-- `GET /users` - Obtener todos los usuarios
-- `GET /users?_sort=totalPoints&_order=desc` - Obtener clasificación
-- `GET /users/:id` - Obtener un usuario por ID
-- `PATCH /users/:id` - Actualizar estadísticas de un usuario
+```
+GET    /users                          # Todos los usuarios
+GET    /users/:id                      # Usuario específico
+POST   /users                          # Crear usuario (registro)
+PATCH  /users/:id                      # Actualizar stats
+DELETE /users/:id                      # Eliminar usuario (admin)
+```
 
 ## 📦 Scripts Disponibles
 
 ```bash
-# Desarrollo
-npm run dev          # Inicia el servidor de desarrollo
-
-# API
-npm run api          # Inicia JSON Server en puerto 3001
-
-# Build
-npm run build        # Compila la aplicación para producción
-
-# Preview
-npm run preview      # Previsualiza la build de producción
-
-# Lint
-npm run lint         # Ejecuta el linter
+npm run dev         # Desarrollo (puerto 5173)
+npm run api         # JSON Server (puerto 3001)
+npm run build       # Build de producción
+npm run preview     # Preview de producción
+npm run lint        # Linter
 ```
 
 ## 🌟 Características Técnicas
 
+### Arquitectura
+
 - ✅ **SPA** con React Router
-- ✅ **TypeScript** con tipado estricto
-- ✅ **Context API** para estado global (Sesión, Puntos)
-- ✅ **Autenticación Completa**: Login, Registro y Logout
-- ✅ **Autorización por Roles**: Rutas protegidas para usuarios y administradores
+- ✅ **TypeScript** con tipado estricto (100%)
+- ✅ **Context API** para estado global
 - ✅ **Custom Hooks** para lógica reutilizable
-- ✅ **Componentes reutilizables** (15+)
-- ✅ **Validación de formularios** avanzada
-- ✅ **Manejo de errores** visual
-- ✅ **LocalStorage** para persistencia de sesión y tema
-- ✅ **API REST** con JSON Server
-- ✅ **Responsive Design**
-- ✅ **Variables de entorno**
+- ✅ **Componentes atómicos** (15+ reutilizables)
+- ✅ **Servicios modulares** para API
 
-## ✅ Requisitos y Cumplimiento
+### Autenticación y Seguridad
 
-Este proyecto ha sido diseñado para cumplir con los objetivos técnicos de la asignatura **DWEC**:
+- ✅ **Sistema completo**: Login, Register, Logout
+- ✅ **Roles de usuario**: Admin y Jugador
+- ✅ **ProtectedRoute**: Rutas para usuarios autenticados
+- ✅ **AdminRoute**: Rutas exclusivas para administradores
+- ✅ **Persistencia**: LocalStorage para sesiones
+- ✅ **Separación de roles**: Admin solo gestiona
 
-### 1. Requisitos Funcionales Mínimos
+### UX/UI
 
-- **Estructura SPA**: Navegación completa mediante `React Router DOM`.
-- **Vistas del Sistema**: Implementadas 5 vistas (Inicio, Clasificación, Mis Predicciones, Hacer Predicción, Admin).
-- **Componentes**: Uso de componentes funcionales con separación clara entre `/ui` y `/pages`.
-- **Estado y Lógica**: Gestión mediante `useState` y `useEffect` con tipado estricto.
-- **Formularios**: Validación avanzada y manejo de errores en el envío de predicciones.
-- **Consumo de API**: Integración modular con **JSON Server** mediante servicios tipados.
+- ✅ **Diseño responsive**: Mobile, Tablet, Desktop, Ultrawide
+- ✅ **Modo Dual**: Light/Dark con persistencia
+- ✅ **Micro-animaciones**: Transiciones suaves
+- ✅ **Glassmorphism**: Efectos visuales premium
+- ✅ **Feedback visual**: Loading, éxito, errores
+- ✅ **Paginación**: En listas largas
+- ✅ **Diseños compactos**: Mejor uso del espacio
 
-### 2. Especificación Técnica
+### Validaciones
 
-- **TypeScript**: Tipado estático en todo el código base (Interfaces y Types).
-- **Tailwind CSS**: Diseño 100% responsive y usable sin librerías externas.
-- **Organización**: Estructura profesional por carpetas (`services`, `hooks`, `context`, `types`).
-- **Control de Versiones**: Gestión total mediante Git/GitHub.
+- ✅ **Formularios validados**: Inputs con feedback
+- ✅ **Coherencia 1X2**: Marcador vs Resultado
+- ✅ **Rangos de goles**: 0-20 válidos
+- ✅ **Emails únicos**: En registro
+- ✅ **Contraseñas seguras**: Mínimo 6 caracteres
 
-### 🌟 Ampliaciones (Subir Nota)
+### Optimizaciones
 
-- [x] **Context API**: Estado global para usuario, sesión y puntos en tiempo real.
-- [x] **Autenticación y Registro**: Sistema completo con validación y persistencia.
-- [x] **Roles de Usuario**: Protección de rutas (`AdminRoute` y `ProtectedRoute`).
-- [x] **Custom Hooks**: Abstracción de lógica en `useDarkMode` y `usePredicciones`.
-- [x] **Modo Oscuro**: Tema dual con persistencia y detección de preferencia.
-- [x] **Filtros Avanzados**: Filtrado dinámico en tiempo real en la vista de predicciones.
-- [x] **UX Premium**: Glassmorphism, micro-animaciones y feedback visual de carga.
+- ✅ **Recarga automática**: Puntos actualizados en navbar
+- ✅ **Filtros dinámicos**: Sin recargar página
+- ✅ **Cálculo automático**: Distribución de puntos
+- ✅ **Bundle optimizado**: Vite + Tree-shaking
 
 ## 👤 Autor
 
@@ -288,11 +335,26 @@ Este proyecto ha sido diseñado para cumplir con los objetivos técnicos de la a
 📧 Email: biwash@gmail.com  
 🔗 GitHub: [@b1wash](https://github.com/b1wash)
 
-## 🙏 Agradecimientos
+---
 
-- Proyecto desarrollado como práctica de **Desarrollo Web en Entorno Cliente (DWEC)**
-- Tecnologías modernas del ecosistema JavaScript
-- Diseño inspirado en aplicaciones deportivas modernas
+## 🎓 Proyecto Académico
+
+Desarrollado para la asignatura **Desarrollo Web en Entorno Cliente (DWEC)**  
+Cumple con todos los requisitos técnicos y funcionales del curso.
+
+### Ampliaciones Implementadas
+
+- [x] Context API para estado global
+- [x] Autenticación y Autorización completas
+- [x] Roles de usuario con permisos diferenciados
+- [x] Custom Hooks para lógica reutilizable
+- [x] Modo Oscuro/Claro con persistencia
+- [x] Filtros avanzados en tiempo real
+- [x] Paginación de contenidos
+- [x] UX Premium con micro-animaciones
+- [x] Panel de Admin con 4 secciones
+- [x] Gestión de usuarios por Admin
+- [x] Diseños compactos y optimizados
 
 ---
 

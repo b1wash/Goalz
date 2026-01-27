@@ -32,12 +32,14 @@ export const Clasificacion = () => {
     cargarUsuarios();
   }, []);
 
-  // ORDENAR USUARIOS POR PUNTOS (DE MAYOR A MENOR)
-  const usuariosOrdenados = [...usuarios].sort(
-    (a, b) =>
-      (b.puntosTotal ?? b.totalPoints ?? 0) -
-      (a.puntosTotal ?? a.totalPoints ?? 0),
-  );
+  // ORDENAR USUARIOS POR PUNTOS (DE MAYOR A MENOR) Y FILTRAR ADMINS
+  const usuariosOrdenados = [...usuarios]
+    .filter((u) => u.role !== "admin") // NO MOSTRAR ADMINISTRADORES EN LA CLASIFICACION
+    .sort(
+      (a, b) =>
+        (b.puntosTotal ?? b.totalPoints ?? 0) -
+        (a.puntosTotal ?? a.totalPoints ?? 0),
+    );
 
   // FUNCION PARA OBTENER EL COLOR SEGUN LA POSICION EN EL RANKING
   const obtenerColorPosicion = (posicion: number): string => {

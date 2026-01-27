@@ -90,22 +90,25 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
               </NavLink>
 
-              <NavLink
-                to="/mis-predicciones"
-                className={({ isActive }) =>
-                  `group relative px-4 xl:px-6 py-2.5 rounded-xl font-bold text-sm xl:text-base transition-all duration-300 ${
-                    isActive
-                      ? "bg-primary text-dark-bg shadow-lg shadow-primary/50"
-                      : "text-slate-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-hover"
-                  }`
-                }
-              >
-                <span className="flex items-center gap-2">
-                  <span className="text-lg xl:text-xl">📊</span>
-                  <span>Mis Predicciones</span>
-                </span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
-              </NavLink>
+              {/* SOLO MOSTRAR MIS PREDICCIONES SI NO ES ADMIN */}
+              {usuarioActual?.role !== "admin" && (
+                <NavLink
+                  to="/mis-predicciones"
+                  className={({ isActive }) =>
+                    `group relative px-4 xl:px-6 py-2.5 rounded-xl font-bold text-sm xl:text-base transition-all duration-300 ${
+                      isActive
+                        ? "bg-primary text-dark-bg shadow-lg shadow-primary/50"
+                        : "text-slate-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-hover"
+                    }`
+                  }
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-lg xl:text-xl">📊</span>
+                    <span>Mis Predicciones</span>
+                  </span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </NavLink>
+              )}
 
               {/* ENLACE ADMIN - SOLO VISIBLE PARA ADMINISTRADORES */}
               {usuarioActual && usuarioActual.role === "admin" && (
@@ -139,17 +142,19 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                 {isDark ? "☀️" : "🌙"}
               </button>
 
-              {/* BOTON CTA PRINCIPAL */}
-              <Link
-                to="/hacer-prediccion"
-                className="group relative overflow-hidden px-4 sm:px-5 lg:px-6 xl:px-8 py-2 lg:py-2.5 xl:py-3 bg-gradient-to-r from-primary via-emerald-500 to-primary bg-size-200 bg-pos-0 hover:bg-pos-100 text-dark-bg font-black text-xs sm:text-sm lg:text-base rounded-full shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center"
-              >
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  <span className="text-base sm:text-lg lg:text-xl">⚡</span>
-                  <span className="hidden sm:inline">Predecir</span>
-                  <span className="hidden lg:inline">Ahora</span>
-                </span>
-              </Link>
+              {/* BOTON CTA PRINCIPAL - SOLO PARA USUARIOS NO ADMIN */}
+              {usuarioActual?.role !== "admin" && (
+                <Link
+                  to="/hacer-prediccion"
+                  className="group relative overflow-hidden px-4 sm:px-5 lg:px-6 xl:px-8 py-2 lg:py-2.5 xl:py-3 bg-gradient-to-r from-primary via-emerald-500 to-primary bg-size-200 bg-pos-0 hover:bg-pos-100 text-dark-bg font-black text-xs sm:text-sm lg:text-base rounded-full shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span className="text-base sm:text-lg lg:text-xl">⚡</span>
+                    <span className="hidden sm:inline">Predecir</span>
+                    <span className="hidden lg:inline">Ahora</span>
+                  </span>
+                </Link>
+              )}
 
               {/* MOSTRAR USUARIO PARA PANTALLA PC */}
               {usuarioActual ? (
@@ -158,10 +163,18 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                     <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
                       {usuarioActual.nombre}
                     </p>
-                    <p className="text-xs font-semibold text-primary flex items-center justify-end gap-1">
-                      <span className="text-accent">⭐</span>
-                      {usuarioActual.puntosTotal} pts
-                    </p>
+                    {/* MOSTRAR PUNTOS SOLO SI NO ES ADMIN */}
+                    {usuarioActual.role !== "admin" ? (
+                      <p className="text-xs font-semibold text-primary flex items-center justify-end gap-1">
+                        <span className="text-accent">⭐</span>
+                        {usuarioActual.puntosTotal} pts
+                      </p>
+                    ) : (
+                      <p className="text-xs font-semibold text-accent flex items-center justify-end gap-1">
+                        <span>🔧</span>
+                        Administrador
+                      </p>
+                    )}
                   </div>
 
                   {/* PARA MOSTRAR LA LETRA INICIAL DEL USUARIO */}
@@ -261,20 +274,23 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
               <span>Clasificación</span>
             </NavLink>
 
-            <NavLink
-              to="/mis-predicciones"
-              onClick={() => setMenuAbierto(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3.5 rounded-xl font-bold text-base transition-all duration-200 ${
-                  isActive
-                    ? "bg-primary text-dark-bg shadow-lg shadow-primary/30"
-                    : "bg-slate-100 dark:bg-dark-bg/50 text-slate-700 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-dark-hover hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-primary/10"
-                }`
-              }
-            >
-              <span className="text-xl">📊</span>
-              <span>Mis Predicciones</span>
-            </NavLink>
+            {/* SOLO MOSTRAR MIS PREDICCIONES SI NO ES ADMIN */}
+            {usuarioActual?.role !== "admin" && (
+              <NavLink
+                to="/mis-predicciones"
+                onClick={() => setMenuAbierto(false)}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3.5 rounded-xl font-bold text-base transition-all duration-200 ${
+                    isActive
+                      ? "bg-primary text-dark-bg shadow-lg shadow-primary/30"
+                      : "bg-slate-100 dark:bg-dark-bg/50 text-slate-700 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-dark-hover hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-primary/10"
+                  }`
+                }
+              >
+                <span className="text-xl">📊</span>
+                <span>Mis Predicciones</span>
+              </NavLink>
+            )}
 
             {/* ENLACE ADMIN MOVIL - SOLO VISIBLE PARA ADMINISTRADORES */}
             {usuarioActual && usuarioActual.role === "admin" && (
@@ -294,15 +310,17 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
               </NavLink>
             )}
 
-            {/* BOTON CTA MOVIL */}
-            <Link
-              to="/hacer-prediccion"
-              onClick={() => setMenuAbierto(false)}
-              className="flex items-center justify-center gap-2 w-full px-4 py-4 mt-4 bg-gradient-to-r from-primary via-emerald-500 to-primary text-dark-bg font-black text-base rounded-xl shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 active:scale-95 transition-all duration-200"
-            >
-              <span className="text-xl">⚡</span>
-              <span>Hacer Predicción</span>
-            </Link>
+            {/* BOTON CTA MOVIL - SOLO PARA NO ADMINS */}
+            {usuarioActual?.role !== "admin" && (
+              <Link
+                to="/hacer-prediccion"
+                onClick={() => setMenuAbierto(false)}
+                className="flex items-center justify-center gap-2 w-full px-4 py-4 mt-4 bg-gradient-to-r from-primary via-emerald-500 to-primary text-dark-bg font-black text-base rounded-xl shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 active:scale-95 transition-all duration-200"
+              >
+                <span className="text-xl">⚡</span>
+                <span>Hacer Predicción</span>
+              </Link>
+            )}
 
             {/* INFO USUARIO MOVIL */}
             {usuarioActual ? (
@@ -320,10 +338,18 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                     <p className="text-sm font-bold text-slate-900 dark:text-white">
                       {usuarioActual.nombre}
                     </p>
-                    <p className="text-xs font-semibold text-primary flex items-center gap-1">
-                      <span className="text-accent">⭐</span>
-                      {usuarioActual.puntosTotal} puntos
-                    </p>
+                    {/* MOSTRAR PUNTOS SOLO SI NO ES ADMIN */}
+                    {usuarioActual.role !== "admin" ? (
+                      <p className="text-xs font-semibold text-primary flex items-center gap-1">
+                        <span className="text-accent">⭐</span>
+                        {usuarioActual.puntosTotal} puntos
+                      </p>
+                    ) : (
+                      <p className="text-xs font-semibold text-accent flex items-center gap-1">
+                        <span>🔧</span>
+                        Administrador
+                      </p>
+                    )}
                   </div>
                 </div>
 

@@ -1,5 +1,6 @@
 // VISTA PARA HACER UNA PREDICCION
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { matchService } from "../services/matchService";
 import { predictionService } from "../services/predictionService";
@@ -139,6 +140,34 @@ export const HacerPrediccion = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
         <div className="text-primary text-2xl font-black animate-pulse uppercase tracking-widest">
           Cargando partidos...
+        </div>
+      </div>
+    );
+  }
+
+  // BLOQUEAR ACCESO SI ES ADMIN
+  if (usuarioActual?.role === "admin") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-300">
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="min-h-[70vh] flex items-center justify-center">
+            <div className="text-center max-w-md animate-in fade-in zoom-in duration-500">
+              <div className="text-8xl mb-6 filter drop-shadow-2xl">🎯</div>
+              <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+                SOLO PARA JUGADORES
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 font-bold text-lg mb-8">
+                Como administrador, tu rol es gestionar los partidos y
+                resultados, no hacer predicciones.
+              </p>
+              <Link to="/admin">
+                <Button className="px-8 py-3 text-lg font-black group">
+                  <span>🔧</span>
+                  <span className="ml-2">IR AL PANEL DE GESTIÓN</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );

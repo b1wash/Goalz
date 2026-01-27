@@ -44,4 +44,9 @@ export const userService = {
     const user = await api.post<Usuario>("/users", data);
     return mapUser(user);
   },
+
+  // ELIMINAR UN USUARIO POR SU ID
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/users/${id}`);
+  },
 };

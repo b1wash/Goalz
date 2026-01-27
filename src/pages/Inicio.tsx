@@ -96,15 +96,32 @@ export const Inicio = () => {
               </div>
             </div>
 
-            <div className="flex flex-col items-center p-6 rounded-3xl bg-primary/10 border border-primary/20 shadow-xl shadow-primary/5 transition-all hover:scale-105">
-              <div className="text-5xl mb-3">🏆</div>
-              <div className="text-4xl font-black text-primary mb-1">
-                {usuarioActual?.puntosTotal ?? usuarioActual?.totalPoints ?? 0}
+            {/* TARJETA DIFERENTE PARA ADMIN VS USUARIO */}
+            {usuarioActual?.role === "admin" ? (
+              <div className="flex flex-col items-center p-6 rounded-3xl bg-accent/10 border border-accent/20 shadow-xl shadow-accent/5 transition-all hover:scale-105">
+                <div className="text-5xl mb-3">👥</div>
+                <div className="text-4xl font-black text-accent mb-1">
+                  {/* Total de usuarios menos el admin */}
+                  {/* Aquí idealmente cargarías usuarios, pero por ahora mostraremos un placeholder */}
+                  0
+                </div>
+                <div className="text-[10px] font-black text-accent/70 uppercase tracking-widest">
+                  Total Jugadores
+                </div>
               </div>
-              <div className="text-[10px] font-black text-primary/70 uppercase tracking-widest">
-                Tu puntuación
+            ) : (
+              <div className="flex flex-col items-center p-6 rounded-3xl bg-primary/10 border border-primary/20 shadow-xl shadow-primary/5 transition-all hover:scale-105">
+                <div className="text-5xl mb-3">🏆</div>
+                <div className="text-4xl font-black text-primary mb-1">
+                  {usuarioActual?.puntosTotal ??
+                    usuarioActual?.totalPoints ??
+                    0}
+                </div>
+                <div className="text-[10px] font-black text-primary/70 uppercase tracking-widest">
+                  Tu puntuación
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </Card>
 
@@ -125,11 +142,14 @@ export const Inicio = () => {
             {partidosPendientes.slice(0, 4).map((partido) => (
               <div key={partido.id} className="group flex flex-col gap-4">
                 <MatchCard match={partido} showResult={false} />
-                <Link to="/hacer-prediccion" className="w-full">
-                  <Button className="w-full py-4 uppercase font-black text-xs tracking-[0.2em] shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
-                    REALIZAR PRONOSTICO
-                  </Button>
-                </Link>
+                {/* SOLO MOSTRAR BOTON SI NO ES ADMIN */}
+                {usuarioActual?.role !== "admin" && (
+                  <Link to="/hacer-prediccion" className="w-full">
+                    <Button className="w-full py-4 uppercase font-black text-xs tracking-[0.2em] shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
+                      REALIZAR PRONOSTICO
+                    </Button>
+                  </Link>
+                )}
               </div>
             ))}
 
@@ -146,30 +166,58 @@ export const Inicio = () => {
 
         {/* SECCION: ACCESOS DIRECTOS A OTRAS VISTAS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          <Link to="/mis-predicciones" className="group">
-            <Card hover className="p-8 lg:p-10 border-primary/10">
-              <div className="flex items-start gap-6">
-                <div className="w-20 h-20 rounded-3xl bg-primary/10 border border-primary/20 flex items-center justify-center text-4xl group-hover:bg-primary group-hover:text-dark-bg transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-primary/5">
-                  📊
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
-                    Mis Predicciones
-                  </h3>
-                  <p className="text-gray-500 dark:text-gray-400 font-medium mb-4">
-                    REVISA EL ESTADO DE TUS APUESTAS Y EL DESGLOSE DE TUS
-                    PUNTOS.
-                  </p>
-                  <span className="text-primary font-black text-xs tracking-widest flex items-center gap-2">
-                    ABRIR HISTORIAL{" "}
-                    <span className="group-hover:translate-x-2 transition-transform">
-                      →
+          {/* MOSTRAR PANEL ADMIN O MIS PREDICCIONES SEGUN ROL */}
+          {usuarioActual?.role === "admin" ? (
+            <Link to="/admin" className="group">
+              <Card hover className="p-8 lg:p-10 border-primary/10">
+                <div className="flex items-start gap-6">
+                  <div className="w-20 h-20 rounded-3xl bg-primary/10 border border-primary/20 flex items-center justify-center text-4xl group-hover:bg-primary group-hover:text-dark-bg transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-primary/5">
+                    🔧
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                      Panel de Gestión
+                    </h3>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium mb-4">
+                      ADMINISTRA PARTIDOS, ACTUALIZA RESULTADOS Y GESTIONA LOS
+                      USUARIOS.
+                    </p>
+                    <span className="text-primary font-black text-xs tracking-widest flex items-center gap-2">
+                      ABRIR PANEL{" "}
+                      <span className="group-hover:translate-x-2 transition-transform">
+                        →
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </Link>
+              </Card>
+            </Link>
+          ) : (
+            <Link to="/mis-predicciones" className="group">
+              <Card hover className="p-8 lg:p-10 border-primary/10">
+                <div className="flex items-start gap-6">
+                  <div className="w-20 h-20 rounded-3xl bg-primary/10 border border-primary/20 flex items-center justify-center text-4xl group-hover:bg-primary group-hover:text-dark-bg transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-primary/5">
+                    📊
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                      Mis Predicciones
+                    </h3>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium mb-4">
+                      REVISA EL ESTADO DE TUS APUESTAS Y EL DESGLOSE DE TUS
+                      PUNTOS.
+                    </p>
+                    <span className="text-primary font-black text-xs tracking-widest flex items-center gap-2">
+                      ABRIR HISTORIAL{" "}
+                      <span className="group-hover:translate-x-2 transition-transform">
+                        →
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          )}
 
           <Link to="/clasificacion" className="group">
             <Card hover className="p-8 lg:p-10 border-accent/10">
