@@ -147,43 +147,43 @@ export const HacerPrediccion = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-300">
       <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* CABECERA */}
+        {/* CABECERA - COMPACTA */}
         <div className="mb-6 text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-4 bg-gradient-to-r from-slate-900 via-primary to-slate-900 dark:from-white dark:via-primary dark:to-white bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-3 bg-gradient-to-r from-slate-900 via-primary to-slate-900 dark:from-white dark:via-primary dark:to-white bg-clip-text text-transparent">
             ⚡ Hacer Predicción
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 text-lg sm:text-xl font-bold uppercase tracking-wider">
+          <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg font-bold uppercase tracking-wider">
             DEMUESTRA TUS CONOCIMIENTOS Y GANA PUNTOS
           </p>
         </div>
 
-        {/* CONTENEDOR PRINCIPAL */}
-        <Card className="p-8 lg:p-12 relative overflow-hidden">
+        {/* CONTENEDOR PRINCIPAL - COMPACTO */}
+        <Card className="p-6 lg:p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
 
           {/* MENSAJES DE ESTADO */}
           {error && (
-            <div className="mb-8 p-6 bg-danger/10 border-2 border-danger/30 rounded-2xl animate-shake">
-              <p className="text-danger font-black flex items-center gap-3">
-                <span className="text-2xl">⚠️</span> {error}
+            <div className="mb-6 p-4 bg-danger/10 border-2 border-danger/30 rounded-xl animate-shake">
+              <p className="text-danger font-black flex items-center gap-2 text-sm">
+                <span className="text-xl">⚠️</span> {error}
               </p>
             </div>
           )}
 
           {exito && (
-            <div className="mb-8 p-6 bg-primary/10 border-2 border-primary/30 rounded-2xl animate-bounce-subtle">
-              <p className="text-primary font-black flex items-center gap-3 text-lg">
-                <span className="text-2xl">✅</span> ¡PREDICCION GUARDADA!
-                REVISA "MIS PREDICCIONES"
+            <div className="mb-6 p-4 bg-primary/10 border-2 border-primary/30 rounded-xl animate-bounce-subtle">
+              <p className="text-primary font-black flex items-center gap-2 text-base">
+                <span className="text-xl">✅</span> ¡PREDICCION GUARDADA! REVISA
+                "MIS PREDICCIONES"
               </p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
+          <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
             {/* 1. SELECCION DE PARTIDO */}
-            <div className="space-y-4">
-              <label className="block text-slate-900 dark:text-white text-xl font-black uppercase tracking-tight flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-primary text-dark-bg flex items-center justify-center text-sm">
+            <div className="space-y-3">
+              <label className="block text-slate-900 dark:text-white text-lg font-black uppercase tracking-tight flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-primary text-dark-bg flex items-center justify-center text-sm">
                   1
                 </span>
                 Slecciona el partido
@@ -191,7 +191,7 @@ export const HacerPrediccion = () => {
               <Select
                 value={partidoSeleccionado}
                 onChange={(e) => setPartidoSeleccionado(e.target.value)}
-                className="text-lg py-4 font-bold"
+                className="text-base py-3 font-bold"
               >
                 <option value="">-- ELIGE UN ENCUENTRO DE LA JORNADA --</option>
                 {partidosPendientes.map((m) => (
@@ -204,9 +204,9 @@ export const HacerPrediccion = () => {
             </div>
 
             {/* 2. RESULTADO 1X2 */}
-            <div className="space-y-4">
-              <label className="block text-slate-900 dark:text-white text-xl font-black uppercase tracking-tight flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-blue-500 text-white flex items-center justify-center text-sm">
+            <div className="space-y-3">
+              <label className="block text-slate-900 dark:text-white text-lg font-black uppercase tracking-tight flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-blue-500 text-white flex items-center justify-center text-sm">
                   2
                 </span>
                 ¿Quién ganará? (1X2)
@@ -234,7 +234,7 @@ export const HacerPrediccion = () => {
                 ].map((opt) => (
                   <label
                     key={opt.id}
-                    className={`relative flex flex-col items-center justify-center p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${
+                    className={`relative flex flex-col items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 ${
                       prediccion === opt.id
                         ? `${opt.border} bg-gradient-to-b ${opt.color} shadow-lg scale-105`
                         : "border-slate-200 dark:border-white/10 grayscale hover:grayscale-0 opacity-60 hover:opacity-100"
@@ -249,11 +249,11 @@ export const HacerPrediccion = () => {
                       className="hidden"
                     />
                     <span
-                      className={`text-3xl font-black mb-1 ${prediccion === opt.id ? "text-slate-900 dark:text-white" : "text-gray-400"}`}
+                      className={`text-2xl font-black mb-1 ${prediccion === opt.id ? "text-slate-900 dark:text-white" : "text-gray-400"}`}
                     >
                       {opt.id}
                     </span>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">
                       {opt.label}
                     </span>
                   </label>
@@ -262,28 +262,28 @@ export const HacerPrediccion = () => {
             </div>
 
             {/* 3. MARCADOR EXACTO */}
-            <div className="space-y-4">
-              <label className="block text-slate-900 dark:text-white text-xl font-black uppercase tracking-tight flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-accent text-dark-bg flex items-center justify-center text-sm">
+            <div className="space-y-3">
+              <label className="block text-slate-900 dark:text-white text-lg font-black uppercase tracking-tight flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-accent text-dark-bg flex items-center justify-center text-sm">
                   3
                 </span>
                 Marcador exacto (+5 puntos)
               </label>
 
-              <div className="bg-slate-50 dark:bg-dark-bg/50 p-8 rounded-3xl border border-slate-200 dark:border-white/10">
-                <div className="flex items-center justify-center gap-8 sm:gap-16">
+              <div className="bg-slate-50 dark:bg-dark-bg/50 p-6 rounded-2xl border border-slate-200 dark:border-white/10">
+                <div className="flex items-center justify-center gap-6 sm:gap-12">
                   {/* LOCAL */}
-                  <div className="flex flex-col items-center gap-4">
-                    <span className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                  <div className="flex flex-col items-center gap-3">
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
                       LOCAL
                     </span>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       <button
                         type="button"
                         onClick={() =>
                           setGolesLocal(Math.max(0, golesLocal - 1))
                         }
-                        className="w-10 h-10 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-2xl font-black hover:bg-danger hover:text-white transition-colors"
+                        className="w-9 h-9 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-xl font-black hover:bg-danger hover:text-white transition-colors"
                       >
                         -
                       </button>
@@ -295,36 +295,36 @@ export const HacerPrediccion = () => {
                         onChange={(e) =>
                           setGolesLocal(parseInt(e.target.value) || 0)
                         }
-                        className="w-20 py-4 bg-white dark:bg-dark-bg border-2 border-primary/30 rounded-2xl text-3xl font-black text-center text-primary focus:border-primary active:scale-95 transition-all"
+                        className="w-16 py-3 bg-white dark:bg-dark-bg border-2 border-primary/30 rounded-xl text-2xl font-black text-center text-primary focus:border-primary active:scale-95 transition-all"
                       />
                       <button
                         type="button"
                         onClick={() =>
                           setGolesLocal(Math.min(20, golesLocal + 1))
                         }
-                        className="w-10 h-10 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-2xl font-black hover:bg-primary hover:text-white transition-colors"
+                        className="w-9 h-9 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-xl font-black hover:bg-primary hover:text-white transition-colors"
                       >
                         +
                       </button>
                     </div>
                   </div>
 
-                  <div className="text-4xl font-black text-gray-300 dark:text-gray-700 mt-8">
+                  <div className="text-3xl font-black text-gray-300 dark:text-gray-700 mt-6">
                     :
                   </div>
 
                   {/* VISITANTE */}
-                  <div className="flex flex-col items-center gap-4">
-                    <span className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                  <div className="flex flex-col items-center gap-3">
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
                       VISITANTE
                     </span>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       <button
                         type="button"
                         onClick={() =>
                           setGolesVisitante(Math.max(0, golesVisitante - 1))
                         }
-                        className="w-10 h-10 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-2xl font-black hover:bg-danger hover:text-white transition-colors"
+                        className="w-9 h-9 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-xl font-black hover:bg-danger hover:text-white transition-colors"
                       >
                         -
                       </button>
@@ -336,14 +336,14 @@ export const HacerPrediccion = () => {
                         onChange={(e) =>
                           setGolesVisitante(parseInt(e.target.value) || 0)
                         }
-                        className="w-20 py-4 bg-white dark:bg-dark-bg border-2 border-blue-400/30 rounded-2xl text-3xl font-black text-center text-blue-500 focus:border-blue-400 active:scale-95 transition-all"
+                        className="w-16 py-3 bg-white dark:bg-dark-bg border-2 border-blue-500/30 rounded-xl text-2xl font-black text-center text-blue-500 focus:border-blue-500 active:scale-95 transition-all"
                       />
                       <button
                         type="button"
                         onClick={() =>
                           setGolesVisitante(Math.min(20, golesVisitante + 1))
                         }
-                        className="w-10 h-10 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-2xl font-black hover:bg-primary hover:text-white transition-colors"
+                        className="w-9 h-9 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-xl font-black hover:bg-blue-500 hover:text-white transition-colors"
                       >
                         +
                       </button>

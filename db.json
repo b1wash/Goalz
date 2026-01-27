@@ -219,6 +219,18 @@
       "puntosTotal": 0,
       "correctPredictions": 0,
       "totalPredictions": 0
+    },
+    {
+      "id": "7c7f",
+      "name": "Benjamin",
+      "nombre": "Benjamin",
+      "email": "benji123@ejemplo.com",
+      "password": "hola1234",
+      "role": "user",
+      "totalPoints": 0,
+      "puntosTotal": 0,
+      "correctPredictions": 0,
+      "totalPredictions": 0
     }
   ]
 }

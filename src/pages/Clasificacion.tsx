@@ -91,19 +91,19 @@ export const Clasificacion = () => {
         {/* CONTENIDO PRINCIPAL DE LA CLASIFICACION */}
         {!error && (
           <>
-            {/* SECCION: PODIO (TOP 3) CON DISEÑO ESPECIAL */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            {/* SECCION: PODIO (TOP 3) CON DISEÑO ESPECIAL - COMPACTO */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
               {usuariosOrdenados.slice(0, 3).map((usuario, index) => {
                 const posicion = index + 1;
                 return (
                   <div
                     key={usuario.id}
-                    className={`relative group overflow-hidden rounded-3xl p-8 text-center shadow-2xl transition-all duration-300 hover:scale-105 ${
+                    className={`relative group overflow-hidden rounded-2xl p-6 text-center shadow-xl transition-all duration-300 hover:scale-105 ${
                       posicion === 1
-                        ? "md:order-2 md:scale-110 border-4 border-accent shadow-accent/20"
+                        ? "md:order-2 md:scale-105 border-3 border-accent shadow-accent/20"
                         : ""
-                    } ${posicion === 2 ? "md:order-1 mt-4" : ""} ${
-                      posicion === 3 ? "md:order-3 mt-8" : ""
+                    } ${posicion === 2 ? "md:order-1 mt-2" : ""} ${
+                      posicion === 3 ? "md:order-3 mt-4" : ""
                     }`}
                     style={{
                       background:
@@ -118,29 +118,29 @@ export const Clasificacion = () => {
                     <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                     <div className="relative z-10 text-white">
-                      <div className="text-6xl lg:text-7xl mb-4 transform group-hover:rotate-12 transition-transform duration-300">
+                      <div className="text-5xl mb-3 transform group-hover:rotate-12 transition-transform duration-300">
                         {obtenerIconoPosicion(posicion)}
                       </div>
-                      <div className="text-xs font-black uppercase tracking-[0.2em] mb-4 opacity-80">
+                      <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-80">
                         PUESTO #{posicion}
                       </div>
 
                       {/* INICIAL DEL NOMBRE COMO AVATAR TEMPORAL */}
-                      <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-white/30 backdrop-blur-md border-4 border-white/40 flex items-center justify-center text-4xl font-black shadow-xl">
+                      <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/30 backdrop-blur-md border-3 border-white/40 flex items-center justify-center text-2xl font-black shadow-lg">
                         {(usuario.nombre || usuario.name || "U")
                           .charAt(0)
                           .toUpperCase()}
                       </div>
 
-                      <h3 className="text-2xl font-black mb-1 drop-shadow-md">
+                      <h3 className="text-lg font-black mb-1 drop-shadow-md truncate px-2">
                         {usuario.nombre || usuario.name}
                       </h3>
                       <div className="flex flex-col items-center">
-                        <span className="text-4xl font-black">
+                        <span className="text-3xl font-black">
                           {usuario.puntosTotal ?? usuario.totalPoints ?? 0}
                         </span>
-                        <span className="text-xs font-black uppercase tracking-widest opacity-80">
-                          PUNTOS TOTALES
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-80">
+                          PUNTOS
                         </span>
                       </div>
                     </div>
@@ -149,10 +149,10 @@ export const Clasificacion = () => {
               })}
             </div>
 
-            {/* SECCION: TABLA COMPLETA DE CLASIFICACION */}
+            {/* SECCION: TABLA COMPLETA DE CLASIFICACION - COMPACTA */}
             <Card className="overflow-hidden border-primary/20 shadow-primary/5">
-              <div className="bg-slate-50 dark:bg-dark-bg/50 border-b border-slate-200 dark:border-primary/20 px-8 py-6">
-                <h2 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">
+              <div className="bg-slate-50 dark:bg-dark-bg/50 border-b border-slate-200 dark:border-primary/20 px-6 py-4">
+                <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
                   TABLA COMPLETA DE PARTICIPANTES
                 </h2>
               </div>
@@ -165,23 +165,23 @@ export const Clasificacion = () => {
                   return (
                     <div
                       key={usuario.id}
-                      className={`px-8 py-6 transition-all hover:bg-slate-50 dark:hover:bg-white/5 ${
+                      className={`px-6 py-4 transition-all hover:bg-slate-50 dark:hover:bg-white/5 ${
                         esUsuarioActual
                           ? "bg-primary/5 dark:bg-primary/5 border-l-4 border-primary"
                           : ""
                       }`}
                     >
-                      <div className="flex items-center gap-6">
+                      <div className="flex items-center gap-4">
                         {/* INDICADOR DE POSICION */}
-                        <div className="flex-shrink-0 w-16 text-center">
-                          <span className="text-2xl font-black text-slate-400 dark:text-gray-600 italic">
+                        <div className="flex-shrink-0 w-12 text-center">
+                          <span className="text-xl font-black text-slate-400 dark:text-gray-600 italic">
                             #{posicion}
                           </span>
                         </div>
 
                         {/* AVATAR ESTILIZADO */}
                         <div
-                          className={`flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white shadow-lg bg-gradient-to-br ${obtenerColorPosicion(posicion)}`}
+                          className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-lg font-black text-white shadow-md bg-gradient-to-br ${obtenerColorPosicion(posicion)}`}
                         >
                           {(usuario.nombre || usuario.name || "U")
                             .charAt(0)
@@ -189,46 +189,46 @@ export const Clasificacion = () => {
                         </div>
 
                         {/* INFORMACION DEL USUARIO */}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3">
-                            <h3 className="text-xl font-black text-slate-900 dark:text-white">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-lg font-black text-slate-900 dark:text-white truncate">
                               {usuario.nombre || usuario.name}
                             </h3>
                             {esUsuarioActual && (
                               <Badge text="TÚ" variant="primary" />
                             )}
                           </div>
-                          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                             JUGADOR ACTIVO
                           </p>
                         </div>
 
                         {/* COLUMNAS DE ESTADISTICAS (VISIBLE SOLO EN PANTALLAS GRANDES) */}
-                        <div className="hidden lg:grid grid-cols-2 gap-12 mr-12 text-center">
+                        <div className="hidden lg:grid grid-cols-2 gap-8 mr-8 text-center">
                           <div>
-                            <div className="text-lg font-black text-slate-900 dark:text-white">
+                            <div className="text-base font-black text-slate-900 dark:text-white">
                               {usuario.totalPredictions ?? 0}
                             </div>
-                            <div className="text-[10px] font-black text-gray-400 uppercase">
+                            <div className="text-[9px] font-black text-gray-400 uppercase">
                               Predicciones
                             </div>
                           </div>
                           <div>
-                            <div className="text-lg font-black text-primary">
+                            <div className="text-base font-black text-primary">
                               {usuario.correctPredictions ?? 0}
                             </div>
-                            <div className="text-[10px] font-black text-gray-400 uppercase">
+                            <div className="text-[9px] font-black text-gray-400 uppercase">
                               Aciertos
                             </div>
                           </div>
                         </div>
 
                         {/* PUNTOS TOTALES */}
-                        <div className="text-right bg-slate-100 dark:bg-dark-bg/50 px-6 py-2 rounded-2xl border border-slate-200 dark:border-white/5">
-                          <div className="text-3xl font-black text-primary tracking-tighter">
+                        <div className="text-right bg-slate-100 dark:bg-dark-bg/50 px-5 py-2 rounded-xl border border-slate-200 dark:border-white/5">
+                          <div className="text-2xl font-black text-primary tracking-tighter">
                             {usuario.puntosTotal ?? usuario.totalPoints ?? 0}
                           </div>
-                          <div className="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                          <div className="text-[9px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                             PUNTOS
                           </div>
                         </div>

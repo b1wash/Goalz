@@ -24,6 +24,10 @@ export const MisPredicciones = () => {
     "todas" | "acertadas" | "falladas" | "pendientes"
   >("todas");
 
+  // ESTADO PARA LA PAGINACION
+  const [paginaActual, setPaginaActual] = useState(1);
+  const ITEMS_POR_PAGINA = 9;
+
   // EFECTO PARA CARGAR PREDICCIONES Y PARTIDOS EN PARALELO
   useEffect(() => {
     const cargarDatos = async () => {
@@ -79,6 +83,22 @@ export const MisPredicciones = () => {
     if (filtro === "falladas") return isFinished && (puntos ?? 0) === 0;
     return true;
   });
+
+  // LOGICA DE PAGINACION
+  const totalPaginas = Math.ceil(
+    prediccionesFiltradas.length / ITEMS_POR_PAGINA,
+  );
+  const indiceInicio = (paginaActual - 1) * ITEMS_POR_PAGINA;
+  const indiceFin = indiceInicio + ITEMS_POR_PAGINA;
+  const prediccionesPaginadas = prediccionesFiltradas.slice(
+    indiceInicio,
+    indiceFin,
+  );
+
+  // RESETEAR PAGINA CUANDO CAMBIA EL FILTRO
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [filtro]);
 
   // CALCULOS EN TIEMPO REAL PARA EL RESUMEN SUPERIOR
   const totalPredicciones = todasLasPredicciones.length;
@@ -193,9 +213,9 @@ export const MisPredicciones = () => {
           ))}
         </div>
 
-        {/* LISTADO DE TARJETAS DE PREDICCION */}
+        {/* LISTADO DE TARJETAS DE PREDICCION - PAGINADAS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {prediccionesFiltradas.length === 0 ? (
+          {prediccionesPaginadas.length === 0 ? (
             <div className="col-span-full py-20 bg-slate-50 dark:bg-dark-card/20 border-2 border-dashed border-slate-200 dark:border-primary/10 rounded-3xl text-center">
               <div className="text-6xl mb-6 grayscale opacity-50">🤷‍♂️</div>
               <p className="text-gray-500 dark:text-gray-400 text-xl font-black uppercase tracking-widest">
@@ -203,7 +223,7 @@ export const MisPredicciones = () => {
               </p>
             </div>
           ) : (
-            prediccionesFiltradas.map((prediccion) => {
+            prediccionesPaginadas.map((prediccion) => {
               const partido = obtenerPartido(
                 prediccion.matchId || prediccion.idPartido || "",
               );
@@ -220,6 +240,47 @@ export const MisPredicciones = () => {
             })
           )}
         </div>
+
+        {/* CONTROLES DE PAGINACION */}
+        {totalPaginas > 1 && (
+          <div className="mt-12 flex justify-center items-center gap-4">
+            <Button
+              onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
+              disabled={paginaActual === 1}
+              className="px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              ← Anterior
+            </Button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
+                (num) => (
+                  <button
+                    key={num}
+                    onClick={() => setPaginaActual(num)}
+                    className={`w-10 h-10 rounded-xl font-black text-sm transition-all ${
+                      paginaActual === num
+                        ? "bg-primary text-dark-bg shadow-lg shadow-primary/20"
+                        : "bg-slate-100 dark:bg-dark-bg text-gray-500 hover:text-primary"
+                    }`}
+                  >
+                    {num}
+                  </button>
+                ),
+              )}
+            </div>
+
+            <Button
+              onClick={() =>
+                setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
+              }
+              disabled={paginaActual === totalPaginas}
+              className="px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente →
+            </Button>
+          </div>
+        )}
 
         {/* CASO: USUARIO SIN HISTORIAL TOTAL */}
         {todasLasPredicciones.length === 0 && !loading && (
