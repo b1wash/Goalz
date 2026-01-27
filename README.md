@@ -281,7 +281,6 @@ npm run dev         # Desarrollo (puerto 5173)
 npm run api         # JSON Server (puerto 3001)
 npm run build       # Build de producción
 npm run preview     # Preview de producción
-npm run lint        # Linter
 ```
 
 ## 🌟 Características Técnicas

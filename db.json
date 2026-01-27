@@ -47,6 +47,18 @@
         "homeGoals": 0,
         "awayGoals": 0
       }
+    },
+    {
+      "id": "c582",
+      "homeTeam": "Valladolid",
+      "awayTeam": "Malaga",
+      "date": "2026-01-08T16:37:00.000Z",
+      "matchday": 1,
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 0
+      }
     }
   ],
   "predictions": [
@@ -157,6 +169,78 @@
       "points": 0,
       "puntosGanados": null,
       "createdAt": "2026-01-27T15:24:23.894Z"
+    },
+    {
+      "id": "db4e",
+      "matchId": "c582",
+      "idPartido": "c582",
+      "userId": "user4",
+      "idUsuario": "user4",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": null,
+      "createdAt": "2026-01-27T16:38:27.711Z"
+    },
+    {
+      "id": "4096",
+      "matchId": "c582",
+      "idPartido": "c582",
+      "userId": "user2",
+      "idUsuario": "user2",
+      "prediction": "1",
+      "prediccion": "1",
+      "exactScore": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "points": 0,
+      "puntosGanados": null,
+      "createdAt": "2026-01-27T16:39:00.075Z"
+    },
+    {
+      "id": "0ec8",
+      "matchId": "c582",
+      "idPartido": "c582",
+      "userId": "user3",
+      "idUsuario": "user3",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": null,
+      "createdAt": "2026-01-27T16:39:21.599Z"
     }
   ],
   "users": [
@@ -191,9 +275,9 @@
       "email": "sergio@goalz.com",
       "password": "sergio123",
       "role": "user",
-      "totalPoints": 260,
+      "totalPoints": 265,
       "puntosTotal": 260,
-      "correctPredictions": 14,
+      "correctPredictions": 15,
       "totalPredictions": 24
     },
     {
@@ -203,9 +287,9 @@
       "email": "esteban@goalz.com",
       "password": "esteban123",
       "role": "user",
-      "totalPoints": 215,
+      "totalPoints": 220,
       "puntosTotal": 215,
-      "correctPredictions": 10,
+      "correctPredictions": 11,
       "totalPredictions": 26
     },
     {
