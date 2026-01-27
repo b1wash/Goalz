@@ -16,6 +16,7 @@ Aplicación web moderna para realizar predicciones de resultados de partidos de 
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Funcionalidades](#-funcionalidades)
 - [Panel de Administración](#-panel-de-administración)
+- [Arquitectura del Backend](#️-arquitectura-del-backend)
 - [API Endpoints](#-api-endpoints)
 - [Características Técnicas](#-características-técnicas)
 - [Autor](#-autor)
@@ -203,6 +204,14 @@ goalz-app/
 - ✅ Gestión completa de partidos
 - ✅ Gestión completa de usuarios
 - ✅ Vista de métricas globales
+
+## ⚙️ Arquitectura del Backend
+
+Para este proyecto, he implementado un **Backend basado en JSON-Server**. Este sistema permite simular una API REST profesional con las siguientes características:
+
+- **Persistencia Local**: Los datos se almacenan de forma permanente en el archivo `db.json`, el cual actúa como la base de datos del sistema.
+- **Protocolo RESTful**: El servidor recibe peticiones estándar (GET, POST, PATCH, DELETE) en el puerto **3001**.
+- **Interacción Real**: Permite que el Frontend de React interactúe con los datos (crear usuarios, guardar predicciones, actualizar resultados) exactamente igual que si se tratara de una API de producción.
 
 ## ✨ Funcionalidades
 
