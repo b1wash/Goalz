@@ -1,5 +1,6 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
+import { Button } from "../ui";
 import type { ReactNode } from "react";
 
 interface AdminRouteProps {
@@ -17,15 +18,22 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
   // SI EL USUARIO NO ES ADMIN, REDIRIGIR A INICIO CON MENSAJE
   if (usuarioActual.role !== "admin") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center py-12 px-4">
-        <div className="text-center">
-          <div className="text-8xl mb-4">🔒</div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-2">
-            Acceso Denegado
+      <div className="min-h-[70vh] flex items-center justify-center py-12 px-4">
+        <div className="text-center max-w-md animate-in fade-in zoom-in duration-500">
+          <div className="text-8xl mb-6 filter drop-shadow-2xl">🔐</div>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+            ACCESO RESTRINGIDO
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 font-bold">
-            Solo los administradores pueden acceder a esta sección.
+          <p className="text-gray-500 dark:text-gray-400 font-bold text-lg mb-8">
+            Lo sentimos, esta sección es exclusiva para el equipo de
+            administración de GOALZ.
           </p>
+          <Link to="/">
+            <Button className="px-8 py-3 text-lg font-black group">
+              <span>🏠</span>
+              <span className="ml-2">VOLVER A INICIO</span>
+            </Button>
+          </Link>
         </div>
       </div>
     );

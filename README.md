@@ -70,74 +70,51 @@ La API estará disponible en: **http://localhost:3001**
 
 ```
 goalz-app/
-├── public/
+├── public/                 # Recursos estáticos (imágenes, logos)
 ├── src/
 │   ├── components/
-│   │   ├── layout/
-│   │   │   ├── Navbar.tsx              # Barra de navegación responsive
-│   │   │   ├── Footer.tsx              # Pie de página
-│   │   │   ├── ContenedorPagina.tsx    # Wrapper para páginas (nuevos)
-│   │   │   └── index.ts                # Exports centralizados
-│   │   ├── ui/
-│   │   │   ├── Button.tsx              # Botón reutilizable
-│   │   │   ├── Card.tsx                # Tarjeta con estilos
-│   │   │   ├── Input.tsx               # Input de formulario
-│   │   │   ├── Select.tsx              # Select desplegable
-│   │   │   ├── Badge.tsx               # Etiqueta de estado
-│   │   │   ├── Cargando.tsx            # Spinner de carga (nuevo)
-│   │   │   ├── EstadoVacio.tsx         # Componente de estado vacío (nuevo)
-│   │   │   └── index.ts                # Exports centralizados
-│   │   ├── matches/
-│   │   │   ├── MatchCard.tsx           # Tarjeta de partido
-│   │   │   ├── MatchList.tsx           # Lista de partidos
-│   │   │   └── index.ts                # Exports centralizados
-│   │   └── predictions/
-│   │       ├── PredictionCard.tsx      # Tarjeta de predicción
-│   │       ├── PredictionList.tsx      # Lista de predicciones
-│   │       └── index.ts                # Exports centralizados
-│   ├── pages/
-│   │   ├── Inicio.tsx                  # Dashboard principal
-│   │   ├── Clasificacion.tsx           # Ranking de usuarios
-│   │   ├── MisPredicciones.tsx         # Historial de predicciones
-│   │   ├── HacerPrediccion.tsx         # Formulario de predicción
-│   │   └── AdminMatches.tsx            # Panel de administración
-│   ├── services/
-│   │   ├── api.ts                      # Cliente HTTP base
-│   │   ├── matchService.ts             # API de partidos
-│   │   ├── predictionService.ts        # API de predicciones
-│   │   └── userService.ts              # API de usuarios
-│   ├── types/
-│   │   └── index.ts                    # Interfaces TypeScript
-│   ├── hooks/
-│   │   ├── usePredicciones.ts          # Hook para predicciones
-│   │   └── useDarkMode.ts              # Hook para modo oscuro
-│   ├── context/
-│   │   └── AppContext.tsx              # Context API global
-│   ├── utils/
-│   │   ├── pointsCalculator.ts         # Cálculo de puntos
-│   │   ├── validators.ts               # Validaciones de formularios
-│   │   └── mockData.ts                 # Datos de prueba
-│   ├── assets/                         # Imágenes y recursos
-│   ├── App.tsx                         # Componente raíz
-│   ├── main.tsx                        # Entry point
-│   └── index.css                       # Estilos globales + Tailwind
-├── db.json                             # Base de datos JSON Server
-├── .env                                # Variables de entorno
-├── .gitignore                          # Archivos ignorados por Git
-├── package.json                        # Dependencias del proyecto
-├── tailwind.config.js                  # Configuración de Tailwind
-├── tsconfig.json                       # Configuración de TypeScript
-├── vite.config.ts                      # Configuración de Vite
-└── README.md                           # Documentación del proyecto
+│   │   ├── auth/           # ✅ NUEVO: Protección de rutas
+│   │   │   ├── AdminRoute.tsx      # Protección para administradores
+│   │   │   └── ProtectedRoute.tsx  # Protección para usuarios logueados
+│   │   ├── layout/         # Estructura general (Navbar, Footer)
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   └── ContenedorPagina.tsx
+│   │   ├── matches/        # Componentes de partidos
+│   │   ├── predictions/    # Componentes de predicciones
+│   │   └── ui/             # Componentes atómicos (Botones, Cards, Inputs)
+│   ├── pages/              # Vistas completas de la aplicación
+│   │   ├── Inicio.tsx
+│   │   ├── Clasificacion.tsx
+│   │   ├── MisPredicciones.tsx
+│   │   ├── HacerPrediccion.tsx
+│   │   ├── AdminMatches.tsx
+│   │   ├── Login.tsx       # ✅ Pantalla de acceso
+│   │   └── Register.tsx    # ✅ Pantalla de registro
+│   ├── services/           # Comunicación con la API (Fetch)
+│   │   ├── api.ts          # Cliente base
+│   │   ├── matchService.ts
+│   │   ├── predictionService.ts
+│   │   └── userService.ts
+│   ├── types/              # Definiciones de TypeScript (Interfaces)
+│   ├── hooks/              # Lógica reutilizable (Modo oscuro, Predicciones)
+│   ├── context/            # Estado global (Sesión, Datos globales)
+│   ├── utils/              # Funciones auxiliares (Cálculos, Validaciones)
+│   ├── App.tsx             # Enrutador y estructura raíz
+│   └── main.tsx            # Punto de entrada de la aplicación
+├── db.json                 # Base de datos simulada (JSON Server)
+├── tailwind.config.js      # Configuración de diseño
+└── package.json            # Dependencias y scripts
 ```
 
 ## 📖 Uso de la Aplicación
 
 ### Primera vez usando GOALZ
 
-1. **Inicio de sesión simulado**: La aplicación usa un usuario de prueba (`user1`) automáticamente
-2. **Navega por las secciones** usando la barra superior
-3. **Explora tus estadísticas** en la página de Inicio
+1. **Inicio de sesión real**: La aplicación cuenta con un sistema de login. Puedes usar los emails de prueba o registrarte.
+2. **Registro de usuarios**: Puedes crear tu propia cuenta desde la página de registro.
+3. **Navega por las secciones** usando la barra superior.
+4. **Explora tus estadísticas** en la página de Inicio.
 
 ### Hacer una predicción
 
@@ -158,9 +135,15 @@ goalz-app/
    - **Acertadas**: Predicciones con puntos ✅
    - **Falladas**: Predicciones sin puntos ❌
 
+### Gestión de Cuentas
+
+1. **Login**: Accede con email y contraseña.
+2. **Registro**: Crea una cuenta nueva con nombre, email y contraseña.
+3. **Logout**: Cierra sesión de forma segura desde el Navbar.
+
 ### Panel de Administración
 
-> 🔐 Solo para administradores
+> 🔐 Solo accesible para usuarios con el rol `admin`.
 
 1. Ve a **"Admin"**
 2. **Crear partido**: Rellena el formulario y click en "Crear Partido"
@@ -257,12 +240,14 @@ npm run lint         # Ejecuta el linter
 
 - ✅ **SPA** con React Router
 - ✅ **TypeScript** con tipado estricto
-- ✅ **Context API** para estado global
+- ✅ **Context API** para estado global (Sesión, Puntos)
+- ✅ **Autenticación Completa**: Login, Registro y Logout
+- ✅ **Autorización por Roles**: Rutas protegidas para usuarios y administradores
 - ✅ **Custom Hooks** para lógica reutilizable
 - ✅ **Componentes reutilizables** (15+)
-- ✅ **Validación de formularios**
-- ✅ **Manejo de errores**
-- ✅ **LocalStorage** para persistencia
+- ✅ **Validación de formularios** avanzada
+- ✅ **Manejo de errores** visual
+- ✅ **LocalStorage** para persistencia de sesión y tema
 - ✅ **API REST** con JSON Server
 - ✅ **Responsive Design**
 - ✅ **Variables de entorno**
@@ -289,7 +274,9 @@ Este proyecto ha sido diseñado para cumplir con los objetivos técnicos de la a
 
 ### 🌟 Ampliaciones (Subir Nota)
 
-- [x] **Context API**: Estado global para usuario y puntos en tiempo real.
+- [x] **Context API**: Estado global para usuario, sesión y puntos en tiempo real.
+- [x] **Autenticación y Registro**: Sistema completo con validación y persistencia.
+- [x] **Roles de Usuario**: Protección de rutas (`AdminRoute` y `ProtectedRoute`).
 - [x] **Custom Hooks**: Abstracción de lógica en `useDarkMode` y `usePredicciones`.
 - [x] **Modo Oscuro**: Tema dual con persistencia y detección de preferencia.
 - [x] **Filtros Avanzados**: Filtrado dinámico en tiempo real en la vista de predicciones.
