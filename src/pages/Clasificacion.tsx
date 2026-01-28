@@ -35,11 +35,21 @@ export const Clasificacion = () => {
   // ORDENAR USUARIOS POR PUNTOS (DE MAYOR A MENOR) Y FILTRAR ADMINS
   const usuariosOrdenados = [...usuarios]
     .filter((u) => u.role !== "admin") // NO MOSTRAR ADMINISTRADORES EN LA CLASIFICACION
-    .sort(
-      (a, b) =>
-        (b.puntosTotal ?? b.totalPoints ?? 0) -
-        (a.puntosTotal ?? a.totalPoints ?? 0),
-    );
+    .sort((a, b) => {
+      // 1. COMPARAR POR PUNTOS
+      const puntosA = a.puntosTotal ?? a.totalPoints ?? 0;
+      const puntosB = b.puntosTotal ?? b.totalPoints ?? 0;
+
+      if (puntosB !== puntosA) {
+        return puntosB - puntosA;
+      }
+
+      // 2. SI HAY EMPATE A PUNTOS, DESEMPATA POR NÚMERO DE ACIERTOS
+      //ES DECIR, SI DOS USUARIOS TIENEN IGUAL PUNTOS, EL QUE MAS ACIERTOS TENGA GANA
+      const aciertosA = a.correctPredictions ?? 0;
+      const aciertosB = b.correctPredictions ?? 0;
+      return aciertosB - aciertosA;
+    });
 
   // FUNCION PARA OBTENER EL COLOR SEGUN LA POSICION EN EL RANKING
   const obtenerColorPosicion = (posicion: number): string => {
@@ -93,63 +103,81 @@ export const Clasificacion = () => {
         {/* CONTENIDO PRINCIPAL DE LA CLASIFICACION */}
         {!error && (
           <>
-            {/* SECCION: PODIO (TOP 3) CON DISEÑO ESPECIAL - COMPACTO */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-              {usuariosOrdenados.slice(0, 3).map((usuario, index) => {
-                const posicion = index + 1;
-                return (
-                  <div
-                    key={usuario.id}
-                    className={`relative group overflow-hidden rounded-2xl p-6 text-center shadow-xl transition-all duration-300 hover:scale-105 ${
-                      posicion === 1
-                        ? "md:order-2 md:scale-105 border-3 border-accent shadow-accent/20"
-                        : ""
-                    } ${posicion === 2 ? "md:order-1 mt-2" : ""} ${
-                      posicion === 3 ? "md:order-3 mt-4" : ""
-                    }`}
-                    style={{
-                      background:
+            {/* COMPROBAR SI ALGUIEN TIENE PUNTOS PARA MOSTRAR EL PODIO */}
+            {usuariosOrdenados.length > 0 &&
+            usuariosOrdenados.some(
+              (u) => (u.puntosTotal ?? u.totalPoints ?? 0) > 0,
+            ) ? (
+              /* SECCION: PODIO (TOP 3) CON DISEÑO ESPECIAL - COMPACTO */
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+                {usuariosOrdenados.slice(0, 3).map((usuario, index) => {
+                  const posicion = index + 1;
+                  return (
+                    <div
+                      key={usuario.id}
+                      className={`relative group overflow-hidden rounded-2xl p-6 text-center shadow-xl transition-all duration-300 hover:scale-105 ${
                         posicion === 1
-                          ? "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)"
-                          : posicion === 2
-                            ? "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%)"
-                            : "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
-                    }}
-                  >
-                    {/* EFECTO DE BRILLO AL PASAR EL RATON */}
-                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          ? "md:order-2 md:scale-105 border-3 border-accent shadow-accent/20"
+                          : ""
+                      } ${posicion === 2 ? "md:order-1 mt-2" : ""} ${
+                        posicion === 3 ? "md:order-3 mt-4" : ""
+                      }`}
+                      style={{
+                        background:
+                          posicion === 1
+                            ? "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)"
+                            : posicion === 2
+                              ? "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%)"
+                              : "linear-gradient(135deg, #fb923c 0%, #ea580c 100%)",
+                      }}
+                    >
+                      {/* EFECTO DE BRILLO AL PASAR EL RATON */}
+                      <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                    <div className="relative z-10 text-white">
-                      <div className="text-5xl mb-3 transform group-hover:rotate-12 transition-transform duration-300">
-                        {obtenerIconoPosicion(posicion)}
-                      </div>
-                      <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-80">
-                        PUESTO #{posicion}
-                      </div>
+                      <div className="relative z-10 text-white">
+                        <div className="text-5xl mb-3 transform group-hover:rotate-12 transition-transform duration-300">
+                          {obtenerIconoPosicion(posicion)}
+                        </div>
+                        <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-80">
+                          PUESTO #{posicion}
+                        </div>
 
-                      {/* INICIAL DEL NOMBRE COMO AVATAR TEMPORAL */}
-                      <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/30 backdrop-blur-md border-3 border-white/40 flex items-center justify-center text-2xl font-black shadow-lg">
-                        {(usuario.nombre || usuario.name || "U")
-                          .charAt(0)
-                          .toUpperCase()}
-                      </div>
+                        {/* INICIAL DEL NOMBRE COMO AVATAR TEMPORAL */}
+                        <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/30 backdrop-blur-md border-3 border-white/40 flex items-center justify-center text-2xl font-black shadow-lg">
+                          {(usuario.nombre || usuario.name || "U")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
 
-                      <h3 className="text-lg font-black mb-1 drop-shadow-md truncate px-2">
-                        {usuario.nombre || usuario.name}
-                      </h3>
-                      <div className="flex flex-col items-center">
-                        <span className="text-3xl font-black">
-                          {usuario.puntosTotal ?? usuario.totalPoints ?? 0}
-                        </span>
-                        <span className="text-[10px] font-black uppercase tracking-widest opacity-80">
-                          PUNTOS
-                        </span>
+                        <h3 className="text-lg font-black mb-1 drop-shadow-md truncate px-2">
+                          {usuario.nombre || usuario.name}
+                        </h3>
+                        <div className="flex flex-col items-center">
+                          <span className="text-3xl font-black">
+                            {usuario.puntosTotal ?? usuario.totalPoints ?? 0}
+                          </span>
+                          <span className="text-[10px] font-black uppercase tracking-widest opacity-80">
+                            PUNTOS
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            ) : (
+              /* MENSAJE CUANDO NO HAY PUNTOS TODAVIA */
+              <div className="mb-12 p-12 text-center bg-white dark:bg-dark-card/30 rounded-3xl border-2 border-dashed border-slate-200 dark:border-white/10">
+                <div className="text-6xl mb-6 animate-bounce">⚽</div>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase mb-2">
+                  La temporada está por comenzar
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400 font-bold max-w-md mx-auto">
+                  Todavía nadie ha sumado puntos. ¡Sé el primero en hacer una
+                  predicción y liderar la tabla!
+                </p>
+              </div>
+            )}
 
             {/* SECCION: TABLA COMPLETA DE CLASIFICACION - COMPACTA */}
             <Card className="overflow-hidden border-primary/20 shadow-primary/5">

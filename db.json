@@ -4,11 +4,11 @@
       "id": "0b65",
       "homeTeam": "Madrid",
       "awayTeam": "Sevilla",
-      "date": "2026-12-02T21:00:00.000Z",
+      "date": "2026-02-15T21:00:00.000Z",
       "matchday": 1,
       "status": "finished",
       "result": {
-        "homeGoals": 1,
+        "homeGoals": 0,
         "awayGoals": 0
       }
     },
@@ -16,70 +16,34 @@
       "id": "286f",
       "homeTeam": "Chelsea",
       "awayTeam": "Barcelona",
-      "date": "2025-12-30T22:28:00.000Z",
-      "matchday": 2,
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 0
-      }
-    },
-    {
-      "id": "08f4",
-      "homeTeam": "Madrid",
-      "awayTeam": "Barcelona",
-      "date": "2026-01-14T15:20:00.000Z",
-      "matchday": 1,
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 0
-      }
-    },
-    {
-      "id": "f40f",
-      "homeTeam": "Madrid",
-      "awayTeam": "Barcelona",
-      "date": "2025-12-30T15:23:00.000Z",
+      "date": "2026-02-16T20:00:00.000Z",
       "matchday": 1,
       "status": "finished",
       "result": {
         "homeGoals": 0,
-        "awayGoals": 0
+        "awayGoals": 2
       }
     },
     {
       "id": "c582",
-      "homeTeam": "Valladolid",
-      "awayTeam": "Malaga",
-      "date": "2026-01-08T16:37:00.000Z",
+      "homeTeam": "Bayern",
+      "awayTeam": "Arsenal",
+      "date": "2026-02-19T21:00:00.000Z",
       "matchday": 1,
       "status": "finished",
       "result": {
-        "homeGoals": 0,
+        "homeGoals": 1,
         "awayGoals": 0
       }
     }
   ],
   "predictions": [
     {
-      "id": "5ea8",
+      "id": "9c7c",
       "matchId": "0b65",
-      "userId": "user1",
-      "prediction": "1",
-      "exactScore": {
-        "home": 1,
-        "away": 0
-      },
-      "points": 5,
-      "createdAt": "2026-01-26T19:21:28.670Z"
-    },
-    {
-      "id": "a7fa",
-      "matchId": "286f",
-      "idPartido": "286f",
-      "userId": "user1",
-      "idUsuario": "user1",
+      "idPartido": "0b65",
+      "userId": "user4",
+      "idUsuario": "user4",
       "prediction": "1",
       "prediccion": "1",
       "exactScore": {
@@ -94,38 +58,14 @@
         "local": 1,
         "visitante": 0
       },
-      "points": 5,
+      "points": 0,
       "puntosGanados": null,
-      "createdAt": "2026-01-26T22:29:02.052Z"
+      "createdAt": "2026-01-27T17:52:10.153Z"
     },
     {
-      "id": "c7c4",
-      "matchId": "08f4",
-      "idPartido": "08f4",
-      "userId": "user1",
-      "idUsuario": "user1",
-      "prediction": "1",
-      "prediccion": "1",
-      "exactScore": {
-        "home": 1,
-        "away": 0,
-        "local": 1,
-        "visitante": 0
-      },
-      "marcadorExacto": {
-        "home": 1,
-        "away": 0,
-        "local": 1,
-        "visitante": 0
-      },
-      "points": 5,
-      "puntosGanados": null,
-      "createdAt": "2026-01-27T15:21:21.050Z"
-    },
-    {
-      "id": "fcf9",
-      "matchId": "f40f",
-      "idPartido": "f40f",
+      "id": "71ab",
+      "matchId": "0b65",
+      "idPartido": "0b65",
       "userId": "user2",
       "idUsuario": "user2",
       "prediction": "X",
@@ -144,14 +84,14 @@
       },
       "points": 5,
       "puntosGanados": null,
-      "createdAt": "2026-01-27T15:23:55.352Z"
+      "createdAt": "2026-01-27T17:52:37.702Z"
     },
     {
-      "id": "184d",
-      "matchId": "f40f",
-      "idPartido": "f40f",
-      "userId": "user1",
-      "idUsuario": "user1",
+      "id": "a227",
+      "matchId": "0b65",
+      "idPartido": "0b65",
+      "userId": "user3",
+      "idUsuario": "user3",
       "prediction": "2",
       "prediccion": "2",
       "exactScore": {
@@ -168,38 +108,86 @@
       },
       "points": 0,
       "puntosGanados": null,
-      "createdAt": "2026-01-27T15:24:23.894Z"
+      "createdAt": "2026-01-27T17:52:59.542Z"
     },
     {
-      "id": "db4e",
-      "matchId": "c582",
-      "idPartido": "c582",
-      "userId": "user4",
-      "idUsuario": "user4",
-      "prediction": "X",
-      "prediccion": "X",
+      "id": "b450",
+      "matchId": "286f",
+      "idPartido": "286f",
+      "userId": "user2",
+      "idUsuario": "user2",
+      "prediction": "2",
+      "prediccion": "2",
       "exactScore": {
         "home": 0,
-        "away": 0,
+        "away": 2,
         "local": 0,
-        "visitante": 0
+        "visitante": 2
       },
       "marcadorExacto": {
         "home": 0,
-        "away": 0,
+        "away": 2,
         "local": 0,
-        "visitante": 0
+        "visitante": 2
       },
       "points": 5,
       "puntosGanados": null,
-      "createdAt": "2026-01-27T16:38:27.711Z"
+      "createdAt": "2026-01-27T17:56:04.424Z"
     },
     {
-      "id": "4096",
+      "id": "2a36",
+      "matchId": "286f",
+      "idPartido": "286f",
+      "userId": "user3",
+      "idUsuario": "user3",
+      "prediction": "2",
+      "prediccion": "2",
+      "exactScore": {
+        "home": 0,
+        "away": 1,
+        "local": 0,
+        "visitante": 1
+      },
+      "marcadorExacto": {
+        "home": 0,
+        "away": 1,
+        "local": 0,
+        "visitante": 1
+      },
+      "points": 3,
+      "puntosGanados": null,
+      "createdAt": "2026-01-27T17:56:29.643Z"
+    },
+    {
+      "id": "4461",
+      "matchId": "286f",
+      "idPartido": "286f",
+      "userId": "user4",
+      "idUsuario": "user4",
+      "prediction": "1",
+      "prediccion": "1",
+      "exactScore": {
+        "home": 2,
+        "away": 0,
+        "local": 2,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 2,
+        "away": 0,
+        "local": 2,
+        "visitante": 0
+      },
+      "points": 0,
+      "puntosGanados": null,
+      "createdAt": "2026-01-27T17:56:57.016Z"
+    },
+    {
+      "id": "40fb",
       "matchId": "c582",
       "idPartido": "c582",
-      "userId": "user2",
-      "idUsuario": "user2",
+      "userId": "c472",
+      "idUsuario": "c472",
       "prediction": "1",
       "prediccion": "1",
       "exactScore": {
@@ -214,16 +202,16 @@
         "local": 1,
         "visitante": 0
       },
-      "points": 0,
+      "points": 5,
       "puntosGanados": null,
-      "createdAt": "2026-01-27T16:39:00.075Z"
+      "createdAt": "2026-01-28T20:20:24.333Z"
     },
     {
-      "id": "0ec8",
+      "id": "524a",
       "matchId": "c582",
       "idPartido": "c582",
-      "userId": "user3",
-      "idUsuario": "user3",
+      "userId": "user2",
+      "idUsuario": "user2",
       "prediction": "X",
       "prediccion": "X",
       "exactScore": {
@@ -238,9 +226,33 @@
         "local": 0,
         "visitante": 0
       },
+      "points": 0,
+      "puntosGanados": null,
+      "createdAt": "2026-01-28T20:20:49.889Z"
+    },
+    {
+      "id": "0153",
+      "matchId": "c582",
+      "idPartido": "c582",
+      "userId": "user3",
+      "idUsuario": "user3",
+      "prediction": "1",
+      "prediccion": "1",
+      "exactScore": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
       "points": 5,
       "puntosGanados": null,
-      "createdAt": "2026-01-27T16:39:21.599Z"
+      "createdAt": "2026-01-28T20:21:09.500Z"
     }
   ],
   "users": [
@@ -251,10 +263,10 @@
       "email": "biwash@goalz.com",
       "password": "admin123",
       "role": "admin",
-      "totalPoints": 290,
-      "puntosTotal": 275,
-      "correctPredictions": 21,
-      "totalPredictions": 25
+      "totalPoints": 0,
+      "puntosTotal": 0,
+      "correctPredictions": 0,
+      "totalPredictions": 0
     },
     {
       "id": "user2",
@@ -263,10 +275,10 @@
       "email": "kerrly@goalz.com",
       "password": "kerrly123",
       "role": "user",
-      "totalPoints": 230,
-      "puntosTotal": 230,
-      "correctPredictions": 11,
-      "totalPredictions": 24
+      "totalPoints": 13,
+      "puntosTotal": 0,
+      "correctPredictions": 3,
+      "totalPredictions": 0
     },
     {
       "id": "user3",
@@ -275,10 +287,10 @@
       "email": "sergio@goalz.com",
       "password": "sergio123",
       "role": "user",
-      "totalPoints": 265,
-      "puntosTotal": 260,
-      "correctPredictions": 15,
-      "totalPredictions": 24
+      "totalPoints": 18,
+      "puntosTotal": 0,
+      "correctPredictions": 4,
+      "totalPredictions": 0
     },
     {
       "id": "user4",
@@ -287,33 +299,21 @@
       "email": "esteban@goalz.com",
       "password": "esteban123",
       "role": "user",
-      "totalPoints": 220,
-      "puntosTotal": 215,
-      "correctPredictions": 11,
-      "totalPredictions": 26
-    },
-    {
-      "id": "e0a5",
-      "name": "biwwi",
-      "nombre": "biwwi",
-      "email": "123@mail.com",
-      "password": "1234567",
-      "role": "user",
       "totalPoints": 0,
       "puntosTotal": 0,
       "correctPredictions": 0,
       "totalPredictions": 0
     },
     {
-      "id": "7c7f",
+      "id": "c472",
       "name": "Benjamin",
       "nombre": "Benjamin",
-      "email": "benji123@ejemplo.com",
-      "password": "hola1234",
+      "email": "benji@goalz.com",
+      "password": "123456",
       "role": "user",
-      "totalPoints": 0,
+      "totalPoints": 5,
       "puntosTotal": 0,
-      "correctPredictions": 0,
+      "correctPredictions": 1,
       "totalPredictions": 0
     }
   ]

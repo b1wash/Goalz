@@ -100,11 +100,7 @@ export const Inicio = () => {
             {usuarioActual?.role === "admin" ? (
               <div className="flex flex-col items-center p-6 rounded-3xl bg-accent/10 border border-accent/20 shadow-xl shadow-accent/5 transition-all hover:scale-105">
                 <div className="text-5xl mb-3">👥</div>
-                <div className="text-4xl font-black text-accent mb-1">
-                  {/* Total de usuarios menos el admin */}
-                  {/* Aquí idealmente cargarías usuarios, pero por ahora mostraremos un placeholder */}
-                  0
-                </div>
+                <div className="text-4xl font-black text-accent mb-1">0</div>
                 <div className="text-[10px] font-black text-accent/70 uppercase tracking-widest">
                   Total Jugadores
                 </div>
@@ -131,11 +127,19 @@ export const Inicio = () => {
             <h2 className="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
               <span className="text-primary text-4xl">●</span> PRÓXIMOS PARTIDOS
             </h2>
-            <Link to="/hacer-prediccion">
-              <Button variant="secondary" className="px-6 py-2">
-                VER TODOS →
-              </Button>
-            </Link>
+            {usuarioActual?.role === "admin" ? (
+              <Link to="/admin" state={{ tabActiva: "partidos" }}>
+                <Button variant="secondary" className="px-6 py-2">
+                  GESTIONAR PARTIDOS →
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/hacer-prediccion">
+                <Button variant="secondary" className="px-6 py-2">
+                  VER TODOS →
+                </Button>
+              </Link>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

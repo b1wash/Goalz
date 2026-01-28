@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
-/* ESTO ES DE TAILWIN V4 Y EL EDITOR TODAVIA NO LO RECONOCE */
+/* ESTO ES DE TAILWIN V4.1 Y EL EDITOR TODAVIA NO LO RECONOCE */
+/* AL USAR VARIANT DARK EN MI CASO LE ESTOY DIIENDO A TAILWIND QUE CUANDO YO ESCRIBA LA PALABRA DARK: DELANTEDE UNA CLASE COMO DARK:BG-RED-500, APLIQUES ESTILOS BAJO UNA CONDICION ESPECIFICA */
+/* @variant dark (&:where(.dark, .dark *)); */
 @variant dark (&:where(.dark, .dark *));
 
+/* DEFINICION DE VARIABLES PARA EL TEMA PERSONALIZADO DE MI APP */
 @theme {
   --color-primary: #10b981;
   --color-secondary: #059669;
@@ -35,20 +38,32 @@
       BlinkMacSystemFont,
       "Segoe UI",
       sans-serif;
-    background-color: #f8fafc; /* Light mode background (Slate 50) */
-    color: #0f172a; /* Light mode text (Slate 900) */
+    background-color: #f8fafc;
+    color: #0f172a;
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
     min-height: 100vh;
   }
 
+  /* ESTO ES PARA QUE SE VEA EL FONDO EN TODA LA PANTALLA */
   html.dark body {
-    background-color: #0f172a; /* Dark mode background */
-    color: #ffffff; /* Dark mode text */
+    background-color: #0f172a;
+    color: #ffffff;
   }
 
+  /* ESTO ES PARA QUE EL CONTENEDOR PRINCIPAL OCUPE TODA LA PANTALLA */
   #root {
     min-height: 100vh;
+  }
+
+  /* MEJORA VISUAL PARA EL ICONO DEL CALENDARIO EN MODO OSCURO */
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    transition: filter 0.3s ease;
+  }
+
+  html.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.5);
   }
 }

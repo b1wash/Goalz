@@ -1,5 +1,6 @@
 // PANEL DE ADMINISTRACION MEJORADO CON MULTIPLES SECCIONES
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { matchService } from "../services/matchService";
 import { predictionService } from "../services/predictionService";
 import { userService } from "../services/userService";
@@ -17,13 +18,14 @@ import type {
 
 export const AdminMatches = () => {
   const { recargarUsuario } = useApp();
+  const location = useLocation();
 
-  // Estado para navegación entre tabs
+  // ESTADO PARA NAVEGACION ENTRE TABS
   const [tabActiva, setTabActiva] = useState<
     "dashboard" | "partidos" | "usuarios" | "estadisticas"
-  >("dashboard");
+  >(location.state?.tabActiva || "dashboard");
 
-  // Estados de datos
+  // ESTADOS PARA LOS DATOS
   const [partidos, setPartidos] = useState<Partido[]>([]);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [predicciones, setPredicciones] = useState<Prediccion[]>([]);
@@ -31,7 +33,7 @@ export const AdminMatches = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Estados para gestión de partidos
+  // ESTADOS PARA GESTION PARTIDOS
   const [vistaPartidos, setVistaPartidos] = useState<
     "lista" | "crear" | "actualizar"
   >("lista");
@@ -52,7 +54,7 @@ export const AdminMatches = () => {
     awayGoals: 0,
   });
 
-  // Cargar todos los datos
+  // CARGAR TODOS LOS DATOS
   useEffect(() => {
     cargarTodosLosDatos();
   }, []);
@@ -77,7 +79,7 @@ export const AdminMatches = () => {
     }
   };
 
-  // Funciones para gestión de partidos (mantener las originales)
+  //FUNCION PARA GESTION DE LOS PARTIDOS (MANTENER LAS ORIGINALES)
   const validarFormCrear = (): boolean => {
     const validacion = validarDatosPartido(
       formCrear.homeTeam,
@@ -656,7 +658,7 @@ export const AdminMatches = () => {
                         onChange={(e) =>
                           setFormCrear({ ...formCrear, date: e.target.value })
                         }
-                        className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
+                        className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all appearance-none"
                       />
                     </div>
                     <div>
