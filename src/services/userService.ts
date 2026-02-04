@@ -5,7 +5,7 @@ import type { Usuario } from "../types";
 // FUNCION INTERNA PARA NORMALIZAR LOS DATOS DEL USUARIO ENTRE DIFERENTES VERSIONES DE LA API
 const mapUser = (user: Usuario): Usuario => ({
   ...user,
-  nombre: user.name || user.nombre,
+  nombre: user.name || user.nombre, //SI VIENE CON EL NOMBRE EN INGLES LO CAMBIA A ESPAÑOL
   puntosTotal: user.totalPoints ?? user.puntosTotal ?? 0,
 });
 

@@ -243,42 +243,55 @@ export const MisPredicciones = () => {
 
         {/* CONTROLES DE PAGINACION */}
         {totalPaginas > 1 && (
-          <div className="mt-12 flex justify-center items-center gap-4">
-            <Button
-              onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
-              disabled={paginaActual === 1}
-              className="px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              ← Anterior
-            </Button>
+          <div className="mt-12">
+            {/* INFORMACION DE PAGINACION */}
+            <div className="text-center mb-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400 font-bold">
+                Mostrando {indiceInicio + 1}-
+                {Math.min(indiceFin, prediccionesFiltradas.length)} de{" "}
+                {prediccionesFiltradas.length} predicciones
+              </p>
+            </div>
 
-            <div className="flex items-center gap-2">
+            {/* CONTROLES */}
+            <div className="flex justify-center items-center gap-2 flex-wrap">
+              {/* BOTON ANTERIOR */}
+              <button
+                onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
+                disabled={paginaActual === 1}
+                className="px-4 py-2 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 font-bold text-sm text-slate-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-dark-card disabled:hover:text-slate-700 dark:disabled:hover:text-gray-300"
+              >
+                ← Anterior
+              </button>
+
+              {/* NUMEROS DE PAGINA */}
               {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
                 (num) => (
                   <button
                     key={num}
                     onClick={() => setPaginaActual(num)}
-                    className={`w-10 h-10 rounded-xl font-black text-sm transition-all ${
+                    className={`min-w-[40px] px-3 py-2 rounded-lg font-black text-sm transition-all ${
                       paginaActual === num
-                        ? "bg-primary text-dark-bg shadow-lg shadow-primary/20"
-                        : "bg-slate-100 dark:bg-dark-bg text-gray-500 hover:text-primary"
+                        ? "bg-primary text-white border-2 border-primary scale-110"
+                        : "bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5"
                     }`}
                   >
                     {num}
                   </button>
                 ),
               )}
-            </div>
 
-            <Button
-              onClick={() =>
-                setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
-              }
-              disabled={paginaActual === totalPaginas}
-              className="px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Siguiente →
-            </Button>
+              {/* BOTON SIGUIENTE */}
+              <button
+                onClick={() =>
+                  setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
+                }
+                disabled={paginaActual === totalPaginas}
+                className="px-4 py-2 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 font-bold text-sm text-slate-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-dark-card disabled:hover:text-slate-700 dark:disabled:hover:text-gray-300"
+              >
+                Siguiente →
+              </button>
+            </div>
           </div>
         )}
 

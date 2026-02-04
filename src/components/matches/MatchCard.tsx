@@ -29,7 +29,7 @@ export const MatchCard = ({ match, showResult = true }: MatchCardProps) => {
   };
 
   return (
-    <div className="bg-white/80 dark:bg-dark-card/50 backdrop-blur-sm border-2 border-slate-200 dark:border-primary/20 rounded-2xl p-4 hover:border-primary dark:hover:border-primary/40 hover:shadow-xl transition-all duration-300">
+    <div className="h-full bg-white/80 dark:bg-dark-card/50 backdrop-blur-sm border-2 border-slate-200 dark:border-primary/20 rounded-2xl p-4 hover:border-primary dark:hover:border-primary/40 hover:shadow-xl transition-all duration-300">
       <div className="flex flex-col gap-3">
         {/* FECHA Y JORNADA */}
         <div className="flex items-center justify-between">

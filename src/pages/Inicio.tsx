@@ -13,6 +13,10 @@ export const Inicio = () => {
   // ESTADOS DE DATOS LOCALES
   const [partidos, setPartidos] = useState<Partido[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // ESTADO DE PAGINACION PARA PARTIDOS
+  const [paginaPartidos, setPaginaPartidos] = useState(1);
+  const partidosPorPagina = 6; // MOSTRAR 6 PARTIDOS POR PAGINA (2 FILAS COMPLETAS EN DESKTOP)
   const [error, setError] = useState<string | null>(null);
 
   // CARGAR PARTIDOS Y RESULTADOS AL INICIAR LA SESION
@@ -37,6 +41,17 @@ export const Inicio = () => {
   // FILTRAR PARTIDOS PENDIENTES PARA EL MODULO DE "PROXIMOS"
   const partidosPendientes = partidos.filter(
     (p) => p.status === "pending" || p.estado === "pendiente",
+  );
+
+  // CALCULAR PAGINACION DE PARTIDOS
+  const indiceUltimoPartido = paginaPartidos * partidosPorPagina;
+  const indicePrimerPartido = indiceUltimoPartido - partidosPorPagina;
+  const partidosPaginados = partidosPendientes.slice(
+    indicePrimerPartido,
+    indiceUltimoPartido,
+  );
+  const totalPaginasPartidos = Math.ceil(
+    partidosPendientes.length / partidosPorPagina,
   );
 
   // RENDERIZADO DE CARGA PREVIO AL CONTENIDO
@@ -142,15 +157,15 @@ export const Inicio = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {partidosPendientes.slice(0, 4).map((partido) => (
-              <div key={partido.id} className="group flex flex-col gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+            {partidosPaginados.map((partido) => (
+              <div key={partido.id} className="flex flex-col gap-4">
                 <MatchCard match={partido} showResult={false} />
                 {/* SOLO MOSTRAR BOTON SI NO ES ADMIN */}
                 {usuarioActual?.role !== "admin" && (
                   <Link to="/hacer-prediccion" className="w-full">
-                    <Button className="w-full py-4 uppercase font-black text-xs tracking-[0.2em] shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
-                      REALIZAR PRONOSTICO
+                    <Button className="w-full py-3 uppercase font-black text-xs tracking-[0.2em]">
+                      REALIZAR PRONÓSTICO
                     </Button>
                   </Link>
                 )}
@@ -166,6 +181,44 @@ export const Inicio = () => {
               </div>
             )}
           </div>
+
+          {/* CONTROLES DE PAGINACION COMPACTOS */}
+          {totalPaginasPartidos > 1 && (
+            <div className="mt-6 flex items-center justify-center gap-2">
+              {/* BOTON ANTERIOR */}
+              <button
+                onClick={() =>
+                  setPaginaPartidos(Math.max(1, paginaPartidos - 1))
+                }
+                disabled={paginaPartidos === 1}
+                className="w-8 h-8 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-dark-card disabled:hover:text-slate-700 dark:disabled:hover:text-gray-300 flex items-center justify-center"
+                title="Anterior"
+              >
+                ←
+              </button>
+
+              {/* INDICADOR DE PAGINA */}
+              <div className="px-3 py-1 bg-slate-100 dark:bg-dark-bg/50 rounded-lg">
+                <span className="text-xs font-bold text-slate-700 dark:text-gray-300">
+                  {paginaPartidos} / {totalPaginasPartidos}
+                </span>
+              </div>
+
+              {/* BOTON SIGUIENTE */}
+              <button
+                onClick={() =>
+                  setPaginaPartidos(
+                    Math.min(totalPaginasPartidos, paginaPartidos + 1),
+                  )
+                }
+                disabled={paginaPartidos === totalPaginasPartidos}
+                className="w-8 h-8 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-dark-card disabled:hover:text-slate-700 dark:disabled:hover:text-gray-300 flex items-center justify-center"
+                title="Siguiente"
+              >
+                →
+              </button>
+            </div>
+          )}
         </div>
 
         {/* SECCION: ACCESOS DIRECTOS A OTRAS VISTAS */}

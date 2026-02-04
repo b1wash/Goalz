@@ -14,7 +14,7 @@ export interface PredictionCardProps {
 export const PredictionCard = ({ prediction, match }: PredictionCardProps) => {
   // FUNCION: CONVERTIR CODIGO DE PREDICCION A TEXTO LEGIBLE
   // TRANSFORMA "1", "X", "2" EN TEXTO CON EMOJI PARA MEJOR UX
-  // EJEMPLO: "1" -> "🏠 Local", "X" -> "🤝 Empate", "2" -> "✈️ Visitante"
+  // EJEMPLO: "1" -> Local", "X" -> "Empate", "2" -> Visitante"
   const getResultText = (pred: "1" | "X" | "2") => {
     if (pred === "1") return "🏠 Local";
     if (pred === "X") return "🤝 Empate";
@@ -64,7 +64,7 @@ export const PredictionCard = ({ prediction, match }: PredictionCardProps) => {
 
       {/* SECCION 2: PREDICCION DEL USUARIO */}
       {/* MUESTRA LA PREDICCION QUE HIZO EL USUARIO: RESULTADO (1X2) Y MARCADOR EXACTO */}
-      {/* TIENE FONDO DIFERENCIADO PARA DESTACAR LA INFORMACION */}
+
       <div className="mb-4 p-4 bg-slate-100 dark:bg-dark-bg/50 rounded-lg border border-slate-200 dark:border-primary/10">
         {/* ETIQUETA DESCRIPTIVA */}
         <p className="text-xs font-bold text-slate-600 dark:text-gray-300 mb-2 uppercase tracking-wide">

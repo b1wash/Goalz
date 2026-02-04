@@ -1,6 +1,7 @@
 // SERVICIO PARA GESTIONAR LA ENTIDAD DE PARTIDOS (MATCHES)
 import { api } from "./api";
 import type { Partido } from "../types";
+// import { partidosMock } from "../utils/mockData";
 
 // INTERFAZ PARA LA CREACION DE UN NUEVO PARTIDO EN EL SISTEMA
 export interface CrearPartidoDTO {
@@ -25,6 +26,8 @@ export const matchService = {
   // OBTENER EL LISTADO COMPLETO DE PARTIDOS REGISTRADOS
   getAll: async (): Promise<Partido[]> => {
     return api.get<Partido[]>("/matches");
+    //DEVUELVE LOS DATOS DE EJEMPLO
+    //return Promise.resolve(partidosMock);
   },
 
   // FILTRAR Y OBTENER UNICAMENTE LOS PARTIDOS QUE AUN NO HAN COMENZADO

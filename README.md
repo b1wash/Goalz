@@ -230,19 +230,46 @@ Para este proyecto, he implementado un **Backend basado en JSON-Server**. Este s
 - Próximos partidos (sin botón de predicción)
 - Acceso rápido al "Panel de Gestión"
 
-### 🏆 Clasificación Compacta
+### 🏆 Clasificación Compacta (con Paginación)
 
-- Podio visual premium (Top 3)
-- Tabla optimizada con menos espacio
-- Solo muestra jugadores (admins filtrados)
-- Posición, nombre, puntos, aciertos
+- **Podio visual premium** (Top 3 siempre visible)
+- **Paginación inteligente**: 10 usuarios por página
+- **Tabla optimizada** con menos espacio
+- **Solo muestra jugadores** (admins filtrados)
+- **Posiciones correctas** en todas las páginas
+- **Controles de navegación**: Anterior, números de página, Siguiente
+- **Información de rango**: "Mostrando 1-10 de 15 usuarios"
+- **Desempate automático**: Por puntos y luego por aciertos
 
 ### 📊 Mis Predicciones (con Paginación)
 
-- **9 predicciones por página**
-- Navegación con botones numéricos
-- Filtros que resetean la paginación
-- Diseño optimizado y compacto
+- **9 predicciones por página** (grid 3x3)
+- **Navegación con botones numéricos**
+- **Filtros que resetean la paginación**
+- **Información de rango**: "Mostrando 1-9 de X predicciones"
+- **Diseño optimizado y compacto**
+- **Filtros dinámicos:**
+  - Todas
+  - Pendientes
+  - Acertadas
+  - Falladas
+
+### 🏠 Inicio (con Paginación de Partidos)
+
+**Para Jugadores:**
+
+- **Tus puntos totales** destacados
+- **6 partidos por página** (2 filas completas en desktop)
+- **Paginación compacta**: `← | 1 / 3 | →`
+- **Botones de predicción** en cada partido
+- **Acceso rápido** a "Mis Predicciones"
+
+**Para Admins:**
+
+- **Total de jugadores activos**
+- **6 partidos por página** (sin botones de predicción)
+- **Paginación compacta** para navegar
+- **Acceso rápido** al "Panel de Gestión"
 
 ### ⚡ Hacer Predicción (Formulario Compacto)
 
@@ -359,11 +386,16 @@ Cumple con todos los requisitos técnicos y funcionales del curso.
 - [x] Custom Hooks para lógica reutilizable
 - [x] Modo Oscuro/Claro con persistencia
 - [x] Filtros avanzados en tiempo real
-- [x] Paginación de contenidos
+- [x] **Paginación en Clasificación** (10 usuarios/página)
+- [x] **Paginación en Mis Predicciones** (9 predicciones/página)
+- [x] **Paginación en Inicio** (6 partidos/página)
 - [x] UX Premium con micro-animaciones
 - [x] Panel de Admin con 4 secciones
 - [x] Gestión de usuarios por Admin
 - [x] Diseños compactos y optimizados
+- [x] Sistema de desempate por aciertos
+- [x] Controles de paginación consistentes
+- [x] Información de rango en todas las vistas paginadas
 
 ---
 

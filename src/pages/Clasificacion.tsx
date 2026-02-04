@@ -13,6 +13,10 @@ export const Clasificacion = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // ESTADOS DE PAGINACION
+  const [paginaActual, setPaginaActual] = useState(1);
+  const usuariosPorPagina = 10; // MOSTRAR 10 USUARIOS POR PAGINA
+
   // CARGAR USUARIOS AL INICIAR EL COMPONENTE
   useEffect(() => {
     const cargarUsuarios = async () => {
@@ -50,6 +54,15 @@ export const Clasificacion = () => {
       const aciertosB = b.correctPredictions ?? 0;
       return aciertosB - aciertosA;
     });
+
+  // CALCULAR PAGINACION
+  const indiceUltimo = paginaActual * usuariosPorPagina;
+  const indicePrimero = indiceUltimo - usuariosPorPagina;
+  const usuariosPaginados = usuariosOrdenados.slice(
+    indicePrimero,
+    indiceUltimo,
+  );
+  const totalPaginas = Math.ceil(usuariosOrdenados.length / usuariosPorPagina);
 
   // FUNCION PARA OBTENER EL COLOR SEGUN LA POSICION EN EL RANKING
   const obtenerColorPosicion = (posicion: number): string => {
@@ -182,14 +195,25 @@ export const Clasificacion = () => {
             {/* SECCION: TABLA COMPLETA DE CLASIFICACION - COMPACTA */}
             <Card className="overflow-hidden border-primary/20 shadow-primary/5">
               <div className="bg-slate-50 dark:bg-dark-bg/50 border-b border-slate-200 dark:border-primary/20 px-6 py-4">
-                <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                  TABLA COMPLETA DE PARTICIPANTES
-                </h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                    TABLA COMPLETA DE PARTICIPANTES
+                  </h2>
+                  {/* INFORMACION DE PAGINACION */}
+                  {totalPaginas > 1 && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 font-bold">
+                      Mostrando {indicePrimero + 1}-
+                      {Math.min(indiceUltimo, usuariosOrdenados.length)} de{" "}
+                      {usuariosOrdenados.length}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="divide-y divide-slate-100 dark:divide-white/5">
-                {usuariosOrdenados.map((usuario, index) => {
-                  const posicion = index + 1;
+                {usuariosPaginados.map((usuario, index) => {
+                  // CALCULAR LA POSICION REAL EN EL RANKING COMPLETO (NO SOLO EN LA PAGINA ACTUAL)
+                  const posicion = indicePrimero + index + 1;
                   const esUsuarioActual = usuario.id === usuarioActual?.id;
 
                   return (
@@ -267,6 +291,54 @@ export const Clasificacion = () => {
                   );
                 })}
               </div>
+
+              {/* CONTROLES DE PAGINACION */}
+              {totalPaginas > 1 && (
+                <div className="bg-slate-50 dark:bg-dark-bg/50 border-t border-slate-200 dark:border-primary/20 px-6 py-4">
+                  <div className="flex items-center justify-center gap-2 flex-wrap">
+                    {/* BOTON ANTERIOR */}
+                    <button
+                      onClick={() =>
+                        setPaginaActual(Math.max(1, paginaActual - 1))
+                      }
+                      disabled={paginaActual === 1}
+                      className="px-4 py-2 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 font-bold text-sm text-slate-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-dark-card disabled:hover:text-slate-700 dark:disabled:hover:text-gray-300"
+                    >
+                      ← Anterior
+                    </button>
+
+                    {/* NUMEROS DE PAGINA */}
+                    {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
+                      (numero) => (
+                        <button
+                          key={numero}
+                          onClick={() => setPaginaActual(numero)}
+                          className={`min-w-[40px] px-3 py-2 rounded-lg font-black text-sm transition-all ${
+                            paginaActual === numero
+                              ? "bg-primary text-white border-2 border-primary scale-110"
+                              : "bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                          }`}
+                        >
+                          {numero}
+                        </button>
+                      ),
+                    )}
+
+                    {/* BOTON SIGUIENTE */}
+                    <button
+                      onClick={() =>
+                        setPaginaActual(
+                          Math.min(totalPaginas, paginaActual + 1),
+                        )
+                      }
+                      disabled={paginaActual === totalPaginas}
+                      className="px-4 py-2 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 font-bold text-sm text-slate-700 dark:text-gray-300 hover:bg-primary hover:text-white hover:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-dark-card disabled:hover:text-slate-700 dark:disabled:hover:text-gray-300"
+                    >
+                      Siguiente →
+                    </button>
+                  </div>
+                </div>
+              )}
             </Card>
 
             {/* SECCION INFORMATIVA SOBRE EL REGLAMENTO */}
