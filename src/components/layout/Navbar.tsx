@@ -22,7 +22,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
   return (
     <>
       {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-dark-bg/95 backdrop-blur-lg border-b border-slate-200 dark:border-primary/20 shadow-2xl transition-colors duration-300">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-dark-bg/95 backdrop-blur-lg border-b border-slate-200 dark:border-primary/20 shadow-2xl transition-colors duration-150">
         {/* CONTENEDOR CENTRADO CON MAX-WIDTH OPTIMIZADO PARA ULTRAWIDE EN MI CASO COMO TENGO UN MONITOR DE ULTRA WIDE */}
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="flex items-center justify-between h-16 lg:h-20 gap-4 lg:gap-8">
@@ -43,7 +43,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
 
               {/* LOGO TEXTO*/}
               <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-none group-hover:text-primary transition-colors duration-300">
+                <span className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-none group-hover:text-primary transition-colors duration-150">
                   GOALZ
                 </span>
                 <span className="text-[10px] sm:text-xs lg:text-sm font-bold text-primary/80 dark:text-primary/80 uppercase tracking-widest">

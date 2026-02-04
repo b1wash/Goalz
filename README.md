@@ -64,8 +64,9 @@ npm run dev
 
 **URLs de acceso:**
 
-- Aplicación: http://localhost:5173
-- API REST: http://localhost:3001
+- **Aplicación (Local)**: http://localhost:5173
+- **Aplicación (Deploy)**: https://goalz-predictor.netlify.app/
+- **API REST**: http://localhost:3001
 
 ## 📂 Estructura del Proyecto
 
@@ -312,7 +313,7 @@ npm run preview     # Preview de producción
 - ✅ **Persistencia**: LocalStorage para sesiones
 - ✅ **Separación de roles**: Admin solo gestiona
 
-### UX/UI
+### Diseño
 
 - ✅ **Diseño responsive**: Mobile, Tablet, Desktop, Ultrawide
 - ✅ **Modo Dual**: Light/Dark con persistencia
