@@ -1,10 +1,14 @@
-// TIPOS PARA PREDICCIONES (1=LOCAL, X=EMPATE, 2=VISITANTE)
+// DEFINICIONES DE TIPOS TYPESCRIPT PARA TODA LA APLICACION
+
+// TIPO: RESULTADO DE UNA PREDICCION (1X2)
+// "1" = VICTORIA LOCAL, "X" = EMPATE, "2" = VICTORIA VISITANTE
 export type TipoPrediccion = "1" | "X" | "2";
 
-// ESTADOS DE UN PARTIDO
+// TIPO: ESTADOS POSIBLES DE UN PARTIDO
 export type EstadoPartido = "pending" | "finished" | "pendiente" | "finalizado";
 
-// DEFINICION DE UN USUARIO (COMPATIBLE CON DB.JSON Y CODIGO EXISTENTE)
+// INTERFAZ: USUARIO DEL SISTEMA
+// COMPATIBLE CON db.json Y DIFERENTES VERSIONES DE LA API
 export interface Usuario {
   id: string;
   name: string;
@@ -18,7 +22,8 @@ export interface Usuario {
   totalPredictions: number;
 }
 
-// RESULTADO DE UN PARTIDO
+// INTERFAZ: RESULTADO FINAL DE UN PARTIDO
+// ALMACENA LOS GOLES DE AMBOS EQUIPOS
 export interface ResultadoPartido {
   homeGoals: number;
   awayGoals: number;
@@ -26,7 +31,8 @@ export interface ResultadoPartido {
   golesVisitante: number;
 }
 
-// DEFINICION DE UN PARTIDO DE FUTBOL (COMPATIBLE CON DB.JSON Y CODIGO EXISTENTE)
+// INTERFAZ: PARTIDO DE FUTBOL
+// CONTIENE TODA LA INFORMACION DE UN PARTIDO
 export interface Partido {
   id: string;
   homeTeam: string;
@@ -42,7 +48,8 @@ export interface Partido {
   resultado: ResultadoPartido | null;
 }
 
-// MARCADOR EXACTO DE UNA PREDICCION
+// INTERFAZ: MARCADOR EXACTO DE UNA PREDICCION
+// GUARDA LOS GOLES QUE EL USUARIO PREDICE PARA CADA EQUIPO
 export interface MarcadorExacto {
   home: number;
   away: number;
@@ -50,7 +57,8 @@ export interface MarcadorExacto {
   visitante: number;
 }
 
-// DEFINICION DE UNA PREDICCION (COMPATIBLE CON DB.JSON Y CODIGO EXISTENTE)
+// INTERFAZ: PREDICCION DE UN USUARIO
+// RELACIONA: UN USUARIO, UN PARTIDO Y SU PRONOSTICO
 export interface Prediccion {
   id: string;
   matchId: string;
@@ -66,7 +74,8 @@ export interface Prediccion {
   createdAt: string;
 }
 
-// DATOS PARA CREAR UNA PREDICCION (FORMULARIO)
+// INTERFAZ: DATOS DE FORMULARIO PARA CREAR PREDICCION
+// SE USA EN EL COMPONENTE DE "HACER PREDICCION"
 export interface DatosFormularioPrediccion {
   matchId: string;
   prediction: TipoPrediccion;
@@ -74,7 +83,8 @@ export interface DatosFormularioPrediccion {
   exactScoreAway: number;
 }
 
-// DATOS PARA CREAR UN PARTIDO (FORMULARIO ADMIN)
+// INTERFAZ: DATOS DE FORMULARIO PARA CREAR PARTIDO
+// SE USA EN EL PANEL DE ADMINISTRADOR
 export interface DatosFormularioPartido {
   homeTeam: string;
   awayTeam: string;
@@ -82,7 +92,8 @@ export interface DatosFormularioPartido {
   matchday: number;
 }
 
-// DATOS PARA ACTUALIZAR RESULTADO (FORMULARIO ADMIN)
+// INTERFAZ: DATOS DE FORMULARIO PARA ACTUALIZAR RESULTADO
+// SE USA CUANDO EL ADMIN INGRESA EL RESULTADO FINAL
 export interface DatosFormularioResultado {
   matchId: string;
   homeGoals: number;
