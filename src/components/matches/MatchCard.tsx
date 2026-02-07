@@ -11,6 +11,8 @@ export const MatchCard = ({ match, showResult = true }: MatchCardProps) => {
   // Formatear fecha y hora
   const formatearFecha = (fecha: string) => {
     const date = new Date(fecha);
+    if (isNaN(date.getTime())) return fecha; // CARGAR ETIQUETA PERSONALIZADA (EJ: JORNADA 2023/24)
+
     const opciones: Intl.DateTimeFormatOptions = {
       weekday: "short",
       day: "numeric",
@@ -22,6 +24,8 @@ export const MatchCard = ({ match, showResult = true }: MatchCardProps) => {
 
   const formatearHora = (fecha: string) => {
     const date = new Date(fecha);
+    if (isNaN(date.getTime())) return null; // NO MOSTRAR HORA SI ES ETIQUETA
+
     return date.toLocaleTimeString("es-ES", {
       hour: "2-digit",
       minute: "2-digit",
@@ -41,15 +45,24 @@ export const MatchCard = ({ match, showResult = true }: MatchCardProps) => {
               {formatearFecha(match.date)}
             </div>
             <div className="text-xs font-black text-primary mt-0.5">
-              🕐 {formatearHora(match.date)}
+              {formatearHora(match.date)
+                ? `🕐 ${formatearHora(match.date)}`
+                : "⚽ LA LIGA"}
             </div>
           </div>
         </div>
 
         {/* EQUIPOS Y RESULTADO */}
         <div className="grid grid-cols-3 gap-4 items-center py-4">
-          <div className="text-right">
-            <p className="font-black text-slate-900 dark:text-white text-lg lg:text-xl">
+          <div className="flex flex-col items-end gap-2 text-right">
+            {match.homeLogo && (
+              <img
+                src={match.homeLogo}
+                alt={match.homeTeam || match.equipoLocal}
+                className="w-12 h-12 object-contain"
+              />
+            )}
+            <p className="font-black text-slate-900 dark:text-white text-lg lg:text-xl leading-tight">
               {match.homeTeam || match.equipoLocal}
             </p>
           </div>
@@ -66,8 +79,15 @@ export const MatchCard = ({ match, showResult = true }: MatchCardProps) => {
             )}
           </div>
 
-          <div className="text-left">
-            <p className="font-black text-slate-900 dark:text-white text-lg lg:text-xl">
+          <div className="flex flex-col items-start gap-2 text-left">
+            {match.awayLogo && (
+              <img
+                src={match.awayLogo}
+                alt={match.awayTeam || match.equipoVisitante}
+                className="w-12 h-12 object-contain"
+              />
+            )}
+            <p className="font-black text-slate-900 dark:text-white text-lg lg:text-xl leading-tight">
               {match.awayTeam || match.equipoVisitante}
             </p>
           </div>

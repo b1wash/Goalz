@@ -43,7 +43,10 @@ export const predictionService = {
 
   // ASIGNAR O ACTUALIZAR LOS PUNTOS OBTENIDOS POR UNA PREDICCION YA EVALUADA
   updatePoints: async (id: string, points: number): Promise<Prediccion> => {
-    return api.patch<Prediccion>(`/predictions/${id}`, { points });
+    return api.patch<Prediccion>(`/predictions/${id}`, {
+      points,
+      puntosGanados: points,
+    });
   },
 
   // ELIMINAR UNA PREDICCION DEL REGISTRO

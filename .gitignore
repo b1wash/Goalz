@@ -1,4 +1,4 @@
-# Logs
+# ARCHIVOS DE LOGS
 logs
 *.log
 npm-debug.log*
@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# DIRECTORIOS Y ARCHIVOS DEL EDITOR
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 eslint.config.js
+
+# VARIABLES DE ENTORNO (API Keys)
+.env
+.env.local
+.env.production

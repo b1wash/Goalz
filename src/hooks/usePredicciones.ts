@@ -19,7 +19,7 @@ export const usePredicciones = () => {
   const agregarPrediccion = (nuevaPrediccion: Omit<Prediccion, "id">) => {
     const prediccion: Prediccion = {
       ...nuevaPrediccion,
-      id: Date.now().toString(), // GENERAR ID UNICO
+      id: Date.now().toString(),
     };
     setPredicciones([...predicciones, prediccion]);
     return prediccion;

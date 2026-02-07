@@ -17,13 +17,13 @@ import { userService } from "../services/userService";
 interface AppContextType {
   usuarioActual: Usuario | null; // USUARIO AUTENTICADO (NULL SI NO HAY SESION)
   predicciones: Prediccion[]; // LISTADO COMPLETO DE PREDICCIONES
-  agregarPrediccion: (prediccion: Omit<Prediccion, "id">) => Prediccion; // CREAR NUEVA PREDICCION
-  eliminarPrediccion: (id: string) => void; // BORRAR PREDICCION POR ID
-  obtenerPrediccionesUsuario: (idUsuario: string) => Prediccion[]; // FILTRAR PREDICCIONES DE UN USUARIO
-  recargarUsuario: () => Promise<void>; // ACTUALIZAR DATOS DEL USUARIO DESDE LA API
-  login: (email: string, password: string) => Promise<void>; // INICIAR SESION
-  register: (nombre: string, email: string, password: string) => Promise<void>; // REGISTRAR NUEVO USUARIO
-  logout: () => void; // CERRAR SESION
+  agregarPrediccion: (prediccion: Omit<Prediccion, "id">) => Prediccion;
+  eliminarPrediccion: (id: string) => void;
+  obtenerPrediccionesUsuario: (idUsuario: string) => Prediccion[];
+  recargarUsuario: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (nombre: string, email: string, password: string) => Promise<void>;
+  logout: () => void;
 }
 
 // CREACION DEL CONTEXTO

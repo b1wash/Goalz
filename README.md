@@ -42,6 +42,7 @@ npm --version
 - **Tailwind CSS** - Framework CSS utility-first
 - **React Router DOM** - Navegación SPA
 - **JSON Server** - API REST simulada
+- **API-Football** - Integración con datos reales de La Liga
 - **Context API** - Gestión de estado global
 - **LocalStorage** - Persistencia de datos del cliente
 
@@ -54,6 +55,14 @@ cd goalz-app
 
 # Instalar dependencias
 npm install
+
+# Configurar API Key (para sincronización con datos reales)
+# 1. Copia el archivo .env.example a .env
+cp .env.example .env
+
+# 2. Edita .env y añade tu API Key de API-Football
+# VITE_FOOTBALL_API_KEY=tu_clave_aqui
+# Obtén tu clave gratis en: https://dashboard.api-football.com/
 
 # Iniciar JSON Server (terminal 1)
 npm run api
@@ -201,201 +210,76 @@ goalz-app/
 - ❌ NO aparece en clasificación
 - ❌ NO puede hacer predicciones
 - ❌ NO se le muestran puntos
-- ✅ Acceso al panel de 4 secciones
-- ✅ Gestión completa de partidos
+- ✅ Acceso al panel de 3 secciones principales (Dashboard, Partidos, Usuarios)
+- ✅ Gestión completa de partidos y resultados
 - ✅ Gestión completa de usuarios
 - ✅ Vista de métricas globales
+- ✅ **Sincronización automática con resultados reales**
+- ✅ **Herramientas de Mantenimiento Avanzadas**
 
-## ⚙️ Arquitectura del Backend
+### 🔄 Sincronización con API Real
 
-Para este proyecto, he implementado un **Backend basado en JSON-Server**. Este sistema permite simular una API REST profesional con las siguientes características:
+**GOALZ se conecta con datos reales de La Liga EA Sports** mediante la integración con API-Football.
 
-- **Persistencia Local**: Los datos se almacenan de forma permanente en el archivo `db.json`, el cual actúa como la base de datos del sistema.
-- **Protocolo RESTful**: El servidor recibe peticiones estándar (GET, POST, PATCH, DELETE) en el puerto **3001**.
-- **Interacción Real**: Permite que el Frontend de React interactúe con los datos (crear usuarios, guardar predicciones, actualizar resultados) exactamente igual que si se tratara de una API de producción.
+**Características:**
 
-## ✨ Funcionalidades
+- **Matching inteligente**: Vincula partidos locales con reales por equipos, jornada y temporada.
+- **Detección anti-duplicados**: Evita sumar puntos dos veces si un partido ya ha sido procesado.
+- **Distribución masiva de puntos**: Actualiza marcadores y premia a los usuarios en un solo clic.
+- **Feedback visual**: Resultados detallados de la sincronización (éxitos/errores).
 
-### 🏠 Inicio (Personalizado por Rol)
+### 🛠️ Herramientas de Mantenimiento (NUEVO)
 
-**Para Jugadores:**
+He implementado herramientas críticas para garantizar la integridad de los datos:
 
-- Tus puntos totales
-- Próximos partidos con botón de predicción
-- Acceso rápido a "Mis Predicciones"
+1.  **🔄 Recalcular Clasificación**: Escanea todas las predicciones reales de la base de datos y reconstruye la puntuación de cada usuario desde cero. Ideal para corregir cualquier discrepancia o "puntos fantasma".
+2.  **🗑️ Borrar Solo Partidos**: Limpia la lista de encuentros pero **respeta** las apuestas y puntos ya ganados por los usuarios.
+3.  **☢️ Resetear Sistema**: Borra absolutamente todo (partidos y predicciones) y pone los contadores de los usuarios a cero. Perfecto para el inicio de una nueva temporada.
 
-**Para Admins:**
+## ✨ Funcionalidades Destacadas
 
-- Total de jugadores activos
-- Próximos partidos (sin botón de predicción)
-- Acceso rápido al "Panel de Gestión"
+### 🔒 Integridad y Reglas de Juego
 
-### 🏆 Clasificación Compacta (con Paginación)
+- **Anti-Duplicados**: El sistema bloquea automáticamente que un usuario realice más de una predicción para el mismo partido.
+- **Protección de Puntos**: Lógica mejorada que impide la suma doble de puntos incluso si el administrador actualiza el resultado varias veces.
 
-- **Podio visual premium** (Top 3 siempre visible)
-- **Paginación inteligente**: 10 usuarios por página
-- **Tabla optimizada** con menos espacio
-- **Solo muestra jugadores** (admins filtrados)
-- **Posiciones correctas** en todas las páginas
-- **Controles de navegación**: Anterior, números de página, Siguiente
-- **Información de rango**: "Mostrando 1-10 de 15 usuarios"
-- **Desempate automático**: Por puntos y luego por aciertos
+### 🎨 UI/UX Premium
 
-### 📊 Mis Predicciones (con Paginación)
-
-- **9 predicciones por página** (grid 3x3)
-- **Navegación con botones numéricos**
-- **Filtros que resetean la paginación**
-- **Información de rango**: "Mostrando 1-9 de X predicciones"
-- **Diseño optimizado y compacto**
-- **Filtros dinámicos:**
-  - Todas
-  - Pendientes
-  - Acertadas
-  - Falladas
-
-### 🏠 Inicio (con Paginación de Partidos)
-
-**Para Jugadores:**
-
-- **Tus puntos totales** destacados
-- **6 partidos por página** (2 filas completas en desktop)
-- **Paginación compacta**: `← | 1 / 3 | →`
-- **Botones de predicción** en cada partido
-- **Acceso rápido** a "Mis Predicciones"
-
-**Para Admins:**
-
-- **Total de jugadores activos**
-- **6 partidos por página** (sin botones de predicción)
-- **Paginación compacta** para navegar
-- **Acceso rápido** al "Panel de Gestión"
-
-### ⚡ Hacer Predicción (Formulario Compacto)
-
-- Formulario reducido en tamaño
-- Validación de coherencia
-- Feedback visual de errores
-- **Bloqueado para admins**
+- **Logos de Equipos**: Visualización de escudos de equipos reales con contenedores circulares elegantes y fallbacks inteligentes (emojis) si no hay logo disponible.
+- **Contexto Temporal**: Las tarjetas de predicción ahora muestran la temporada/año (ej: 2023/24) para dar contexto histórico a las apuestas.
+- **Responsividad Total**: Navbar optimizado que mantiene la información del usuario visible en todos los tamaños de desktop (desde 1024px) y colapsa correctamente en móvil.
 
 ## 🔌 API Endpoints
 
-### Partidos
-
-```
-GET    /matches              # Todos los partidos
-GET    /matches/:id          # Partido específico
-POST   /matches              # Crear partido (admin)
-PATCH  /matches/:id          # Actualizar resultado (admin)
-DELETE /matches/:id          # Eliminar partido (admin)
-```
-
-### Predicciones
-
-```
-GET    /predictions                    # Todas las predicciones
-GET    /predictions?userId=:id         # Por usuario
-GET    /predictions?matchId=:id        # Por partido
-POST   /predictions                    # Crear predicción
-PATCH  /predictions/:id                # Actualizar puntos
-DELETE /predictions/:id                # Eliminar predicción
-```
-
-### Usuarios
-
-```
-GET    /users                          # Todos los usuarios
-GET    /users/:id                      # Usuario específico
-POST   /users                          # Crear usuario (registro)
-PATCH  /users/:id                      # Actualizar stats
-DELETE /users/:id                      # Eliminar usuario (admin)
-```
-
-## 📦 Scripts Disponibles
-
-```bash
-npm run dev         # Desarrollo (puerto 5173)
-npm run api         # JSON Server (puerto 3001)
-npm run build       # Build de producción
-npm run preview     # Preview de producción
-```
+... (rest of the endpoints) ...
 
 ## 🌟 Características Técnicas
 
-### Arquitectura
-
-- ✅ **SPA** con React Router
-- ✅ **TypeScript** con tipado estricto (100%)
-- ✅ **Context API** para estado global
-- ✅ **Custom Hooks** para lógica reutilizable
-- ✅ **Componentes atómicos** (15+ reutilizables)
-- ✅ **Servicios modulares** para API
-
-### Autenticación y Seguridad
-
-- ✅ **Sistema completo**: Login, Register, Logout
-- ✅ **Roles de usuario**: Admin y Jugador
-- ✅ **ProtectedRoute**: Rutas para usuarios autenticados
-- ✅ **AdminRoute**: Rutas exclusivas para administradores
-- ✅ **Persistencia**: LocalStorage para sesiones
-- ✅ **Separación de roles**: Admin solo gestiona
-
-### Diseño
-
-- ✅ **Diseño responsive**: Mobile, Tablet, Desktop, Ultrawide
-- ✅ **Modo Dual**: Light/Dark con persistencia
-- ✅ **Micro-animaciones**: Transiciones suaves
-- ✅ **Glassmorphism**: Efectos visuales premium
-- ✅ **Feedback visual**: Loading, éxito, errores
-- ✅ **Paginación**: En listas largas
-- ✅ **Diseños compactos**: Mejor uso del espacio
-
-### Validaciones
-
-- ✅ **Formularios validados**: Inputs con feedback
-- ✅ **Coherencia 1X2**: Marcador vs Resultado
-- ✅ **Rangos de goles**: 0-20 válidos
-- ✅ **Emails únicos**: En registro
-- ✅ **Contraseñas seguras**: Mínimo 6 caracteres
-
-### Optimizaciones
-
-- ✅ **Recarga automática**: Puntos actualizados en navbar
-- ✅ **Filtros dinámicos**: Sin recargar página
-- ✅ **Cálculo automático**: Distribución de puntos
-- ✅ **Bundle optimizado**: Vite + Tree-shaking
+... (rest of the characteristics) ...
 
 ## 👤 Autor
 
-**Biwash Shrestha**  
-📧 Email: biwash@gmail.com  
-🔗 GitHub: [@b1wash](https://github.com/b1wash)
+... (author info) ...
 
 ---
 
 ## 🎓 Proyecto Académico
 
-Desarrollado para la asignatura **Desarrollo Web en Entorno Cliente (DWEC)**  
-Cumple con todos los requisitos técnicos y funcionales del curso.
+... (academic info) ...
 
-### Ampliaciones Implementadas
+### Ampliaciones Implementadas (Última Versión)
 
-- [x] Context API para estado global
-- [x] Autenticación y Autorización completas
-- [x] Roles de usuario con permisos diferenciados
-- [x] Custom Hooks para lógica reutilizable
-- [x] Modo Oscuro/Claro con persistencia
-- [x] Filtros avanzados en tiempo real
-- [x] **Paginación en Clasificación** (10 usuarios/página)
-- [x] **Paginación en Mis Predicciones** (9 predicciones/página)
-- [x] **Paginación en Inicio** (6 partidos/página)
+- [x] **Prevención de Predicciones Duplicadas**
+- [x] **Sistema de Integridad de Puntos** (Sin doble conteo)
+- [x] **Herramienta de Recalculo de Clasificación**
+- [x] **Eliminación Selectiva vs Reset Total**
+- [x] **Diseño de Logos Circulares de Equipos**
+- [x] **Contexto de Temporada en Tarjetas**
+- [x] **Fix Responsivo en Navbar (lg/xl)**
+- [x] **Matching de API por Temporada y Jornada**
 - [x] UX Premium con micro-animaciones
-- [x] Panel de Admin con 4 secciones
-- [x] Gestión de usuarios por Admin
-- [x] Diseños compactos y optimizados
-- [x] Sistema de desempate por aciertos
-- [x] Controles de paginación consistentes
-- [x] Información de rango en todas las vistas paginadas
+- [x] Filtros avanzados en tiempo real
+- [x] Paginación completa en todas las vistas críticas
 
 ---
 

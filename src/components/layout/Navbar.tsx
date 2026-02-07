@@ -158,7 +158,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
 
               {/* MOSTRAR USUARIO PARA PANTALLA PC */}
               {usuarioActual ? (
-                <div className="hidden xl:flex items-center gap-4 pl-6 border-l-2 border-primary/30">
+                <div className="hidden lg:flex items-center gap-4 pl-6 border-l-2 border-primary/30">
                   <div className="text-right">
                     <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
                       {usuarioActual.nombre}
@@ -201,7 +201,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="hidden xl:flex items-center gap-2 px-5 py-2.5 bg-slate-200 dark:bg-dark-card hover:bg-slate-300 dark:hover:bg-dark-hover border border-slate-300 dark:border-primary/20 text-slate-900 dark:text-white font-bold text-sm rounded-lg transition-all duration-200"
+                  className="hidden lg:flex items-center gap-2 px-5 py-2.5 bg-slate-200 dark:bg-dark-card hover:bg-slate-300 dark:hover:bg-dark-hover border border-slate-300 dark:border-primary/20 text-slate-900 dark:text-white font-bold text-sm rounded-lg transition-all duration-200"
                 >
                   <span>🔐</span>
                   <span>Iniciar Sesión</span>

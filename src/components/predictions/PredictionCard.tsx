@@ -41,24 +41,60 @@ export const PredictionCard = ({ prediction, match }: PredictionCardProps) => {
       {/* SECCION 1: INFORMACION DEL PARTIDO */}
       {/* MUESTRA LOS DOS EQUIPOS QUE SE ENFRENTAN EN FORMATO: EQUIPO1 vs EQUIPO2 */}
       {/* USA GRID DE 3 COLUMNAS PARA ALINEAR: LOCAL - VS - VISITANTE */}
-      <div className="mb-4">
-        <div className="grid grid-cols-3 gap-3 items-center text-base">
-          {/* EQUIPO LOCAL - ALINEADO A LA DERECHA */}
-          <p className="text-right font-black text-slate-900 dark:text-white text-base">
-            {/* OPERADOR || PARA COMPATIBILIDAD CON DIFERENTES FORMATOS DE API */}
-            {match.homeTeam || match.equipoLocal}
-          </p>
+      <div className="mb-6">
+        <div className="grid grid-cols-3 gap-2 items-center">
+          {/* EQUIPO LOCAL */}
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-full p-1 border border-slate-100 dark:border-white/10 shadow-sm">
+              {match.homeLogo ? (
+                <img
+                  src={match.homeLogo}
+                  alt={match.homeTeam}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <span className="text-xl">🏠</span>
+              )}
+            </div>
+            <p className="text-center font-black text-slate-900 dark:text-white text-[11px] uppercase leading-tight line-clamp-2 min-h-[2rem] flex items-center justify-center">
+              {match.homeTeam || match.equipoLocal}
+            </p>
+          </div>
 
-          {/* SEPARADOR "VS" - CENTRADO Y DESTACADO */}
-          {/* UPPERCASE Y TRACKING-WIDER PARA MEJOR LEGIBILIDAD */}
-          <p className="text-center font-bold text-slate-500 dark:text-gray-300 text-sm uppercase tracking-wider">
-            vs
-          </p>
+          {/* VS Y DETALLES DE JORNADA */}
+          <div className="flex flex-col items-center justify-center">
+            <span className="bg-primary/10 text-primary px-2 py-1 rounded-md text-[10px] font-black tracking-widest">
+              VS
+            </span>
+            <div className="mt-1 flex flex-col items-center">
+              <span className="text-[10px] text-slate-500 dark:text-white font-black uppercase">
+                JORNADA {match.matchday}
+              </span>
+              {match.date && match.date.includes("JORNADA") && (
+                <span className="text-[8px] text-gray-400 font-bold uppercase tracking-tighter">
+                  {match.date.replace("JORNADA ", "")}
+                </span>
+              )}
+            </div>
+          </div>
 
-          {/* EQUIPO VISITANTE - ALINEADO A LA IZQUIERDA */}
-          <p className="text-left font-black text-slate-900 dark:text-white text-base">
-            {match.awayTeam || match.equipoVisitante}
-          </p>
+          {/* EQUIPO VISITANTE */}
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-full p-1 border border-slate-100 dark:border-white/10 shadow-sm">
+              {match.awayLogo ? (
+                <img
+                  src={match.awayLogo}
+                  alt={match.awayTeam}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <span className="text-xl">✈️</span>
+              )}
+            </div>
+            <p className="text-center font-black text-slate-900 dark:text-white text-[11px] uppercase leading-tight line-clamp-2 min-h-[2rem] flex items-center justify-center">
+              {match.awayTeam || match.equipoVisitante}
+            </p>
+          </div>
         </div>
       </div>
 

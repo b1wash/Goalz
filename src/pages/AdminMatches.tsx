@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { matchService } from "../services/matchService";
 import { predictionService } from "../services/predictionService";
 import { userService } from "../services/userService";
+import { footballApiService } from "../services/footballApiService";
 import { calcularPuntosGanados } from "../utils/pointsCalculator";
 import { validarDatosPartido, validarGoles } from "../utils/validators";
 import { Card, Button, Badge } from "../components/ui";
@@ -47,12 +48,30 @@ export const AdminMatches = () => {
     awayTeam: "",
     date: "",
     matchday: 1,
+    homeLogo: "",
+    awayLogo: "",
   });
   const [formResultado, setFormResultado] = useState<DatosFormularioResultado>({
     matchId: "",
     homeGoals: 0,
     awayGoals: 0,
   });
+
+  // ESTADOS PARA SINCRONIZACIÓN CON API EXTERNA
+  const [sincronizando, setSincronizando] = useState(false);
+  const [resultadoSincronizacion, setResultadoSincronizacion] = useState<{
+    actualizados: number;
+    errores: number;
+  } | null>(null);
+
+  // ESTADOS PARA IMPORTACIÓN MASIVA DESDE API
+  const [subVistaCrear, setSubVistaCrear] = useState<"manual" | "api">(
+    "manual",
+  );
+  const [jornadaApi, setJornadaApi] = useState<number>(1);
+  const [temporadaApi, setTemporadaApi] = useState<number>(2023);
+  const [partidosPreviosApi, setPartidosPreviosApi] = useState<any[]>([]);
+  const [loadingApiPartidos, setLoadingApiPartidos] = useState(false);
 
   // CARGAR TODOS LOS DATOS
   useEffect(() => {
@@ -79,7 +98,7 @@ export const AdminMatches = () => {
     }
   };
 
-  //FUNCION PARA GESTION DE LOS PARTIDOS (MANTENER LAS ORIGINALES)
+  // FUNCIÓN PARA GESTIÓN DE LOS PARTIDOS (MANTENER LAS ORIGINALES)
   const validarFormCrear = (): boolean => {
     const validacion = validarDatosPartido(
       formCrear.homeTeam,
@@ -104,18 +123,101 @@ export const AdminMatches = () => {
         awayTeam: formCrear.awayTeam,
         date: new Date(formCrear.date).toISOString(),
         matchday: formCrear.matchday,
+        homeLogo: formCrear.homeLogo,
+        awayLogo: formCrear.awayLogo,
         status: "pending",
         result: null,
       });
 
-      setSuccess("¡Partido creado exitosamente!");
-      setFormCrear({ homeTeam: "", awayTeam: "", date: "", matchday: 1 });
+      setSuccess("¡PARTIDO CREADO EXITOSAMENTE!");
+      setFormCrear({
+        homeTeam: "",
+        awayTeam: "",
+        date: "",
+        matchday: 1,
+        homeLogo: "",
+        awayLogo: "",
+      });
       setVistaPartidos("lista");
       cargarTodosLosDatos();
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
-      setError("Error al crear el partido");
+      setError("ERROR AL CREAR EL PARTIDO");
       console.error(err);
+    }
+  };
+
+  // FUNCIÓN PARA CARGAR PREVISUALIZACIÓN DE JORNADA DESDE LA API
+  const handleCargarPartidosJornada = async () => {
+    try {
+      setLoadingApiPartidos(true);
+      setError(null);
+      const data = await footballApiService.getMatchesBySeason(
+        jornadaApi,
+        temporadaApi,
+      );
+      setPartidosPreviosApi(data);
+    } catch (err) {
+      setError("ERROR AL OBTENER PARTIDOS DE LA API");
+      console.error(err);
+    } finally {
+      setLoadingApiPartidos(false);
+    }
+  };
+
+  // FUNCIÓN PARA IMPORTAR TODA UNA JORNADA A LA BASE DE DATOS LOCAL
+  const handleImportarJornada = async () => {
+    if (partidosPreviosApi.length === 0) return;
+
+    if (
+      !window.confirm(
+        `¿DESEAS IMPORTAR LOS ${partidosPreviosApi.length} PARTIDOS DE LA JORNADA ${jornadaApi}?\n\n(TEMPORADA ${temporadaApi}/${(temporadaApi + 1).toString().slice(-2)})`,
+      )
+    )
+      return;
+
+    try {
+      setLoading(true);
+      let importados = 0;
+
+      for (const apiMatch of partidosPreviosApi) {
+        const mapeado = footballApiService.mapApiMatchToLocal(apiMatch);
+
+        // VERIFICAR SI YA EXISTE (POR NOMBRE DE EQUIPOS Y JORNADA)
+        const existe = partidos.find(
+          (p) =>
+            p.homeTeam === mapeado.homeTeam &&
+            p.awayTeam === mapeado.awayTeam &&
+            p.matchday === mapeado.matchday,
+        );
+
+        if (!existe) {
+          await matchService.create({
+            homeTeam: mapeado.homeTeam,
+            awayTeam: mapeado.awayTeam,
+            date: `JORNADA ${temporadaApi}/${(temporadaApi + 1).toString().slice(-2)}`,
+            matchday: mapeado.matchday,
+            homeLogo: mapeado.homeLogo,
+            awayLogo: mapeado.awayLogo,
+            status: "pending",
+            result: null,
+          });
+          importados++;
+        }
+      }
+
+      setSuccess(
+        `¡IMPORTACIÓN COMPLETADA! ${importados} PARTIDOS NUEVOS AGREGADOS.`,
+      );
+      setPartidosPreviosApi([]);
+      setVistaPartidos("lista");
+      cargarTodosLosDatos();
+      setTimeout(() => setSuccess(null), 5000);
+    } catch (err) {
+      console.error("ERROR EN LA IMPORTACIÓN:", err);
+      setError("HUBO UN ERROR DURANTE LA IMPORTACIÓN MASIVA.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -171,6 +273,9 @@ export const AdminMatches = () => {
       const predicciones = await predictionService.getByMatch(matchId);
 
       for (const pred of predicciones) {
+        // EVITAR SUMAR PUNTOS SI YA HAN SIDO ASIGNADOS PREVIAMENTE
+        if (pred.points !== null) continue;
+
         const puntos = calcularPuntosGanados(
           pred.prediction || pred.prediccion,
           {
@@ -184,16 +289,239 @@ export const AdminMatches = () => {
 
         const usuario = await userService.getById(pred.userId);
         await userService.updateStats(pred.userId, {
-          totalPoints: usuario.totalPoints + puntos,
+          totalPoints: (usuario.totalPoints || 0) + puntos,
           correctPredictions:
             puntos > 0
-              ? usuario.correctPredictions + 1
-              : usuario.correctPredictions,
-          totalPredictions: usuario.totalPredictions,
+              ? (usuario.correctPredictions || 0) + 1
+              : usuario.correctPredictions || 0,
+          totalPredictions: (usuario.totalPredictions || 0) + 1,
         });
       }
     } catch (err) {
       console.error("Error al calcular puntos:", err);
+    }
+  };
+
+  // FUNCION PARA SINCRONIZAR LOS RESULTADOS
+  // ESTA FUNCION ES LA QUE SE ENCARGA DE SINCRONIZAR LOS RESULTADOS DE LOS PARTIDOS
+  // DE LA LIGA Y ACTUALIZA AUTOMÁTICAMENTE LOS RESULTADOS Y PUNTOS
+  const handleSincronizarResultados = async () => {
+    if (
+      !window.confirm(
+        "¿Sincronizar resultados reales de La Liga?\n\nEsto buscará resultados para todas las temporadas presentes en tus partidos pendientes y repartirá puntos.",
+      )
+    )
+      return;
+
+    try {
+      setSincronizando(true);
+      setError(null);
+      setResultadoSincronizacion(null);
+
+      const nuestrosPartidos = partidos.filter((p) => p.status === "pending");
+
+      if (nuestrosPartidos.length === 0) {
+        setError("NO HAY PARTIDOS PENDIENTES PARA SINCRONIZAR.");
+        setSincronizando(false);
+        return;
+      }
+
+      // IDENTIFICAR QUÉ TEMPORADAS TENEMOS (2022, 2023, ETC)
+      const temporadasDetectadas = new Set<number>();
+      nuestrosPartidos.forEach((p) => {
+        if (p.date.includes("JORNADA")) {
+          const año = parseInt(p.date.split(" ")[1].split("/")[0]);
+          if (!isNaN(año)) temporadasDetectadas.add(año);
+        } else {
+          // PARA PARTIDOS MANUALES, POR DEFECTO USAMOS LA TEMPORADA ACTUAL
+          temporadasDetectadas.add(2023);
+        }
+      });
+
+      let totalActualizados = 0;
+      let totalErrores = 0;
+
+      // SINCRONIZAMOS CADA TEMPORADA DETECTADA
+      for (const season of Array.from(temporadasDetectadas)) {
+        console.log(`Sincronizando temporada ${season}...`);
+        const partidosReales =
+          await footballApiService.getFinishedMatches(season);
+
+        for (const partidoReal of partidosReales) {
+          const partidoRealMapeado =
+            footballApiService.mapApiMatchToLocal(partidoReal);
+
+          const partidoLocal = nuestrosPartidos.find((p) => {
+            // VERIFICAR SI LA TEMPORADA COINCIDE
+            const pSeason = p.date.includes("JORNADA")
+              ? parseInt(p.date.split(" ")[1].split("/")[0])
+              : 2023;
+
+            if (pSeason !== season) return false;
+
+            // VERIFICAR JORNADA
+            if (p.matchday !== partidoRealMapeado.matchday) return false;
+
+            // NORMALIZAR NOMBRES PARA COMPARAR
+            const nombrar = (name: string) =>
+              name
+                .toLowerCase()
+                .replace("atletico", "atlético")
+                .replace("almeria", "almería")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+
+            const localNormalizado = nombrar(p.homeTeam);
+            const visitanteNormalizado = nombrar(p.awayTeam);
+            const apiLocalNormalizado = nombrar(partidoReal.teams.home.name);
+            const apiVisitanteNormalizado = nombrar(
+              partidoReal.teams.away.name,
+            );
+
+            // COINCIDENCIA SI UN NOMBRE CONTIENE AL OTRO (EJ EN DB "REAL MADRID", EN API "REAL MADRID")
+            const matchHome =
+              localNormalizado.includes(apiLocalNormalizado) ||
+              apiLocalNormalizado.includes(localNormalizado);
+            const matchAway =
+              visitanteNormalizado.includes(apiVisitanteNormalizado) ||
+              apiVisitanteNormalizado.includes(visitanteNormalizado);
+
+            return matchHome && matchAway;
+          });
+
+          if (partidoLocal && partidoReal.score.fulltime.home !== null) {
+            try {
+              const golesL = partidoReal.score.fulltime.home;
+              const golesV = partidoReal.score.fulltime.away!;
+
+              await matchService.updateResult(partidoLocal.id, {
+                result: { homeGoals: golesL, awayGoals: golesV },
+                status: "finished",
+              });
+
+              await calcularPuntos(partidoLocal.id, golesL, golesV);
+              totalActualizados++;
+            } catch (err) {
+              console.error(`Error sync ${partidoLocal.homeTeam}:`, err);
+              totalErrores++;
+            }
+          }
+        }
+      }
+
+      await cargarTodosLosDatos();
+      await recargarUsuario();
+
+      if (totalActualizados > 0) {
+        setResultadoSincronizacion({
+          actualizados: totalActualizados,
+          errores: totalErrores,
+        });
+        setSuccess(
+          `¡SINCRONIZACIÓN COMPLETADA! ${totalActualizados} PARTIDOS ACTUALIZADOS.`,
+        );
+        setTimeout(() => {
+          setSuccess(null);
+          setResultadoSincronizacion(null);
+        }, 5000);
+      } else {
+        setError("NO SE ENCONTRARON RESULTADOS NUEVOS PARA TUS PARTIDOS.");
+        setTimeout(() => setError(null), 5000);
+      }
+    } catch (err) {
+      console.error("Error en sincronización:", err);
+      setError("ERROR AL CONECTAR CON LA API. INTÉNTALO DE NUEVO.");
+    } finally {
+      setSincronizando(false);
+    }
+  };
+
+  // FUNCIÓN PARA ELIMINAR SOLO LOS PARTIDOS (MANTIENE PUNTOS Y PREDICCIONES)
+  const handleEliminarSoloPartidos = async () => {
+    if (partidos.length === 0) {
+      setError("NO HAY PARTIDOS PARA ELIMINAR.");
+      return;
+    }
+
+    if (
+      !window.confirm(
+        "¿ELIMINAR SOLO LOS PARTIDOS?\n\nLas predicciones y los puntos de los usuarios se mantendrán intactos. ¡Usa esto si solo quieres limpiar la lista de encuentros!",
+      )
+    )
+      return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // ELIMINAMOS CADA PARTIDO PERO NO TOCAMOS NADA MÁS
+      await Promise.all(partidos.map((p) => matchService.delete(p.id)));
+
+      setSuccess(
+        "PARTIDOS ELIMINADOS. SE HAN RESPETADO LOS PUNTOS Y APUESTAS.",
+      );
+      await cargarTodosLosDatos();
+      setTimeout(() => setSuccess(null), 5000);
+    } catch (err) {
+      console.error("ERROR AL ELIMINAR PARTIDOS:", err);
+      setError("ERROR AL INTENTAR ELIMINAR LOS PARTIDOS.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // FUNCIÓN PARA ELIMINAR TODOS LOS PARTIDOS DEL SISTEMA (RESET TOTAL)
+  const handleEliminarTodosLosPartidos = async () => {
+    // VERIFICAR SI HAY PARTIDOS PARA ELIMINAR
+    if (partidos.length === 0) {
+      setError("NO HAY PARTIDOS REGISTRADOS PARA ELIMINAR.");
+      setTimeout(() => setError(null), 5000);
+      return;
+    }
+
+    if (
+      !window.confirm(
+        "¿ESTÁS SEGURO DE QUE DESEAS ELIMINAR TODOS LOS PARTIDOS? ESTA ACCIÓN NO SE PUEDE DESHACER.",
+      )
+    )
+      return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // 1. ELIMINAR TODAS LAS PREDICCIONES PRIMERO
+      const todasLasPredicciones = await predictionService.getAll();
+      await Promise.all(
+        todasLasPredicciones.map((p) => predictionService.delete(p.id)),
+      );
+
+      // 2. ELIMINAMOS CADA PARTIDO
+      await Promise.all(partidos.map((p) => matchService.delete(p.id)));
+
+      // 3. RESETEAR PUNTOS DE TODOS LOS USUARIOS
+      await Promise.all(
+        usuarios.map((u) => {
+          if (u.role === "admin") return Promise.resolve();
+          return userService.updateStats(u.id, {
+            totalPoints: 0,
+            correctPredictions: 0,
+            totalPredictions: 0,
+          });
+        }),
+      );
+
+      setSuccess(
+        "SISTEMA RESETEADO: SE HAN ELIMINADO PARTIDOS, PREDICCIONES Y PUNTOS.",
+      );
+      await cargarTodosLosDatos();
+      setTimeout(() => setSuccess(null), 5000);
+    } catch (err) {
+      console.error("ERROR AL ELIMINAR TODO:", err);
+      setError("ERROR AL INTENTAR LIMPIAR EL SISTEMA.");
+      setTimeout(() => setError(null), 5000);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -209,12 +537,23 @@ export const AdminMatches = () => {
       const prediccionesDelPartido = await predictionService.getByMatch(
         partido.id,
       );
-      for (const prediccion of prediccionesDelPartido) {
-        await predictionService.delete(prediccion.id);
+
+      // RESTAR PUNTOS A LOS USUARIOS ANTES DE BORRAR
+      for (const pred of prediccionesDelPartido) {
+        if (pred.points && pred.points > 0) {
+          const u = await userService.getById(pred.userId);
+          await userService.updateStats(pred.userId, {
+            totalPoints: Math.max(0, (u.totalPoints || 0) - pred.points),
+            correctPredictions: Math.max(0, (u.correctPredictions || 0) - 1),
+            totalPredictions: Math.max(0, (u.totalPredictions || 0) - 1),
+          });
+        }
+        await predictionService.delete(pred.id);
       }
+
       await matchService.delete(partido.id);
       setSuccess(
-        `Partido eliminado (${prediccionesDelPartido.length} predicciones)`,
+        `Partido eliminado y puntos revertidos para ${prediccionesDelPartido.length} predicciones`,
       );
       cargarTodosLosDatos();
       setTimeout(() => setSuccess(null), 3000);
@@ -251,7 +590,7 @@ export const AdminMatches = () => {
     }
   };
 
-  // Estadísticas calculadas
+  // ESTADÍSTICAS CALCULADAS
   const partidosPendientes = partidos.filter((p) => p.status === "pending");
   const partidosFinalizados = partidos.filter((p) => p.status === "finished");
   const usuariosJugadores = usuarios.filter((u) => u.role !== "admin");
@@ -277,7 +616,7 @@ export const AdminMatches = () => {
         {/* HEADER */}
         <div className="mb-8">
           <h1 className="text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-2">
-            🔧 Panel de Administración
+            🔧 PANEL DE ADMINISTRACIÓN CON MÚLTIPLES SECCIONES
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-lg font-bold">
             GESTIÓN CENTRALIZADA DEL SISTEMA GOALZ
@@ -348,11 +687,13 @@ export const AdminMatches = () => {
         {/* CONTENIDO SEGÚN TAB ACTIVA */}
         {tabActiva === "dashboard" && (
           <div className="space-y-8">
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-              Resumen del Sistema
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+                Resumen del Sistema
+              </h2>
+            </div>
 
-            {/* Tarjetas de estadísticas */}
+            {/* TARJETAS DE ESTADÍSTICAS */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Card className="p-6 border-primary/20">
                 <div className="text-center">
@@ -403,7 +744,7 @@ export const AdminMatches = () => {
               </Card>
             </div>
 
-            {/* Resumen de jornada */}
+            {/* RESUMEN DE JORNADA */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="p-6">
                 <h3 className="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -461,26 +802,81 @@ export const AdminMatches = () => {
           </div>
         )}
 
-        {/* TAB PARTIDOS - contenido original */}
+        {/* TAB PARTIDOS - CONTENIDO ORIGINAL */}
         {tabActiva === "partidos" && (
           <div>
-            {/* Navegación interna */}
-            <div className="flex flex-wrap gap-4 mb-8">
-              <Button
-                onClick={() => setVistaPartidos("lista")}
-                variant={vistaPartidos === "lista" ? "primary" : "secondary"}
-              >
-                📋 LISTA
-              </Button>
-              <Button
-                onClick={() => setVistaPartidos("crear")}
-                variant={vistaPartidos === "crear" ? "primary" : "secondary"}
-              >
-                ➕ CREAR
-              </Button>
+            {/* NAVEGACIÓN INTERNA Y BOTÓN DE SINCRONIZACIÓN */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  onClick={() => setVistaPartidos("lista")}
+                  variant={vistaPartidos === "lista" ? "primary" : "secondary"}
+                >
+                  📋 LISTA
+                </Button>
+                <Button
+                  onClick={() => setVistaPartidos("crear")}
+                  variant={vistaPartidos === "crear" ? "primary" : "secondary"}
+                >
+                  ➕ CREAR
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  onClick={handleSincronizarResultados}
+                  disabled={sincronizando}
+                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-black px-6 py-2 shadow-lg"
+                >
+                  {sincronizando ? (
+                    <>
+                      <span className="animate-spin inline-block mr-2">⚙️</span>
+                      SINCRONIZANDO...
+                    </>
+                  ) : (
+                    <>🔄 SINCRONIZAR API REAL</>
+                  )}
+                </Button>
+
+                <Button
+                  onClick={handleEliminarSoloPartidos}
+                  variant="secondary"
+                  className="font-black px-6 py-2 border-2 border-slate-300 dark:border-white/10"
+                >
+                  🗑️ BORRAR SOLO PARTIDOS
+                </Button>
+
+                <Button
+                  onClick={handleEliminarTodosLosPartidos}
+                  variant="danger"
+                  className="font-black px-6 py-2 transition-all shadow-lg shadow-danger/20"
+                >
+                  ☢️ RESETEAR SISTEMA
+                </Button>
+              </div>
             </div>
 
-            {/* Lista de partidos */}
+            {/* RESULTADO DE LA SINCRONIZACIÓN */}
+            {resultadoSincronizacion && (
+              <Card className="p-4 mb-8 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-500/30">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">📊</span>
+                  <div>
+                    <p className="font-black text-slate-900 dark:text-white">
+                      Sincronización completada
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 font-bold">
+                      ✅ {resultadoSincronizacion.actualizados} partido(s)
+                      actualizado(s)
+                      {resultadoSincronizacion.errores > 0 &&
+                        ` • ⚠️ ${resultadoSincronizacion.errores} error(es)`}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {/* LISTA DE PARTIDOS */}
             {vistaPartidos === "lista" && (
               <div className="space-y- 4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -536,14 +932,25 @@ export const AdminMatches = () => {
                           <div className="flex-1">
                             <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
                               JORNADA {partido.matchday} •{" "}
-                              {new Date(partido.date).toLocaleDateString(
-                                "es-ES",
-                              )}
+                              {isNaN(new Date(partido.date).getTime())
+                                ? partido.date
+                                : new Date(partido.date).toLocaleDateString(
+                                    "es-ES",
+                                  )}
                             </div>
                             <div className="grid grid-cols-3 gap-8 items-center">
-                              <p className="text-right font-black text-slate-900 dark:text-white text-xl">
-                                {partido.homeTeam}
-                              </p>
+                              <div className="flex flex-col items-end gap-2 text-right">
+                                {partido.homeLogo && (
+                                  <img
+                                    src={partido.homeLogo}
+                                    alt={partido.homeTeam}
+                                    className="w-10 h-10 object-contain"
+                                  />
+                                )}
+                                <p className="font-black text-slate-900 dark:text-white text-xl">
+                                  {partido.homeTeam}
+                                </p>
+                              </div>
                               <div className="text-center">
                                 {partido.result ? (
                                   <div className="text-3xl font-black text-primary">
@@ -556,9 +963,18 @@ export const AdminMatches = () => {
                                   </div>
                                 )}
                               </div>
-                              <p className="text-left font-black text-slate-900 dark:text-white text-xl">
-                                {partido.awayTeam}
-                              </p>
+                              <div className="flex flex-col items-start gap-2 text-left">
+                                {partido.awayLogo && (
+                                  <img
+                                    src={partido.awayLogo}
+                                    alt={partido.awayTeam}
+                                    className="w-10 h-10 object-contain"
+                                  />
+                                )}
+                                <p className="font-black text-slate-900 dark:text-white text-xl">
+                                  {partido.awayTeam}
+                                </p>
+                              </div>
                             </div>
                           </div>
 
@@ -604,86 +1020,256 @@ export const AdminMatches = () => {
               </div>
             )}
 
-            {/* Formulario crear */}
+            {/* SECCIÓN DE CREACIÓN DE PARTIDOS (REDISEÑADA) */}
             {vistaPartidos === "crear" && (
-              <Card className="max-w-2xl mx-auto">
-                <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6">
-                  NUEVO PARTIDO
-                </h2>
-                <form onSubmit={handleCrearPartido} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
-                        EQUIPO LOCAL
-                      </label>
-                      <input
-                        type="text"
-                        value={formCrear.homeTeam}
-                        onChange={(e) =>
-                          setFormCrear({
-                            ...formCrear,
-                            homeTeam: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
-                        placeholder="REAL MADRID"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
-                        EQUIPO VISITANTE
-                      </label>
-                      <input
-                        type="text"
-                        value={formCrear.awayTeam}
-                        onChange={(e) =>
-                          setFormCrear({
-                            ...formCrear,
-                            awayTeam: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
-                        placeholder="FC BARCELONA"
-                      />
-                    </div>
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex justify-center">
+                  <div className="inline-flex p-1 bg-slate-100 dark:bg-dark-card rounded-2xl border border-slate-200 dark:border-white/5">
+                    <button
+                      onClick={() => setSubVistaCrear("manual")}
+                      className={`px-8 py-3 rounded-xl font-black text-xs tracking-widest transition-all ${
+                        subVistaCrear === "manual"
+                          ? "bg-white dark:bg-dark-bg text-primary shadow-xl"
+                          : "text-gray-500 hover:text-primary"
+                      }`}
+                    >
+                      ✍️ CREACIÓN MANUAL
+                    </button>
+                    <button
+                      onClick={() => setSubVistaCrear("api")}
+                      className={`px-8 py-3 rounded-xl font-black text-xs tracking-widest transition-all ${
+                        subVistaCrear === "api"
+                          ? "bg-white dark:bg-dark-bg text-primary shadow-xl"
+                          : "text-gray-500 hover:text-primary"
+                      }`}
+                    >
+                      🚀 IMPORTAR LIGA 23/24
+                    </button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
-                        FECHA Y HORA
-                      </label>
-                      <input
-                        type="datetime-local"
-                        value={formCrear.date}
-                        onChange={(e) =>
-                          setFormCrear({ ...formCrear, date: e.target.value })
-                        }
-                        className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all appearance-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
-                        JORNADA
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={formCrear.matchday}
-                        onChange={(e) =>
-                          setFormCrear({
-                            ...formCrear,
-                            matchday: parseInt(e.target.value) || 1,
-                          })
-                        }
-                        className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
-                      />
-                    </div>
+                </div>
+
+                {subVistaCrear === "manual" ? (
+                  <Card className="max-w-2xl mx-auto border-primary/20">
+                    <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 uppercase">
+                      NUEVO PARTIDO LOCAL
+                    </h2>
+                    <form onSubmit={handleCrearPartido} className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
+                            EQUIPO LOCAL
+                          </label>
+                          <input
+                            type="text"
+                            value={formCrear.homeTeam}
+                            onChange={(e) =>
+                              setFormCrear({
+                                ...formCrear,
+                                homeTeam: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
+                            placeholder="EJ: MIS AMIGOS FC"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
+                            URL LOGO LOCAL (OPCIONAL)
+                          </label>
+                          <input
+                            type="text"
+                            value={formCrear.homeLogo}
+                            onChange={(e) =>
+                              setFormCrear({
+                                ...formCrear,
+                                homeLogo: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
+                            placeholder="https://ejemplo.com/logo.png"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
+                            EQUIPO VISITANTE
+                          </label>
+                          <input
+                            type="text"
+                            value={formCrear.awayTeam}
+                            onChange={(e) =>
+                              setFormCrear({
+                                ...formCrear,
+                                awayTeam: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
+                            placeholder="EJ: PROFESORES UNITED"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
+                            URL LOGO VISITANTE (OPCIONAL)
+                          </label>
+                          <input
+                            type="text"
+                            value={formCrear.awayLogo}
+                            onChange={(e) =>
+                              setFormCrear({
+                                ...formCrear,
+                                awayLogo: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
+                            placeholder="https://ejemplo.com/logo.png"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
+                            FECHA Y HORA
+                          </label>
+                          <input
+                            type="datetime-local"
+                            value={formCrear.date}
+                            onChange={(e) =>
+                              setFormCrear({
+                                ...formCrear,
+                                date: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
+                            JORNADA
+                          </label>
+                          <input
+                            type="number"
+                            min="1"
+                            value={formCrear.matchday}
+                            onChange={(e) =>
+                              setFormCrear({
+                                ...formCrear,
+                                matchday: parseInt(e.target.value) || 1,
+                              })
+                            }
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
+                          />
+                        </div>
+                      </div>
+                      <Button type="submit" className="w-full py-4 text-lg">
+                        🚀 CREAR PARTIDO LOCAL
+                      </Button>
+                    </form>
+                  </Card>
+                ) : (
+                  <div className="max-w-4xl mx-auto space-y-6">
+                    <Card className="border-accent/20">
+                      <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 uppercase">
+                        IMPORTAR JORNADA DE LA LIGA
+                      </h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div className="w-full">
+                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
+                            TEMPORADA
+                          </label>
+                          <select
+                            value={temporadaApi}
+                            onChange={(e) =>
+                              setTemporadaApi(parseInt(e.target.value))
+                            }
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all font-bold"
+                          >
+                            <option value={2022}>2022/23</option>
+                            <option value={2023}>2023/24</option>
+                          </select>
+                        </div>
+                        <div className="w-full">
+                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
+                            JORNADA
+                          </label>
+                          <select
+                            value={jornadaApi}
+                            onChange={(e) =>
+                              setJornadaApi(parseInt(e.target.value))
+                            }
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all font-bold"
+                          >
+                            {Array.from({ length: 38 }, (_, i) => (
+                              <option key={i + 1} value={i + 1}>
+                                JORNADA {i + 1}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="flex flex-col md:flex-row items-end gap-6">
+                        <Button
+                          onClick={handleCargarPartidosJornada}
+                          disabled={loadingApiPartidos}
+                          className="w-full md:w-auto px-10"
+                        >
+                          {loadingApiPartidos
+                            ? "BUSCANDO..."
+                            : "🔍 VER PARTIDOS"}
+                        </Button>
+                      </div>
+                    </Card>
+
+                    {partidosPreviosApi.length > 0 && (
+                      <div className="space-y-4 animate-in fade-in duration-500">
+                        <div className="flex items-center justify-between bg-primary/10 p-4 rounded-xl border border-primary/20">
+                          <p className="font-black text-primary text-sm uppercase">
+                            {partidosPreviosApi.length} PARTIDOS ENCONTRADOS
+                            PARA LA JORNADA {jornadaApi}
+                          </p>
+                          <Button
+                            onClick={handleImportarJornada}
+                            className="bg-primary text-dark-bg px-6 py-2 text-xs"
+                          >
+                            📥 IMPORTAR TODO A MI APP
+                          </Button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {partidosPreviosApi.map((p: any, idx: number) => (
+                            <div
+                              key={idx}
+                              className="p-4 bg-white dark:bg-dark-card rounded-xl border border-slate-200 dark:border-white/5 flex gap-4 items-center shadow-sm"
+                            >
+                              <div className="flex-1 flex items-center justify-end gap-2 w-2/5">
+                                <span className="text-[10px] font-black dark:text-gray-300 uppercase truncate">
+                                  {p.teams.home.name}
+                                </span>
+                                <img
+                                  src={p.teams.home.logo}
+                                  alt=""
+                                  className="w-8 h-8 object-contain"
+                                />
+                              </div>
+                              <span className="bg-slate-100 dark:bg-dark-bg px-2 py-1 rounded-lg font-black text-primary text-[10px]">
+                                VS
+                              </span>
+                              <div className="flex-1 flex items-center justify-start gap-2 w-2/5">
+                                <img
+                                  src={p.teams.away.logo}
+                                  alt=""
+                                  className="w-8 h-8 object-contain"
+                                />
+                                <span className="text-[10px] font-black dark:text-gray-300 uppercase truncate">
+                                  {p.teams.away.name}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <Button type="submit" className="w-full py-4 text-lg">
-                    🚀 CREAR PARTIDO
-                  </Button>
-                </form>
-              </Card>
+                )}
+              </div>
             )}
 
             {/* Formulario actualizar resultado */}

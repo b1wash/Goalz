@@ -14,7 +14,11 @@ export const HacerPrediccion = () => {
 
   // ESTADOS DEL FORMULARIO Y DATOS
   const [partidos, setPartidos] = useState<Partido[]>([]);
+  const [prediccionesUsuario, setPrediccionesUsuario] = useState<Prediccion[]>(
+    [],
+  );
   const [partidoSeleccionado, setPartidoSeleccionado] = useState("");
+  const [partidoActual, setPartidoActual] = useState<Partido | null>(null);
   const [prediccion, setPrediccion] = useState<"1" | "X" | "2">("1");
   const [golesLocal, setGolesLocal] = useState(0);
   const [golesVisitante, setGolesVisitante] = useState(0);
@@ -24,13 +28,21 @@ export const HacerPrediccion = () => {
   const [error, setError] = useState("");
   const [exito, setExito] = useState(false);
 
-  // CARGAR PARTIDOS DISPONIBLES AL INICIAR
+  // CARGAR PARTIDOS Y PREDICCIONES DEL USUARIO AL INICIAR
   useEffect(() => {
-    const cargarPartidos = async () => {
+    const cargarDatos = async () => {
       try {
         setLoading(true);
         const data = await matchService.getAll();
         setPartidos(data);
+
+        // CARGAR PREDICCIONES DEL USUARIO PARA EVITAR DUPLICADOS
+        if (usuarioActual) {
+          const predicciones = await predictionService.getByUser(
+            usuarioActual.id,
+          );
+          setPrediccionesUsuario(predicciones);
+        }
       } catch (err) {
         console.error("Error al cargar partidos:", err);
         setError("Error al cargar los partidos desde el servidor");
@@ -38,8 +50,8 @@ export const HacerPrediccion = () => {
         setLoading(false);
       }
     };
-    cargarPartidos();
-  }, []);
+    cargarDatos();
+  }, [usuarioActual]);
 
   // FILTRAR SOLO PARTIDOS QUE AUN NO HAN COMENZADO
   const partidosPendientes = partidos.filter(
@@ -50,6 +62,17 @@ export const HacerPrediccion = () => {
   const validarPrediccion = (): boolean => {
     if (!partidoSeleccionado) {
       setError("Por favor, selecciona un partido de la lista");
+      return false;
+    }
+
+    // VERIFICAR SI YA EXISTE UNA PREDICCIÓN PARA ESTE PARTIDO
+    const yaPredicho = prediccionesUsuario.find(
+      (p) => (p.matchId || p.idPartido) === partidoSeleccionado,
+    );
+    if (yaPredicho) {
+      setError(
+        "YA HAS HECHO UNA PREDICCIÓN PARA ESTE PARTIDO. No puedes modificarla.",
+      );
       return false;
     }
 
@@ -91,11 +114,11 @@ export const HacerPrediccion = () => {
 
       const nuevaPrediccion: Omit<Prediccion, "id"> = {
         matchId: partidoSeleccionado,
-        idPartido: partidoSeleccionado, // COMPATIBILIDAD CON CODIGO ANTIGUO
+        idPartido: partidoSeleccionado,
         userId: usuarioActual!.id,
-        idUsuario: usuarioActual!.id, // COMPATIBILIDAD CON CODIGO ANTIGUO
+        idUsuario: usuarioActual!.id,
         prediction: prediccion,
-        prediccion: prediccion, // COMPATIBILIDAD CON CODIGO ANTIGUO
+        prediccion: prediccion,
         exactScore: {
           home: golesLocal,
           away: golesVisitante,
@@ -118,6 +141,12 @@ export const HacerPrediccion = () => {
 
       // ACTUALIZAR ESTADO GLOBAL
       agregarPrediccion(nuevaPrediccion);
+
+      // ACTUALIZAR ESTADO LOCAL PARA BLOQUEAR DUPLICADOS INMEDIATAMENTE
+      setPrediccionesUsuario((prev) => [
+        ...prev,
+        { ...nuevaPrediccion, id: Date.now().toString() } as Prediccion,
+      ]);
 
       // RESETEAR FORMULARIO Y MOSTRAR EXITO
       setExito(true);
@@ -219,18 +248,77 @@ export const HacerPrediccion = () => {
               </label>
               <Select
                 value={partidoSeleccionado}
-                onChange={(e) => setPartidoSeleccionado(e.target.value)}
+                onChange={(e) => {
+                  const id = e.target.value;
+                  setPartidoSeleccionado(id);
+                  const partido = partidos.find((p) => p.id === id);
+                  setPartidoActual(partido || null);
+                }}
                 className="text-base py-3 font-bold"
               >
                 <option value="">-- ELIGE UN ENCUENTRO DE LA JORNADA --</option>
-                {partidosPendientes.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.homeTeam} vs {m.awayTeam} (
-                    {new Date(m.date).toLocaleDateString("es-ES")})
-                  </option>
-                ))}
+                {partidosPendientes.map((m) => {
+                  const fecha = new Date(m.date);
+                  const fechaTexto = isNaN(fecha.getTime())
+                    ? m.date
+                    : fecha.toLocaleDateString("es-ES");
+                  return (
+                    <option key={m.id} value={m.id}>
+                      {m.homeTeam} vs {m.awayTeam} ({fechaTexto})
+                    </option>
+                  );
+                })}
               </Select>
             </div>
+
+            {/* VISUALIZACIÓN DEL PARTIDO SELECCIONADO */}
+            {partidoActual && (
+              <div className="p-6 bg-gradient-to-br from-primary/5 to-blue-500/5 dark:from-primary/10 dark:to-blue-500/10 rounded-2xl border-2 border-primary/20 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="grid grid-cols-3 gap-6 items-center">
+                  {/* EQUIPO LOCAL */}
+                  <div className="flex flex-col items-center gap-3 text-center">
+                    {partidoActual.homeLogo && (
+                      <img
+                        src={partidoActual.homeLogo}
+                        alt={partidoActual.homeTeam}
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-lg"
+                      />
+                    )}
+                    <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base uppercase leading-tight">
+                      {partidoActual.homeTeam}
+                    </p>
+                    <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-[10px] font-black uppercase tracking-wider">
+                      LOCAL
+                    </span>
+                  </div>
+
+                  {/* VS */}
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="text-4xl font-black text-primary">VS</div>
+                    <span className="px-3 py-1.5 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-wider">
+                      Jornada {partidoActual.matchday}
+                    </span>
+                  </div>
+
+                  {/* EQUIPO VISITANTE */}
+                  <div className="flex flex-col items-center gap-3 text-center">
+                    {partidoActual.awayLogo && (
+                      <img
+                        src={partidoActual.awayLogo}
+                        alt={partidoActual.awayTeam}
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-lg"
+                      />
+                    )}
+                    <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base uppercase leading-tight">
+                      {partidoActual.awayTeam}
+                    </p>
+                    <span className="px-3 py-1 bg-blue-500/20 text-blue-500 rounded-full text-[10px] font-black uppercase tracking-wider">
+                      VISITANTE
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* 2. RESULTADO 1X2 */}
             <div className="space-y-3">
@@ -384,15 +472,28 @@ export const HacerPrediccion = () => {
 
             {/* BOTON DE ENVIO */}
             <div className="pt-6">
-              <Button
-                type="submit"
-                className="w-full py-6 text-xl lg:text-2xl font-black flex items-center justify-center gap-4 group"
-              >
-                <span>🚀 ENVIAR PREDICCION</span>
-                <span className="group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform">
-                  ⚽
-                </span>
-              </Button>
+              {prediccionesUsuario.some(
+                (p) => (p.matchId || p.idPartido) === partidoSeleccionado,
+              ) ? (
+                <div className="bg-amber-100 dark:bg-amber-900/30 border-2 border-amber-500/50 p-4 rounded-xl text-center mb-4">
+                  <p className="text-amber-700 dark:text-amber-300 font-extrabold uppercase text-sm">
+                    ⚠️ Ya has realizado una predicción para este encuentro
+                  </p>
+                </div>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={loading || !partidoSeleccionado}
+                  className="w-full py-6 text-xl lg:text-2xl font-black flex items-center justify-center gap-4 group"
+                >
+                  <span>
+                    {loading ? "PROCESANDO..." : "🚀 ENVIAR PREDICCION"}
+                  </span>
+                  <span className="group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform">
+                    ⚽
+                  </span>
+                </Button>
+              )}
               <p className="mt-4 text-center text-gray-500 font-bold text-xs uppercase tracking-widest">
                 ¡UNA VEZ ENVIADA, NO PODRAS MODIFICAR TU APUESTA!
               </p>

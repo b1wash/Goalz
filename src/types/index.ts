@@ -46,6 +46,8 @@ export interface Partido {
   estado: "pendiente" | "finalizado";
   result: ResultadoPartido | null;
   resultado: ResultadoPartido | null;
+  homeLogo?: string;
+  awayLogo?: string;
 }
 
 // INTERFAZ: MARCADOR EXACTO DE UNA PREDICCION
@@ -90,6 +92,8 @@ export interface DatosFormularioPartido {
   awayTeam: string;
   date: string;
   matchday: number;
+  homeLogo?: string;
+  awayLogo?: string;
 }
 
 // INTERFAZ: DATOS DE FORMULARIO PARA ACTUALIZAR RESULTADO

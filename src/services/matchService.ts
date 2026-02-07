@@ -11,6 +11,8 @@ export interface CrearPartidoDTO {
   matchday: number;
   status: "pending" | "finished";
   result: { homeGoals: number; awayGoals: number } | null;
+  homeLogo?: string;
+  awayLogo?: string;
 }
 
 // INTERFAZ PARA REGISTRAR EL MARCADOR FINAL DE UN ENCUENTRO
