@@ -245,7 +245,7 @@ Debido al plan gratuito de la **API-Football**, la sincronización de datos real
 
 Desarrollado para la asignatura **Desarrollo Web en Entorno Cliente (DWEC)**. Cumple con todos los requisitos técnicos y funcionales, incluyendo múltiples ampliaciones de lógica compleja y diseño premium.
 
-### Mejoras de Desarrollo (V2.0)
+### Todo lo que se ha incorporado
 
 - [x] **Integración de API Real**: Sincronización con temporadas 22/23 y 23/24.
 - [x] **Integridad de Puntos**: Sistema para evitar duplicados y función de recálculo masivo.
