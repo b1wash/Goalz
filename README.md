@@ -36,15 +36,15 @@ npm --version
 
 ## 🛠️ Tecnologías
 
-- **React 19** - Biblioteca UI con componentes funcionales
-- **TypeScript** - Tipado estático para mayor seguridad
-- **Vite** - Entorno de desarrollo ultrarrápido
-- **Tailwind CSS** - Framework CSS utility-first
-- **React Router DOM** - Navegación SPA
-- **JSON Server** - API REST simulada
-- **API-Football** - Integración con datos reales de La Liga
-- **Context API** - Gestión de estado global
-- **LocalStorage** - Persistencia de datos del cliente
+- **React 19** - Herramienta para crear la interfaz
+- **TypeScript** - Sistema para evitar errores de código
+- **Vite** - Herramienta de desarrollo rápida
+- **Tailwind CSS** - Sistema de diseño para los estilos
+- **React Router DOM** - Sistema de navegación entre páginas
+- **JSON Server** - Base de datos sencilla para pruebas
+- **API-Football** - Datos reales de La Liga
+- **Context API** - Gestión de la información del usuario
+- **LocalStorage** - Guardado de datos en el navegador
 
 ## 🚀 Instalación
 
@@ -102,6 +102,7 @@ goalz-app/
 │   │   └── Register.tsx
 │   ├── services/              # Comunicación con API
 │   │   ├── api.ts
+│   │   ├── footballApiService.ts  # Conexión con API real
 │   │   ├── matchService.ts
 │   │   ├── predictionService.ts
 │   │   └── userService.ts
@@ -111,7 +112,10 @@ goalz-app/
 │   │   ├── useDarkMode.ts
 │   │   └── usePredicciones.ts
 │   ├── types/                 # Definiciones TypeScript
+│   │   └── index.ts
 │   ├── utils/                 # Funciones auxiliares
+│   │   ├── pointsCalculator.ts
+│   │   └── validators.ts
 │   ├── App.tsx
 │   └── main.tsx
 ├── db.json                     # Base de datos simulada
@@ -165,7 +169,7 @@ goalz-app/
 
 ### 🏆 Clasificación
 
-- Podio visual del Top 3
+- Podio visual de los primeros puestos
 - Tabla completa ordenada por puntos
 - Estadísticas de cada jugador
 - **Los admins NO aparecen** (solo gestionan)
@@ -174,112 +178,82 @@ goalz-app/
 
 > 🔐 **Acceso exclusivo para rol `admin`**
 
-### 📊 Dashboard
+### 📊 Panel de Control y Estadísticas
 
-- Resumen de métricas del sistema
-- Total de partidos, jugadores y predicciones
-- Tasa de acierto global
-- Próximos 5 partidos pendientes
-- Top 5 clasificación en tiempo real
+- **Resumen del sistema**: Total de partidos, jugadores, predicciones y tasa de acierto global.
+- **Mejores jugadores**: Clasificación actualizada al instante.
+- **Próximos encuentros**: Vista rápida de los 5 partidos más cercanos.
 
-### ⚽ Gestión de Partidos
+### ⚽ Gestión de Datos y Mantenimiento
 
-- **Lista completa** con filtros (Todos/Pendientes/Finalizados)
-- **Crear partidos** nuevos
-- **Actualizar resultados** con distribución automática de puntos
-- **Eliminar partidos** (incluyendo predicciones asociadas)
-
-### 👥 Gestión de Usuarios
-
-- Lista de todos los usuarios registrados
-- Identificación de roles (Admin/Jugador)
-- Visualización de puntos por jugador
-- **Eliminar usuarios** (con sus predicciones)
-
-### 📈 Estadísticas Generales
-
-- Total de predicciones realizadas
-- Predicciones acertadas
-- Tasa de acierto global
-- Estado del sistema completo
-
-### ⚙️ Características del Admin
-
-**El administrador es un GESTOR puro:**
-
-- ❌ NO aparece en clasificación
-- ❌ NO puede hacer predicciones
-- ❌ NO se le muestran puntos
-- ✅ Acceso al panel de 3 secciones principales (Dashboard, Partidos, Usuarios)
-- ✅ Gestión completa de partidos y resultados
-- ✅ Gestión completa de usuarios
-- ✅ Vista de métricas globales
-- ✅ **Sincronización automática con resultados reales**
-- ✅ **Herramientas de Mantenimiento Avanzadas**
+- **Partidos y Usuarios**: Control total sobre los encuentros y los jugadores.
+- **Integridad**: Evita hacer dos veces la misma apuesta y errores en los puntos.
+- **Herramientas**: Botones para **limpiar la lista de puntos**, **borrar solo los partidos** o **reiniciar todo** el sistema.
 
 ### 🔄 Sincronización con API Real
 
-**GOALZ se conecta con datos reales de La Liga EA Sports** mediante la integración con API-Football.
+- **Automático**: Conexión con los partidos reales buscando el equipo y la jornada.
+- **Limitación**: Debido a que usamos una cuenta gratuita, la conexión solo funciona para las temporadas **2022 a 2024**.
 
-**Características:**
+## ✨ Diseño UI/UX
 
-- **Matching inteligente**: Vincula partidos locales con reales por equipos, jornada y temporada.
-- **Detección anti-duplicados**: Evita sumar puntos dos veces si un partido ya ha sido procesado.
-- **Distribución masiva de puntos**: Actualiza marcadores y premia a los usuarios en un solo clic.
-- **Feedback visual**: Resultados detallados de la sincronización (éxitos/errores).
+- **Tema claro y oscuro**: Cambia el aspecto de la aplicación y lo recuerda para la próxima vez.
+- **Estilo visual**: Escudos de equipos circulares y detalles de la temporada en las tarjetas.
+- **Adaptable**: Se ve bien en móviles, tablets y ordenadores (el nombre del usuario siempre está a la vista).
+- **Rapidez**: División por páginas en las listas largas para que la aplicación vaya fluida.
 
-### 🛠️ Herramientas de Mantenimiento (NUEVO)
+## 🔌 API Endpoints (Simulados con JSON Server)
 
-He implementado herramientas críticas para garantizar la integridad de los datos:
+### Partidos (`/matches`)
 
-1.  **🔄 Recalcular Clasificación**: Escanea todas las predicciones reales de la base de datos y reconstruye la puntuación de cada usuario desde cero. Ideal para corregir cualquier discrepancia o "puntos fantasma".
-2.  **🗑️ Borrar Solo Partidos**: Limpia la lista de encuentros pero **respeta** las apuestas y puntos ya ganados por los usuarios.
-3.  **☢️ Resetear Sistema**: Borra absolutamente todo (partidos y predicciones) y pone los contadores de los usuarios a cero. Perfecto para el inicio de una nueva temporada.
+- `GET /matches`: Lista todos los encuentros.
+- `POST /matches`: Crea un nuevo partido (Admin).
+- `PATCH /matches/:id`: Actualiza resultado y estado.
+- `DELETE /matches/:id`: Elimina un partido.
 
-## ✨ Funcionalidades Destacadas
+### Predicciones (`/predictions`)
 
-### 🔒 Integridad y Reglas de Juego
+- `GET /predictions?userId=:id`: Filtra apuestas por usuario.
+- `POST /predictions`: Registra una nueva apuesta.
+- `PATCH /predictions/:id`: Asigna puntos tras el resultado.
 
-- **Anti-Duplicados**: El sistema bloquea automáticamente que un usuario realice más de una predicción para el mismo partido.
-- **Protección de Puntos**: Lógica mejorada que impide la suma doble de puntos incluso si el administrador actualiza el resultado varias veces.
+### Usuarios (`/users`)
 
-### 🎨 UI/UX Premium
-
-- **Logos de Equipos**: Visualización de escudos de equipos reales con contenedores circulares elegantes y fallbacks inteligentes (emojis) si no hay logo disponible.
-- **Contexto Temporal**: Las tarjetas de predicción ahora muestran la temporada/año (ej: 2023/24) para dar contexto histórico a las apuestas.
-- **Responsividad Total**: Navbar optimizado que mantiene la información del usuario visible en todos los tamaños de desktop (desde 1024px) y colapsa correctamente en móvil.
-
-## 🔌 API Endpoints
-
-... (rest of the endpoints) ...
+- `POST /users`: Registro de nuevos jugadores.
+- `PATCH /users/:id`: Actualiza estadísticas de puntos y aciertos.
 
 ## 🌟 Características Técnicas
 
-... (rest of the characteristics) ...
+- ✅ **Seguridad**: Protección de rutas por roles y persistencia de sesión.
+- ✅ **Adaptabilidad**: Diseño responsivo optimizado para todo tipo de dispositivos.
+- ✅ **Diseño**: Temas claro/oscuro, micro-animaciones y feedback para el usuario.
+- ✅ **Rendimiento**: Paginación de datos para garantizar una navegación fluida.
+
+## ⚠️ Limitación de Datos Reales
+
+Debido al plan gratuito de la **API-Football**, la sincronización de datos reales de La Liga está disponible únicamente para las temporadas comprendidas entre **2022 y 2024**.
 
 ## 👤 Autor
 
-... (author info) ...
+**Biwash Shrestha**  
+📧 Email: biwash@gmail.com  
+🔗 GitHub: [@b1wash](https://github.com/b1wash)
 
 ---
 
 ## 🎓 Proyecto Académico
 
-... (academic info) ...
+Desarrollado para la asignatura **Desarrollo Web en Entorno Cliente (DWEC)**. Cumple con todos los requisitos técnicos y funcionales, incluyendo múltiples ampliaciones de lógica compleja y diseño premium.
 
-### Ampliaciones Implementadas (Última Versión)
+### Mejoras de Desarrollo (V2.0)
 
-- [x] **Prevención de Predicciones Duplicadas**
-- [x] **Sistema de Integridad de Puntos** (Sin doble conteo)
-- [x] **Herramienta de Recalculo de Clasificación**
-- [x] **Eliminación Selectiva vs Reset Total**
-- [x] **Diseño de Logos Circulares de Equipos**
-- [x] **Contexto de Temporada en Tarjetas**
-- [x] **Fix Responsivo en Navbar (lg/xl)**
-- [x] **Matching de API por Temporada y Jornada**
-- [x] UX Premium con micro-animaciones
-- [x] Filtros avanzados en tiempo real
-- [x] Paginación completa en todas las vistas críticas
+- [x] **Integración de API Real**: Sincronización con temporadas 22/23 y 23/24.
+- [x] **Integridad de Puntos**: Sistema para evitar duplicados y función de recálculo masivo.
+- [x] **Validación de Predicciones**: Restricción de una única apuesta por partido y usuario.
+- [x] **Paginación Global**: Implementada en Inicio, Clasificación y Mis Predicciones.
+- [x] **Herramientas de Administración**: Reset de sistema, borrado selectivo y matching de partidos.
+- [x] **Evolución Visual**: Logos de equipos, contexto de temporada y optimización para monitores grandes.
+- [x] **Persistencia de Preferencias**: El tema (oscuro/claro) se mantiene tras recargar la página.
 
 ---
 
