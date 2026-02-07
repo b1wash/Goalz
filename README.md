@@ -247,13 +247,15 @@ Desarrollado para la asignatura **Desarrollo Web en Entorno Cliente (DWEC)**. Cu
 
 ### Todo lo que se ha incorporado
 
-- [x] **Integración de API Real**: Sincronización con temporadas 22/23 y 23/24.
-- [x] **Integridad de Puntos**: Sistema para evitar duplicados y función de recálculo masivo.
-- [x] **Validación de Predicciones**: Restricción de una única apuesta por partido y usuario.
-- [x] **Paginación Global**: Implementada en Inicio, Clasificación y Mis Predicciones.
-- [x] **Herramientas de Administración**: Reset de sistema, borrado selectivo y matching de partidos.
-- [x] **Evolución Visual**: Logos de equipos, contexto de temporada y optimización para monitores grandes.
-- [x] **Persistencia de Preferencias**: El tema (oscuro/claro) se mantiene tras recargar la página.
+### Todo lo que se ha incorporado
+
+- [x] **Integración de API Real**: Se ha conectado la aplicación con datos oficiales de La Liga para obtener resultados reales de forma automática. Esto permite que el sistema se actualice solo, centrándose en las temporadas entre 2022 y 2024 según el plan gratuito de la API.
+- [x] **Sistema de Control de Puntos**: Se ha programado una lógica que supervisa cada apuesta para evitar que se sumen puntos por duplicado. Además, el administrador cuenta con una función especial para reajustar y recalcular todos los puntos de la clasificación desde cero si fuera necesario.
+- [x] **Protección contra Apuestas Duplicadas**: Para garantizar el juego limpio, el sistema impide que un usuario envíe más de una predicción para el mismo partido. Una vez realizada la apuesta, el formulario se bloquea automáticamente y muestra un mensaje de aviso.
+- [x] **Navegación por Páginas (Paginación)**: Con el fin de que la web sea rápida y fluida, las listas de partidos, el historial de apuestas y la tabla de clasificación se han dividido en páginas, evitando así esperas innecesarias al cargar muchos datos.
+- [x] **Panel de Control Avanzado**: Las herramientas para el administrador son ahora más completas, permitiendo sincronizar resultados con un solo clic, realizar limpiezas selectivas de partidos o reiniciar el sistema por completo para nuevas temporadas.
+- [x] **Mejora en la Presentación Visual**: El diseño se ha refinado añadiendo los escudos oficiales de los equipos, indicando la temporada y jornada en cada tarjeta y optimizando la interfaz para que se vea perfecta tanto en móviles como en monitores de gran tamaño.
+- [x] **Memoria de Ajustes Personales**: La aplicación ahora recuerda las preferencias del usuario. Por ejemplo, si activas el modo oscuro, esta elección se guarda en el navegador para que la próxima vez que entres todo esté a tu gusto automáticamente.
 
 ---
 
