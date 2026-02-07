@@ -250,8 +250,17 @@ Desarrollado para la asignatura **Desarrollo Web en Entorno Cliente (DWEC)**. Cu
 - [x] **Integración de API Real**: Sincronización con temporadas 22/23 y 23/24.
 - [x] **Integridad de Puntos**: Sistema para evitar duplicados y función de recálculo masivo.
 - [x] **Validación de Predicciones**: Restricción de una única apuesta por partido y usuario.
+- [x] **Gestión Avanzada de Partidos**:
+  - Prevención de partidos duplicados (mismo local, visitante y jornada).
+  - Mensajes de feedback contextuales (en formulario vs globales).
+- [x] **Optimización de Imágenes**:
+  - Compresión y redimensionamiento automático de logos en cliente.
+  - Soporte para imágenes de cualquier tamaño y formato (JPG, PNG, WEBP).
+- [x] **Herramientas de Administración**:
+  - Reset total del sistema con advertencias de seguridad detalladas.
+  - Borrado selectivo y matching de partidos.
+  - Limpieza de base de datos incluso sin partidos registrados.
 - [x] **Paginación Global**: Implementada en Inicio, Clasificación y Mis Predicciones.
-- [x] **Herramientas de Administración**: Reset de sistema, borrado selectivo y matching de partidos.
 - [x] **Evolución Visual**: Logos de equipos, contexto de temporada y optimización para monitores grandes.
 - [x] **Persistencia de Preferencias**: El tema (oscuro/claro) se mantiene tras recargar la página.
 

@@ -34,6 +34,10 @@ export const AdminMatches = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // MENSAJES ESPECÍFICOS PARA EL FORMULARIO DE CREACIÓN
+  const [errorFormCrear, setErrorFormCrear] = useState<string | null>(null);
+  const [successFormCrear, setSuccessFormCrear] = useState<string | null>(null);
+
   // ESTADOS PARA GESTION PARTIDOS
   const [vistaPartidos, setVistaPartidos] = useState<
     "lista" | "crear" | "actualizar"
@@ -81,55 +85,176 @@ export const AdminMatches = () => {
   const cargarTodosLosDatos = async () => {
     try {
       setLoading(true);
+      setError(null);
+
       const [partidosData, usuariosData, prediccionesData] = await Promise.all([
-        matchService.getAll(),
-        userService.getAll(),
-        predictionService.getAll(),
+        matchService.getAll().catch((err) => {
+          console.error("Error cargando partidos:", err);
+          return [];
+        }),
+        userService.getAll().catch((err) => {
+          console.error("Error cargando usuarios:", err);
+          return [];
+        }),
+        predictionService.getAll().catch((err) => {
+          console.error("Error cargando predicciones:", err);
+          return [];
+        }),
       ]);
+
       setPartidos(partidosData);
       setUsuarios(usuariosData);
       setPredicciones(prediccionesData);
-      setError(null);
     } catch (err) {
-      setError("Error al cargar los datos del sistema");
-      console.error(err);
+      console.error("Error crítico al cargar datos:", err);
+      setError(
+        "Error al cargar los datos del sistema. Verifica que el servidor esté funcionando.",
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  // FUNCIÓN PARA GESTIÓN DE LOS PARTIDOS (MANTENER LAS ORIGINALES)
-  const validarFormCrear = (): boolean => {
-    const validacion = validarDatosPartido(
-      formCrear.homeTeam,
-      formCrear.awayTeam,
-      formCrear.date,
-      formCrear.matchday,
-    );
-    if (!validacion.esValido) {
-      setError(validacion.mensaje);
-      return false;
+  const handleFileUpload = (
+    e: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>,
+    side: "home" | "away",
+  ) => {
+    let file: File | undefined;
+
+    if ("files" in e.target && e.target.files) {
+      file = e.target.files[0];
+    } else if ("dataTransfer" in e && e.dataTransfer.files) {
+      e.preventDefault();
+      file = e.dataTransfer.files[0];
     }
-    return true;
+
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        setErrorFormCrear(
+          "POR FAVOR, SELECCIONA ÚNICAMENTE ARCHIVOS DE IMAGEN.",
+        );
+        return;
+      }
+
+      // COMPRESIÓN AUTOMÁTICA DE LA IMAGEN
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          // REDIMENSIONAR A MÁXIMO 200x200 MANTENIENDO PROPORCIÓN
+          const maxSize = 200;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxSize) {
+              height = (height * maxSize) / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width = (width * maxSize) / height;
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // CONVERTIR A BASE64 CON CALIDAD REDUCIDA
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+
+          // VERIFICAR TAMAÑO FINAL
+          const sizeInKB = Math.round((compressedBase64.length * 3) / 4 / 1024);
+
+          if (sizeInKB > 500) {
+            setErrorFormCrear(
+              `IMAGEN MUY GRANDE (${sizeInKB}KB). USA UNA MÁS SIMPLE.`,
+            );
+            return;
+          }
+
+          setFormCrear((prev) => ({
+            ...prev,
+            [side === "home" ? "homeLogo" : "awayLogo"]: compressedBase64,
+          }));
+        };
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleCrearPartido = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validarFormCrear()) return;
+    setErrorFormCrear(null);
+    setSuccessFormCrear(null);
+
+    // 1. NORMALIZACIÓN Y VALIDACIÓN INICIAL
+    const homeName = formCrear.homeTeam.trim();
+    const awayName = formCrear.awayTeam.trim();
+
+    const validacion = validarDatosPartido(
+      homeName,
+      awayName,
+      formCrear.date,
+      formCrear.matchday,
+    );
+
+    if (!validacion.esValido) {
+      setErrorFormCrear(validacion.mensaje);
+      return;
+    }
+
+    // 2. VALIDACIÓN DE FECHA
+    const dateObj = new Date(formCrear.date);
+    if (isNaN(dateObj.getTime())) {
+      setErrorFormCrear("LA FECHA SELECCIONADA NO ES VÁLIDA.");
+      return;
+    }
+
+    // 3. VALIDACIÓN DE DUPLICADOS
+    const partidoDuplicado = partidos.find(
+      (p) =>
+        p.homeTeam.toLowerCase().trim() === homeName.toLowerCase() &&
+        p.awayTeam.toLowerCase().trim() === awayName.toLowerCase() &&
+        p.matchday === formCrear.matchday,
+    );
+
+    if (partidoDuplicado) {
+      setErrorFormCrear(
+        `YA EXISTE UN PARTIDO ENTRE ${homeName.toUpperCase()} Y ${awayName.toUpperCase()} EN LA JORNADA ${formCrear.matchday}.`,
+      );
+      return;
+    }
 
     try {
-      await matchService.create({
-        homeTeam: formCrear.homeTeam,
-        awayTeam: formCrear.awayTeam,
-        date: new Date(formCrear.date).toISOString(),
+      // 4. PREPARAR OBJETO (DUPLICIDAD PARA COMPATIBILIDAD)
+      const nuevoPartido = {
+        homeTeam: homeName,
+        awayTeam: awayName,
+        equipoLocal: homeName,
+        equipoVisitante: awayName,
+        date: dateObj.toISOString(),
+        fecha: formCrear.date,
         matchday: formCrear.matchday,
         homeLogo: formCrear.homeLogo,
         awayLogo: formCrear.awayLogo,
-        status: "pending",
+        status: "pending" as const,
+        estado: "pendiente" as const,
         result: null,
-      });
+        resultado: null,
+      };
 
-      setSuccess("¡PARTIDO CREADO EXITOSAMENTE!");
+      // 5. PERSISTENCIA
+      await matchService.create(nuevoPartido as any);
+
+      // 6. ÉXITO Y RESET
+      setSuccessFormCrear("¡PARTIDO CREADO EXITOSAMENTE!");
       setFormCrear({
         homeTeam: "",
         awayTeam: "",
@@ -139,11 +264,13 @@ export const AdminMatches = () => {
         awayLogo: "",
       });
       setVistaPartidos("lista");
-      cargarTodosLosDatos();
-      setTimeout(() => setSuccess(null), 3000);
+      await cargarTodosLosDatos();
+      setTimeout(() => setSuccessFormCrear(null), 3000);
     } catch (err) {
-      setError("ERROR AL CREAR EL PARTIDO");
-      console.error(err);
+      console.error("ERROR AL CREAR PARTIDO:", err);
+      setErrorFormCrear(
+        "ERROR AL CREAR EL PARTIDO. VERIFICA LA CONEXIÓN O EL TAMAÑO DE LAS IMÁGENES.",
+      );
     }
   };
 
@@ -471,20 +598,23 @@ export const AdminMatches = () => {
   };
 
   // FUNCIÓN PARA ELIMINAR TODOS LOS PARTIDOS DEL SISTEMA (RESET TOTAL)
+  // FUNCIÓN PARA ELIMINAR TODOS LOS PARTIDOS DEL SISTEMA (RESET TOTAL)
   const handleEliminarTodosLosPartidos = async () => {
-    // VERIFICAR SI HAY PARTIDOS PARA ELIMINAR
-    if (partidos.length === 0) {
-      setError("NO HAY PARTIDOS REGISTRADOS PARA ELIMINAR.");
-      setTimeout(() => setError(null), 5000);
-      return;
-    }
+    // MENSAJE DE ADVERTENCIA DETALLADO
+    const mensajeConfirmacion = `⚠️ ¡ATENCIÓN! ACCIÓN DESTRUCTIVA ⚠️
 
-    if (
-      !window.confirm(
-        "¿ESTÁS SEGURO DE QUE DESEAS ELIMINAR TODOS LOS PARTIDOS? ESTA ACCIÓN NO SE PUEDE DESHACER.",
-      )
-    )
-      return;
+¿ESTÁS SEGURO DE QUE DESEAS RESETEAR TODO EL SISTEMA?
+
+Esta acción es IRREVERSIBLE y realizará lo siguiente:
+1. Eliminará TODOS los partidos registrados.
+2. Eliminará TODAS las predicciones de los usuarios.
+3. Reseteará a 0 los puntos y estadísticas de TODOS los jugadores.
+
+Si procedes, se perderán todos los datos actuales del juego.
+
+¿Confirmas que quieres proceder?`;
+
+    if (!window.confirm(mensajeConfirmacion)) return;
 
     try {
       setLoading(true);
@@ -623,7 +753,7 @@ export const AdminMatches = () => {
           </p>
         </div>
 
-        {/* MENSAJES */}
+        {/* MENSAJES GLOBALES (PARA SINCRONIZAR, BORRAR, ETC.) */}
         {error && (
           <div className="mb-6 p-4 bg-danger/10 border border-danger/30 rounded-xl animate-shake">
             <p className="text-danger font-bold flex items-center gap-2">
@@ -843,7 +973,7 @@ export const AdminMatches = () => {
                   variant="secondary"
                   className="font-black px-6 py-2 border-2 border-slate-300 dark:border-white/10"
                 >
-                  🗑️ BORRAR SOLO PARTIDOS
+                  🗑️ BORRAR TODOS LOS PARTIDOS
                 </Button>
 
                 <Button
@@ -878,7 +1008,7 @@ export const AdminMatches = () => {
 
             {/* LISTA DE PARTIDOS */}
             {vistaPartidos === "lista" && (
-              <div className="space-y- 4">
+              <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                   <h2 className="text-2xl font-black text-slate-900 dark:text-white">
                     BASE DE DATOS DE PARTIDOS
@@ -1053,6 +1183,24 @@ export const AdminMatches = () => {
                     <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 uppercase">
                       NUEVO PARTIDO LOCAL
                     </h2>
+
+                    {/* MENSAJES DE ERROR/ÉXITO DENTRO DEL FORMULARIO */}
+                    {errorFormCrear && (
+                      <div className="mb-6 p-4 bg-danger/10 border-2 border-danger/30 rounded-xl animate-shake">
+                        <p className="text-danger font-bold flex items-center gap-2">
+                          <span>⚠️</span> {errorFormCrear}
+                        </p>
+                      </div>
+                    )}
+
+                    {successFormCrear && (
+                      <div className="mb-6 p-4 bg-primary/10 border-2 border-primary/30 rounded-xl">
+                        <p className="text-primary font-bold flex items-center gap-2">
+                          <span>✅</span> {successFormCrear}
+                        </p>
+                      </div>
+                    )}
+
                     <form onSubmit={handleCrearPartido} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -1074,23 +1222,6 @@ export const AdminMatches = () => {
                         </div>
                         <div>
                           <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
-                            URL LOGO LOCAL (OPCIONAL)
-                          </label>
-                          <input
-                            type="text"
-                            value={formCrear.homeLogo}
-                            onChange={(e) =>
-                              setFormCrear({
-                                ...formCrear,
-                                homeLogo: e.target.value,
-                              })
-                            }
-                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
-                            placeholder="https://ejemplo.com/logo.png"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
                             EQUIPO VISITANTE
                           </label>
                           <input
@@ -1106,24 +1237,123 @@ export const AdminMatches = () => {
                             placeholder="EJ: PROFESORES UNITED"
                           />
                         </div>
-                        <div>
-                          <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
-                            URL LOGO VISITANTE (OPCIONAL)
-                          </label>
-                          <input
-                            type="text"
-                            value={formCrear.awayLogo}
-                            onChange={(e) =>
-                              setFormCrear({
-                                ...formCrear,
-                                awayLogo: e.target.value,
-                              })
-                            }
-                            className="w-full px-4 py-3 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-primary/20 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-all"
-                            placeholder="https://ejemplo.com/logo.png"
-                          />
+
+                        {/* SECCIÓN DE LOGOS DRAG & DROP */}
+                        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {/* LOGO LOCAL */}
+                          <div className="space-y-2">
+                            <label className="block text-slate-700 dark:text-slate-300 font-black mb-1 uppercase text-[10px] tracking-wider">
+                              LOGO LOCAL{" "}
+                              <span className="text-gray-400 font-normal">
+                                (Opcional)
+                              </span>
+                            </label>
+                            <p className="text-[9px] text-gray-500 dark:text-gray-400 mb-2">
+                              PNG, JPG, WEBP • Cualquier tamaño
+                            </p>
+                            <div
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={(e) => handleFileUpload(e, "home")}
+                              className="relative group h-32 border-2 border-dashed border-slate-200 dark:border-white/10 rounded-2xl flex flex-col items-center justify-center bg-slate-50 dark:bg-dark-bg/50 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer overflow-hidden"
+                            >
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleFileUpload(e, "home")}
+                                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                              />
+                              {formCrear.homeLogo ? (
+                                <div className="relative w-full h-full flex items-center justify-center p-2">
+                                  <img
+                                    src={formCrear.homeLogo}
+                                    alt="Preview"
+                                    className="max-w-full max-h-full object-contain drop-shadow-md"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setFormCrear({
+                                        ...formCrear,
+                                        homeLogo: "",
+                                      });
+                                    }}
+                                    className="absolute top-2 right-2 bg-danger text-white w-6 h-6 rounded-full flex items-center justify-center text-xs z-20 hover:scale-110 transition-transform"
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="text-center p-4">
+                                  <span className="text-2xl mb-1 block group-hover:scale-110 transition-transform">
+                                    🖼️
+                                  </span>
+                                  <p className="text-[10px] font-bold text-gray-500 uppercase">
+                                    SOLTAR O CLICK
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* LOGO VISITANTE */}
+                          <div className="space-y-2">
+                            <label className="block text-slate-700 dark:text-slate-300 font-black mb-1 uppercase text-[10px] tracking-wider">
+                              LOGO VISITANTE{" "}
+                              <span className="text-gray-400 font-normal">
+                                (Opcional)
+                              </span>
+                            </label>
+                            <p className="text-[9px] text-gray-500 dark:text-gray-400 mb-2">
+                              PNG, JPG, WEBP • Cualquier tamaño
+                            </p>
+                            <div
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={(e) => handleFileUpload(e, "away")}
+                              className="relative group h-32 border-2 border-dashed border-slate-200 dark:border-white/10 rounded-2xl flex flex-col items-center justify-center bg-slate-50 dark:bg-dark-bg/50 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer overflow-hidden"
+                            >
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleFileUpload(e, "away")}
+                                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                              />
+                              {formCrear.awayLogo ? (
+                                <div className="relative w-full h-full flex items-center justify-center p-2">
+                                  <img
+                                    src={formCrear.awayLogo}
+                                    alt="Preview"
+                                    className="max-w-full max-h-full object-contain drop-shadow-md"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setFormCrear({
+                                        ...formCrear,
+                                        awayLogo: "",
+                                      });
+                                    }}
+                                    className="absolute top-2 right-2 bg-danger text-white w-6 h-6 rounded-full flex items-center justify-center text-xs z-20 hover:scale-110 transition-transform"
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="text-center p-4">
+                                  <span className="text-2xl mb-1 block group-hover:scale-110 transition-transform">
+                                    🖼️
+                                  </span>
+                                  <p className="text-[10px] font-bold text-gray-500 uppercase">
+                                    SOLTAR O CLICK
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-slate-700 dark:text-slate-300 font-black mb-2 uppercase text-xs tracking-wider">
