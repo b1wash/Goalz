@@ -10,6 +10,7 @@ import { HacerPrediccion } from "./pages/HacerPrediccion";
 import { AdminMatches } from "./pages/AdminMatches";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   return (
@@ -49,6 +50,9 @@ const App = () => {
             </AdminRoute>
           }
         />
+
+        {/* CUALQUIER RUTA NO DEFINIDA */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </div>

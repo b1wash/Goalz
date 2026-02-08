@@ -263,6 +263,7 @@ Desarrollado para la asignatura **Desarrollo Web en Entorno Cliente (DWEC)**. Cu
 - [x] **Paginación Global**: Implementada en Inicio, Clasificación y Mis Predicciones.
 - [x] **Evolución Visual**: Logos de equipos, contexto de temporada y optimización para monitores grandes.
 - [x] **Persistencia de Preferencias**: El tema (oscuro/claro) se mantiene tras recargar la página.
+- [x] **Gestión de Errores (404)**: Página "Fuera de Juego" personalizada con temática de fútbol para rutas no existentes.
 
 ---
 
