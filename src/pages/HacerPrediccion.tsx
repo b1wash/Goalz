@@ -5,7 +5,7 @@ import { useApp } from "../context/AppContext";
 import { matchService } from "../services/matchService";
 import { predictionService } from "../services/predictionService";
 import { validarCoherenciaMarcador, validarGoles } from "../utils/validators";
-import { Card, Button, Select } from "../components/ui";
+import { Card, Button } from "../components/ui";
 import type { Partido, Prediccion } from "../types";
 
 export const HacerPrediccion = () => {
@@ -22,6 +22,8 @@ export const HacerPrediccion = () => {
   const [prediccion, setPrediccion] = useState<"1" | "X" | "2">("1");
   const [golesLocal, setGolesLocal] = useState(0);
   const [golesVisitante, setGolesVisitante] = useState(0);
+  const [busqueda, setBusqueda] = useState("");
+  const [dropdownAbierto, setDropdownAbierto] = useState(false);
 
   // ESTADOS DE UI
   const [loading, setLoading] = useState(true);
@@ -53,10 +55,20 @@ export const HacerPrediccion = () => {
     cargarDatos();
   }, [usuarioActual]);
 
-  // FILTRAR SOLO PARTIDOS QUE AUN NO HAN COMENZADO
-  const partidosPendientes = partidos.filter(
-    (p) => p.status === "pending" || p.estado === "pendiente",
-  );
+  // FILTRAR SOLO PARTIDOS QUE AUN NO HAN COMENZADO Y QUE COINCIDAN CON LA BÚSQUEDA
+  const partidosPendientes = partidos.filter((p) => {
+    const esPendiente = p.status === "pending" || p.estado === "pendiente";
+    if (!esPendiente) return false;
+
+    if (busqueda) {
+      const b = busqueda.toLowerCase();
+      return (
+        p.homeTeam.toLowerCase().includes(b) ||
+        p.awayTeam.toLowerCase().includes(b)
+      );
+    }
+    return true;
+  });
 
   // VALIDAR QUE LA PREDICCION SEA LOGICA RESPECTO AL MARCADOR
   const validarPrediccion = (): boolean => {
@@ -203,8 +215,8 @@ export const HacerPrediccion = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-6 transition-colors duration-150">
+      <div className="w-full max-w-2xl mx-auto px-4 sm:px-6">
         {/* CABECERA - COMPACTA */}
         <div className="mb-6 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-3 bg-gradient-to-r from-slate-900 via-primary to-slate-900 dark:from-white dark:via-primary dark:to-white bg-clip-text text-transparent">
@@ -215,8 +227,8 @@ export const HacerPrediccion = () => {
           </p>
         </div>
 
-        {/* CONTENEDOR PRINCIPAL - COMPACTO */}
-        <Card className="p-6 lg:p-8 relative overflow-hidden">
+        {/* CONTENEDOR PRINCIPAL - ULTRA COMPACTO */}
+        <Card className="p-5 sm:p-6 relative overflow-hidden ring-1 ring-slate-200 dark:ring-white/5">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl rounded-full -mr-16 -mt-16"></div>
 
           {/* MENSAJES DE ESTADO */}
@@ -237,98 +249,199 @@ export const HacerPrediccion = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
-            {/* 1. SELECCION DE PARTIDO */}
-            <div className="space-y-3">
-              <label className="block text-slate-900 dark:text-white text-lg font-black uppercase tracking-tight flex items-center gap-2">
-                <span className="w-7 h-7 rounded-lg bg-primary text-dark-bg flex items-center justify-center text-sm">
+          <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
+            {/* 1. SELECCION DE PARTIDO (CUSTOM DROPDOWN CON LOGOS) */}
+            <div className="space-y-2.5">
+              <label className="text-slate-900 dark:text-white text-base font-black uppercase tracking-tight flex items-center gap-2">
+                <span className="w-6 h-6 rounded-md bg-primary text-dark-bg flex items-center justify-center text-[10px] shadow-sm">
                   1
                 </span>
-                Slecciona el partido
+                Partido
               </label>
-              <Select
-                value={partidoSeleccionado}
-                onChange={(e) => {
-                  const id = e.target.value;
-                  setPartidoSeleccionado(id);
-                  const partido = partidos.find((p) => p.id === id);
-                  setPartidoActual(partido || null);
-                }}
-                className="text-base py-3 font-bold"
-              >
-                <option value="">-- ELIGE UN ENCUENTRO DE LA JORNADA --</option>
-                {partidosPendientes.map((m) => {
-                  const fecha = new Date(m.date);
-                  const fechaTexto = isNaN(fecha.getTime())
-                    ? m.date
-                    : fecha.toLocaleDateString("es-ES");
-                  return (
-                    <option key={m.id} value={m.id}>
-                      {m.homeTeam} vs {m.awayTeam} ({fechaTexto})
-                    </option>
-                  );
-                })}
-              </Select>
+
+              <div className="relative">
+                {/* TRIGGER (EL BOTÓN QUE PARECE UN SELECT) */}
+                <div
+                  onClick={() => {
+                    setExito(false);
+                    setDropdownAbierto(!dropdownAbierto);
+                  }}
+                  className={`w-full p-4 bg-white dark:bg-dark-card border-2 rounded-2xl cursor-pointer transition-all flex items-center justify-between group ${
+                    partidoSeleccionado
+                      ? "border-primary shadow-lg shadow-primary/5"
+                      : "border-slate-100 dark:border-white/5 hover:border-primary/50"
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    {partidoActual ? (
+                      <>
+                        <div className="flex -space-x-2">
+                          <img
+                            src={partidoActual.homeLogo}
+                            className="w-8 h-8 object-contain rounded-full bg-slate-50 p-1 shadow-sm border border-slate-200"
+                          />
+                          <img
+                            src={partidoActual.awayLogo}
+                            className="w-8 h-8 object-contain rounded-full bg-slate-50 p-1 shadow-sm border border-slate-200"
+                          />
+                        </div>
+                        <div>
+                          <p className="font-black text-slate-900 dark:text-white uppercase text-sm">
+                            {partidoActual.homeTeam} VS {partidoActual.awayTeam}
+                          </p>
+                          <p className="text-[10px] font-bold text-gray-400 uppercase">
+                            Jornada {partidoActual.matchday}
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl opacity-50">🏟️</span>
+                        <span className="font-bold text-gray-400 uppercase text-sm tracking-wider">
+                          Elegir partido de la jornada...
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <span
+                    className={`text-xl transition-transform duration-300 ${dropdownAbierto ? "rotate-180" : ""}`}
+                  >
+                    {dropdownAbierto ? "🔼" : "🔽"}
+                  </span>
+                </div>
+
+                {/* DROPDOWN MENU (EL DESPLEGABLE) */}
+                {dropdownAbierto && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1a1c2e] border-2 border-slate-100 dark:border-primary/20 rounded-2xl shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 backdrop-blur-xl">
+                    {/* BUSCADOR DENTRO DEL DROPDOWN */}
+                    <div className="p-3 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-black/20">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="BUSCAR EQUIPO..."
+                          autoFocus
+                          value={busqueda}
+                          onChange={(e) => setBusqueda(e.target.value)}
+                          className="w-full pl-9 pr-4 py-2 bg-white dark:bg-dark-bg border-2 border-slate-100 dark:border-white/10 rounded-xl text-xs font-black focus:outline-none focus:border-primary transition-all"
+                        />
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px]">
+                          🔍
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* LISTA DE PARTIDOS */}
+                    <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                      {partidosPendientes.length > 0 ? (
+                        partidosPendientes.map((m) => {
+                          const yaPredicho = prediccionesUsuario.some(
+                            (p) => (p.matchId || p.idPartido) === m.id,
+                          );
+                          const isSelected = m.id === partidoSeleccionado;
+
+                          return (
+                            <div
+                              key={m.id}
+                              onClick={() => {
+                                if (!yaPredicho) {
+                                  setPartidoSeleccionado(m.id);
+                                  setPartidoActual(m);
+                                  setDropdownAbierto(false);
+                                  setBusqueda("");
+                                }
+                              }}
+                              className={`p-3 flex items-center justify-between hover:bg-primary/10 cursor-pointer transition-colors border-b border-slate-50 dark:border-white/5 last:border-0 ${
+                                yaPredicho
+                                  ? "opacity-40 cursor-not-allowed"
+                                  : ""
+                              } ${isSelected ? "bg-primary/5" : ""}`}
+                            >
+                              <div className="flex items-center gap-4">
+                                <div className="flex -space-x-2">
+                                  <img
+                                    src={m.homeLogo}
+                                    className="w-7 h-7 object-contain rounded-full bg-white p-0.5 shadow-sm"
+                                  />
+                                  <img
+                                    src={m.awayLogo}
+                                    className="w-7 h-7 object-contain rounded-full bg-white p-0.5 shadow-sm"
+                                  />
+                                </div>
+                                <div>
+                                  <p className="font-black text-slate-900 dark:text-white uppercase text-[11px]">
+                                    {m.homeTeam} - {m.awayTeam}
+                                  </p>
+                                  <p className="text-[9px] font-bold text-gray-400 capitalize">
+                                    Jornada {m.matchday} •{" "}
+                                    {isNaN(new Date(m.date).getTime())
+                                      ? m.date
+                                      : new Date(m.date).toLocaleDateString()}
+                                  </p>
+                                </div>
+                              </div>
+                              {yaPredicho ? (
+                                <span className="text-[8px] font-black bg-amber-500/10 text-amber-600 px-2 py-1 rounded">
+                                  COMPLETADO
+                                </span>
+                              ) : isSelected ? (
+                                <span className="text-primary text-xs">⭐</span>
+                              ) : null}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="p-8 text-center text-gray-400 font-bold uppercase text-[10px] tracking-widest italic">
+                          No hay partidos que coincidan
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* OVERLAY PARA CERRAR AL HACER CLIC FUERA */}
+                {dropdownAbierto && (
+                  <div
+                    className="fixed inset-0 z-[90]"
+                    onClick={() => setDropdownAbierto(false)}
+                  ></div>
+                )}
+              </div>
             </div>
 
-            {/* VISUALIZACIÓN DEL PARTIDO SELECCIONADO */}
+            {/* VISUALIZACIÓN MINI DEL PARTIDO SELECT */}
             {partidoActual && (
-              <div className="p-6 bg-gradient-to-br from-primary/5 to-blue-500/5 dark:from-primary/10 dark:to-blue-500/10 rounded-2xl border-2 border-primary/20 animate-in fade-in slide-in-from-top-4 duration-500">
-                <div className="grid grid-cols-3 gap-6 items-center">
-                  {/* EQUIPO LOCAL */}
-                  <div className="flex flex-col items-center gap-3 text-center">
-                    {partidoActual.homeLogo && (
-                      <img
-                        src={partidoActual.homeLogo}
-                        alt={partidoActual.homeTeam}
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-lg"
-                      />
-                    )}
-                    <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base uppercase leading-tight">
-                      {partidoActual.homeTeam}
-                    </p>
-                    <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-[10px] font-black uppercase tracking-wider">
-                      LOCAL
-                    </span>
-                  </div>
-
-                  {/* VS */}
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="text-4xl font-black text-primary">VS</div>
-                    <span className="px-3 py-1.5 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-wider">
-                      Jornada {partidoActual.matchday}
-                    </span>
-                  </div>
-
-                  {/* EQUIPO VISITANTE */}
-                  <div className="flex flex-col items-center gap-3 text-center">
-                    {partidoActual.awayLogo && (
-                      <img
-                        src={partidoActual.awayLogo}
-                        alt={partidoActual.awayTeam}
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-lg"
-                      />
-                    )}
-                    <p className="font-black text-slate-900 dark:text-white text-sm sm:text-base uppercase leading-tight">
-                      {partidoActual.awayTeam}
-                    </p>
-                    <span className="px-3 py-1 bg-blue-500/20 text-blue-500 rounded-full text-[10px] font-black uppercase tracking-wider">
-                      VISITANTE
-                    </span>
-                  </div>
+              <div className="py-3 px-4 bg-slate-50 dark:bg-dark-bg/40 rounded-xl border border-slate-100 dark:border-white/5 flex items-center justify-center gap-6 animate-in fade-in zoom-in duration-300">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={partidoActual.homeLogo}
+                    className="w-8 h-8 object-contain"
+                  />
+                  <span className="text-xs font-black dark:text-white uppercase">
+                    {partidoActual.homeTeam.substring(0, 15)}
+                  </span>
+                </div>
+                <div className="text-primary font-black text-sm">VS</div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-black dark:text-white uppercase">
+                    {partidoActual.awayTeam.substring(0, 15)}
+                  </span>
+                  <img
+                    src={partidoActual.awayLogo}
+                    className="w-8 h-8 object-contain"
+                  />
                 </div>
               </div>
             )}
 
-            {/* 2. RESULTADO 1X2 */}
-            <div className="space-y-3">
-              <label className="block text-slate-900 dark:text-white text-lg font-black uppercase tracking-tight flex items-center gap-2">
-                <span className="w-7 h-7 rounded-lg bg-blue-500 text-white flex items-center justify-center text-sm">
+            {/* 2. RESULTADO 1X2 COMPACTO */}
+            <div className="space-y-2.5">
+              <label className="text-slate-900 dark:text-white text-base font-black uppercase tracking-tight flex items-center gap-2">
+                <span className="w-6 h-6 rounded-md bg-blue-500 text-white flex items-center justify-center text-[10px] shadow-sm">
                   2
                 </span>
                 ¿Quién ganará? (1X2)
               </label>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-2">
                 {[
                   {
                     id: "1",
@@ -351,10 +464,10 @@ export const HacerPrediccion = () => {
                 ].map((opt) => (
                   <label
                     key={opt.id}
-                    className={`relative flex flex-col items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 ${
+                    className={`relative flex flex-col items-center justify-center p-2.5 border-2 rounded-xl cursor-pointer transition-all duration-300 ${
                       prediccion === opt.id
-                        ? `${opt.border} bg-gradient-to-b ${opt.color} shadow-lg scale-105`
-                        : "border-slate-200 dark:border-white/10 grayscale hover:grayscale-0 opacity-60 hover:opacity-100"
+                        ? `${opt.border} bg-gradient-to-b ${opt.color} shadow-sm scale-102`
+                        : "border-slate-100 dark:border-white/5 opacity-60 hover:opacity-100 hover:border-slate-200"
                     }`}
                   >
                     <input
@@ -366,11 +479,11 @@ export const HacerPrediccion = () => {
                       className="hidden"
                     />
                     <span
-                      className={`text-2xl font-black mb-1 ${prediccion === opt.id ? "text-slate-900 dark:text-white" : "text-gray-400"}`}
+                      className={`text-xl font-black ${prediccion === opt.id ? "text-slate-900 dark:text-white" : "text-gray-400"}`}
                     >
                       {opt.id}
                     </span>
-                    <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">
+                    <span className="text-[8px] font-black uppercase tracking-widest text-gray-400">
                       {opt.label}
                     </span>
                   </label>
@@ -378,17 +491,16 @@ export const HacerPrediccion = () => {
               </div>
             </div>
 
-            {/* 3. MARCADOR EXACTO */}
-            <div className="space-y-3">
-              <label className="block text-slate-900 dark:text-white text-lg font-black uppercase tracking-tight flex items-center gap-2">
-                <span className="w-7 h-7 rounded-lg bg-accent text-dark-bg flex items-center justify-center text-sm">
+            <div className="space-y-2.5">
+              <label className="text-slate-900 dark:text-white text-base font-black uppercase tracking-tight flex items-center gap-2">
+                <span className="w-6 h-6 rounded-md bg-accent text-dark-bg flex items-center justify-center text-[10px] shadow-sm">
                   3
                 </span>
-                Marcador exacto (+5 puntos)
+                Marcador exacto
               </label>
 
-              <div className="bg-slate-50 dark:bg-dark-bg/50 p-6 rounded-2xl border border-slate-200 dark:border-white/10">
-                <div className="flex items-center justify-center gap-6 sm:gap-12">
+              <div className="bg-slate-50 dark:bg-dark-bg/20 p-4 rounded-xl border border-slate-100 dark:border-white/5">
+                <div className="flex items-center justify-center gap-6">
                   {/* LOCAL */}
                   <div className="flex flex-col items-center gap-3">
                     <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
@@ -400,7 +512,7 @@ export const HacerPrediccion = () => {
                         onClick={() =>
                           setGolesLocal(Math.max(0, golesLocal - 1))
                         }
-                        className="w-9 h-9 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-xl font-black hover:bg-danger hover:text-white transition-colors"
+                        className="w-7 h-7 rounded-lg bg-white dark:bg-dark-card shadow-sm flex items-center justify-center text-sm font-black hover:bg-danger hover:text-white transition-colors"
                       >
                         -
                       </button>
@@ -412,14 +524,14 @@ export const HacerPrediccion = () => {
                         onChange={(e) =>
                           setGolesLocal(parseInt(e.target.value) || 0)
                         }
-                        className="w-16 py-3 bg-white dark:bg-dark-bg border-2 border-primary/30 rounded-xl text-2xl font-black text-center text-primary focus:border-primary active:scale-95 transition-all"
+                        className="w-12 py-1.5 bg-white dark:bg-dark-bg border border-slate-200 dark:border-white/10 rounded-lg text-lg font-black text-center text-primary focus:border-primary active:scale-95 transition-all outline-none"
                       />
                       <button
                         type="button"
                         onClick={() =>
                           setGolesLocal(Math.min(20, golesLocal + 1))
                         }
-                        className="w-9 h-9 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-xl font-black hover:bg-primary hover:text-white transition-colors"
+                        className="w-7 h-7 rounded-lg bg-white dark:bg-dark-card shadow-sm flex items-center justify-center text-sm font-black hover:bg-primary hover:text-white transition-colors"
                       >
                         +
                       </button>
@@ -441,7 +553,7 @@ export const HacerPrediccion = () => {
                         onClick={() =>
                           setGolesVisitante(Math.max(0, golesVisitante - 1))
                         }
-                        className="w-9 h-9 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-xl font-black hover:bg-danger hover:text-white transition-colors"
+                        className="w-7 h-7 rounded-lg bg-white dark:bg-dark-card shadow-sm flex items-center justify-center text-sm font-black hover:bg-danger hover:text-white transition-colors"
                       >
                         -
                       </button>
@@ -453,14 +565,14 @@ export const HacerPrediccion = () => {
                         onChange={(e) =>
                           setGolesVisitante(parseInt(e.target.value) || 0)
                         }
-                        className="w-16 py-3 bg-white dark:bg-dark-bg border-2 border-blue-500/30 rounded-xl text-2xl font-black text-center text-blue-500 focus:border-blue-500 active:scale-95 transition-all"
+                        className="w-12 py-1.5 bg-white dark:bg-dark-bg border border-slate-200 dark:border-white/10 rounded-lg text-lg font-black text-center text-blue-500 focus:border-blue-500 active:scale-95 transition-all outline-none"
                       />
                       <button
                         type="button"
                         onClick={() =>
                           setGolesVisitante(Math.min(20, golesVisitante + 1))
                         }
-                        className="w-9 h-9 rounded-full bg-white dark:bg-dark-card shadow-md flex items-center justify-center text-xl font-black hover:bg-blue-500 hover:text-white transition-colors"
+                        className="w-7 h-7 rounded-lg bg-white dark:bg-dark-card shadow-sm flex items-center justify-center text-sm font-black hover:bg-blue-500 hover:text-white transition-colors"
                       >
                         +
                       </button>
@@ -470,13 +582,13 @@ export const HacerPrediccion = () => {
               </div>
             </div>
 
-            {/* BOTON DE ENVIO */}
-            <div className="pt-6">
+            {/* BOTON DE ENVIO - COMPACTO */}
+            <div className="pt-2">
               {prediccionesUsuario.some(
                 (p) => (p.matchId || p.idPartido) === partidoSeleccionado,
               ) ? (
-                <div className="bg-amber-100 dark:bg-amber-900/30 border-2 border-amber-500/50 p-4 rounded-xl text-center mb-4">
-                  <p className="text-amber-700 dark:text-amber-300 font-extrabold uppercase text-sm">
+                <div className="bg-amber-100 dark:bg-amber-900/20 border border-amber-500/30 p-3 rounded-lg text-center mb-2">
+                  <p className="text-amber-700 dark:text-amber-400 font-extrabold uppercase text-[10px]">
                     ⚠️ Ya has realizado una predicción para este encuentro
                   </p>
                 </div>
@@ -484,18 +596,18 @@ export const HacerPrediccion = () => {
                 <Button
                   type="submit"
                   disabled={loading || !partidoSeleccionado}
-                  className="w-full py-6 text-xl lg:text-2xl font-black flex items-center justify-center gap-4 group"
+                  className="w-full py-4 text-lg font-black flex items-center justify-center gap-3 group"
                 >
                   <span>
                     {loading ? "PROCESANDO..." : "🚀 ENVIAR PREDICCION"}
                   </span>
-                  <span className="group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform">
+                  <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
                     ⚽
                   </span>
                 </Button>
               )}
-              <p className="mt-4 text-center text-gray-500 font-bold text-xs uppercase tracking-widest">
-                ¡UNA VEZ ENVIADA, NO PODRAS MODIFICAR TU APUESTA!
+              <p className="mt-2 text-center text-gray-400 font-bold text-[9px] uppercase tracking-widest">
+                ¡UNA VEZ ENVIADA, NO PODRÁS MODIFICARLA!
               </p>
             </div>
           </form>

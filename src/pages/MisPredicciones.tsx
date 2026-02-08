@@ -24,6 +24,9 @@ export const MisPredicciones = () => {
     "todas" | "acertadas" | "falladas" | "pendientes"
   >("todas");
 
+  // ESTADO PARA LA BUSQUEDA POR EQUIPO
+  const [busqueda, setBusqueda] = useState("");
+
   // ESTADO PARA LA PAGINACION
   const [paginaActual, setPaginaActual] = useState(1);
   const ITEMS_POR_PAGINA = 9;
@@ -70,6 +73,15 @@ export const MisPredicciones = () => {
     const partido = obtenerPartido(partidoId);
     if (!partido) return false;
 
+    // FILTRADO POR SEARCH (EQUIPOS)
+    if (busqueda) {
+      const b = busqueda.toLowerCase();
+      const match =
+        partido.homeTeam.toLowerCase().includes(b) ||
+        partido.awayTeam.toLowerCase().includes(b);
+      if (!match) return false;
+    }
+
     if (filtro === "todas") return true;
 
     const estado = (partido.status || partido.estado) as string;
@@ -95,10 +107,10 @@ export const MisPredicciones = () => {
     indiceFin,
   );
 
-  // RESETEAR PAGINA CUANDO CAMBIA EL FILTRO
+  // RESETEAR PAGINA CUANDO CAMBIA EL FILTRO O LA BUSQUEDA
   useEffect(() => {
     setPaginaActual(1);
-  }, [filtro]);
+  }, [filtro, busqueda]);
 
   // CALCULOS EN TIEMPO REAL PARA EL RESUMEN SUPERIOR
   const totalPredicciones = todasLasPredicciones.length;
@@ -174,43 +186,74 @@ export const MisPredicciones = () => {
           </Card>
         </div>
 
-        {/* BARRA DE FILTROS PARA LA LISTA */}
-        <div className="bg-white/50 dark:bg-dark-card/50 backdrop-blur-md border border-slate-200 dark:border-primary/20 rounded-2xl p-4 mb-10 flex flex-wrap gap-3">
-          {[
-            { id: "todas", label: "VER TODAS", count: totalPredicciones },
-            {
-              id: "pendientes",
-              label: "PENDIENTES",
-              count:
-                totalPredicciones -
-                (acertadas +
-                  todasLasPredicciones.filter((p) => p.points === 0).length),
-            },
-            { id: "acertadas", label: "ACERTADAS", count: acertadas },
-            {
-              id: "falladas",
-              label: "FALLADAS",
-              count: todasLasPredicciones.filter(
-                (p) => (p.points ?? 0) === 0 && p.points !== null,
-              ).length,
-            },
-          ].map((f) => (
-            <button
-              key={f.id}
-              onClick={() =>
-                setFiltro(
-                  f.id as "todas" | "acertadas" | "falladas" | "pendientes",
-                )
-              }
-              className={`px-6 py-3 rounded-xl font-black text-xs tracking-widest transition-all ${
-                filtro === f.id
-                  ? "bg-primary text-dark-bg shadow-lg shadow-primary/20"
-                  : "bg-slate-100 dark:bg-dark-bg/50 text-gray-500 hover:text-primary"
-              }`}
-            >
-              {f.label} ({f.count})
-            </button>
-          ))}
+        {/* BARRA DE FILTROS Y BUSQUEDA */}
+        <div className="flex flex-col lg:flex-row gap-6 mb-10">
+          {/* BUSCADOR */}
+          <div className="flex-1 relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-gray-400">🔍</span>
+            </div>
+            <input
+              type="text"
+              placeholder="BUSCAR EQUIPO EN MIS APUESTAS..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-dark-card border-2 border-slate-100 dark:border-primary/20 rounded-2xl text-slate-900 dark:text-white font-black text-sm focus:outline-none focus:border-primary transition-all shadow-sm"
+            />
+            {busqueda && (
+              <button
+                onClick={() => setBusqueda("")}
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors font-black text-xl"
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+          {/* BOTONES DE FILTRO */}
+          <div className="bg-white/50 dark:bg-dark-card/50 backdrop-blur-md border border-slate-200 dark:border-primary/20 rounded-2xl p-2 flex flex-wrap gap-2">
+            {[
+              { id: "todas", label: "VER TODAS", count: totalPredicciones },
+              {
+                id: "pendientes",
+                label: "PENDIENTES",
+                count:
+                  totalPredicciones -
+                  (acertadas +
+                    todasLasPredicciones.filter(
+                      (p) =>
+                        (p.points ?? p.puntosGanados) === 0 &&
+                        (p.points ?? p.puntosGanados) !== null,
+                    ).length),
+              },
+              { id: "acertadas", label: "ACERTADAS", count: acertadas },
+              {
+                id: "falladas",
+                label: "FALLADAS",
+                count: todasLasPredicciones.filter(
+                  (p) =>
+                    (p.points ?? p.puntosGanados ?? 0) === 0 &&
+                    (p.points ?? p.puntosGanados) !== null,
+                ).length,
+              },
+            ].map((f) => (
+              <button
+                key={f.id}
+                onClick={() =>
+                  setFiltro(
+                    f.id as "todas" | "acertadas" | "falladas" | "pendientes",
+                  )
+                }
+                className={`px-4 py-2.5 rounded-xl font-black text-[10px] tracking-widest transition-all ${
+                  filtro === f.id
+                    ? "bg-primary text-dark-bg shadow-lg shadow-primary/20"
+                    : "bg-slate-100 dark:bg-dark-bg/50 text-gray-400 hover:text-primary"
+                }`}
+              >
+                {f.label} ({f.count})
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* LISTADO DE TARJETAS DE PREDICCION - PAGINADAS */}

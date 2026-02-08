@@ -99,6 +99,10 @@ export const AdminMatches = () => {
   const [partidosPreviosApi, setPartidosPreviosApi] = useState<any[]>([]);
   const [loadingApiPartidos, setLoadingApiPartidos] = useState(false);
 
+  // ESTADOS PARA BUSQUEDA EN TIEMPO REAL
+  const [busquedaPartidos, setBusquedaPartidos] = useState("");
+  const [busquedaUsuarios, setBusquedaUsuarios] = useState("");
+
   // CARGAR TODOS LOS DATOS
   useEffect(() => {
     cargarTodosLosDatos();
@@ -755,6 +759,22 @@ export const AdminMatches = () => {
       ? ((prediccionesAcertadas.length / predicciones.length) * 100).toFixed(1)
       : 0;
 
+  // FILTRADO DINÁMICO PARA BUSQUEDAS
+  const partidosFiltrados = partidos.filter((p) => {
+    const cumpleFiltroEstado =
+      filtroEstado === "todos" || p.status === filtroEstado;
+    const cumpleBusqueda =
+      p.homeTeam.toLowerCase().includes(busquedaPartidos.toLowerCase()) ||
+      p.awayTeam.toLowerCase().includes(busquedaPartidos.toLowerCase());
+    return cumpleFiltroEstado && cumpleBusqueda;
+  });
+
+  const usuariosFiltrados = usuarios.filter(
+    (u) =>
+      u.nombre.toLowerCase().includes(busquedaUsuarios.toLowerCase()) ||
+      u.email.toLowerCase().includes(busquedaUsuarios.toLowerCase()),
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
@@ -1070,107 +1090,119 @@ export const AdminMatches = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4">
-                  {partidos
-                    .filter(
-                      (partido) =>
-                        filtroEstado === "todos" ||
-                        partido.status === filtroEstado,
-                    )
-                    .map((partido) => (
-                      <Card
-                        key={partido.id}
-                        hover
-                        className="border-primary/20"
-                      >
-                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                          <div className="flex-1">
-                            <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
-                              JORNADA {partido.matchday} •{" "}
-                              {isNaN(new Date(partido.date).getTime())
-                                ? partido.date
-                                : new Date(partido.date).toLocaleDateString(
-                                    "es-ES",
-                                  )}
-                            </div>
-                            <div className="grid grid-cols-3 gap-8 items-center">
-                              <div className="flex flex-col items-end gap-2 text-right">
-                                {partido.homeLogo && (
-                                  <img
-                                    src={partido.homeLogo}
-                                    alt={partido.homeTeam}
-                                    className="w-10 h-10 object-contain"
-                                  />
-                                )}
-                                <p className="font-black text-slate-900 dark:text-white text-xl">
-                                  {partido.homeTeam}
-                                </p>
-                              </div>
-                              <div className="text-center">
-                                {partido.result ? (
-                                  <div className="text-3xl font-black text-primary">
-                                    {partido.result.homeGoals} -{" "}
-                                    {partido.result.awayGoals}
-                                  </div>
-                                ) : (
-                                  <div className="text-gray-400 font-black border-2 border-gray-200 dark:border-gray-700 rounded-lg py-1">
-                                    VS
-                                  </div>
-                                )}
-                              </div>
-                              <div className="flex flex-col items-start gap-2 text-left">
-                                {partido.awayLogo && (
-                                  <img
-                                    src={partido.awayLogo}
-                                    alt={partido.awayTeam}
-                                    className="w-10 h-10 object-contain"
-                                  />
-                                )}
-                                <p className="font-black text-slate-900 dark:text-white text-xl">
-                                  {partido.awayTeam}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
+                {/* BARRA DE BÚSQUEDA DE PARTIDOS */}
+                <div className="mb-6 relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <span className="text-gray-400">🔍</span>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="BUSCAR EQUIPO (MADRID, BARCELONA...)"
+                    value={busquedaPartidos}
+                    onChange={(e) => setBusquedaPartidos(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 bg-white dark:bg-dark-card border-2 border-slate-100 dark:border-white/5 rounded-2xl text-slate-900 dark:text-white font-black text-sm focus:outline-none focus:border-primary transition-all shadow-sm"
+                  />
+                  {busquedaPartidos && (
+                    <button
+                      onClick={() => setBusquedaPartidos("")}
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors font-black text-xl"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
 
-                          <div className="flex items-center gap-4">
-                            <Badge
-                              text={
-                                partido.status === "finished"
-                                  ? "FINALIZADO"
-                                  : "PENDIENTE"
-                              }
-                              variant={
-                                partido.status === "finished"
-                                  ? "success"
-                                  : "warning"
-                              }
-                            />
-                            {partido.status === "pending" && (
-                              <Button
-                                onClick={() => {
-                                  setPartidoSeleccionado(partido);
-                                  setFormResultado({
-                                    matchId: partido.id,
-                                    homeGoals: 0,
-                                    awayGoals: 0,
-                                  });
-                                  setVistaPartidos("actualizar");
-                                }}
-                              >
-                                ACTUALIZAR
-                              </Button>
-                            )}
-                            <Button
-                              onClick={() => handleEliminarPartido(partido)}
-                              variant="danger"
-                            >
-                              🗑️
-                            </Button>
+                <div className="grid grid-cols-1 gap-4">
+                  {partidosFiltrados.map((partido) => (
+                    <Card key={partido.id} hover className="border-primary/20">
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                        <div className="flex-1">
+                          <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                            JORNADA {partido.matchday} •{" "}
+                            {isNaN(new Date(partido.date).getTime())
+                              ? partido.date
+                              : new Date(partido.date).toLocaleDateString(
+                                  "es-ES",
+                                )}
+                          </div>
+                          <div className="grid grid-cols-3 gap-8 items-center">
+                            <div className="flex flex-col items-end gap-2 text-right">
+                              {partido.homeLogo && (
+                                <img
+                                  src={partido.homeLogo}
+                                  alt={partido.homeTeam}
+                                  className="w-10 h-10 object-contain"
+                                />
+                              )}
+                              <p className="font-black text-slate-900 dark:text-white text-xl">
+                                {partido.homeTeam}
+                              </p>
+                            </div>
+                            <div className="text-center">
+                              {partido.result ? (
+                                <div className="text-3xl font-black text-primary">
+                                  {partido.result.homeGoals} -{" "}
+                                  {partido.result.awayGoals}
+                                </div>
+                              ) : (
+                                <div className="text-gray-400 font-black border-2 border-gray-200 dark:border-gray-700 rounded-lg py-1">
+                                  VS
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex flex-col items-start gap-2 text-left">
+                              {partido.awayLogo && (
+                                <img
+                                  src={partido.awayLogo}
+                                  alt={partido.awayTeam}
+                                  className="w-10 h-10 object-contain"
+                                />
+                              )}
+                              <p className="font-black text-slate-900 dark:text-white text-xl">
+                                {partido.awayTeam}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </Card>
-                    ))}
+
+                        <div className="flex items-center gap-4">
+                          <Badge
+                            text={
+                              partido.status === "finished"
+                                ? "FINALIZADO"
+                                : "PENDIENTE"
+                            }
+                            variant={
+                              partido.status === "finished"
+                                ? "success"
+                                : "warning"
+                            }
+                          />
+                          {partido.status === "pending" && (
+                            <Button
+                              onClick={() => {
+                                setPartidoSeleccionado(partido);
+                                setFormResultado({
+                                  matchId: partido.id,
+                                  homeGoals: 0,
+                                  awayGoals: 0,
+                                });
+                                setVistaPartidos("actualizar");
+                              }}
+                            >
+                              ACTUALIZAR
+                            </Button>
+                          )}
+                          <Button
+                            onClick={() => handleEliminarPartido(partido)}
+                            variant="danger"
+                          >
+                            🗑️
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
                 </div>
               </div>
             )}
@@ -1622,8 +1654,30 @@ export const AdminMatches = () => {
               GESTIÓN DE USUARIOS
             </h2>
 
+            {/* BARRA DE BÚSQUEDA DE USUARIOS */}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <span className="text-gray-400">🔍</span>
+              </div>
+              <input
+                type="text"
+                placeholder="BUSCAR POR NOMBRE O EMAIL..."
+                value={busquedaUsuarios}
+                onChange={(e) => setBusquedaUsuarios(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-white dark:bg-dark-card border-2 border-slate-100 dark:border-white/5 rounded-2xl text-slate-900 dark:text-white font-black text-sm focus:outline-none focus:border-primary transition-all shadow-sm"
+              />
+              {busquedaUsuarios && (
+                <button
+                  onClick={() => setBusquedaUsuarios("")}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors font-black text-xl"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 gap-4">
-              {usuarios.map((usuario) => (
+              {usuariosFiltrados.map((usuario) => (
                 <Card key={usuario.id} hover className="border-primary/20">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-4">

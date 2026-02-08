@@ -8,8 +8,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/723.png",
       "awayLogo": "https://media.api-sports.io/football/teams/728.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 2
+      }
     },
     {
       "id": "aa4d",
@@ -19,8 +22,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/536.png",
       "awayLogo": "https://media.api-sports.io/football/teams/532.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 2
+      }
     },
     {
       "id": "6540",
@@ -30,8 +36,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/548.png",
       "awayLogo": "https://media.api-sports.io/football/teams/547.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 1
+      }
     },
     {
       "id": "125d",
@@ -41,8 +50,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/534.png",
       "awayLogo": "https://media.api-sports.io/football/teams/798.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 1
+      }
     },
     {
       "id": "65f6",
@@ -52,8 +64,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/531.png",
       "awayLogo": "https://media.api-sports.io/football/teams/541.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 2
+      }
     },
     {
       "id": "c1a9",
@@ -63,8 +78,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/538.png",
       "awayLogo": "https://media.api-sports.io/football/teams/727.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 2
+      }
     },
     {
       "id": "4596",
@@ -74,8 +92,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/533.png",
       "awayLogo": "https://media.api-sports.io/football/teams/543.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 2
+      }
     },
     {
       "id": "4802",
@@ -85,8 +106,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/546.png",
       "awayLogo": "https://media.api-sports.io/football/teams/529.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 0
+      }
     },
     {
       "id": "c460",
@@ -96,8 +120,11 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/724.png",
       "awayLogo": "https://media.api-sports.io/football/teams/542.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      }
     },
     {
       "id": "8b04",
@@ -107,11 +134,39 @@
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/530.png",
       "awayLogo": "https://media.api-sports.io/football/teams/715.png",
-      "status": "pending",
-      "result": null
+      "status": "finished",
+      "result": {
+        "homeGoals": 3,
+        "awayGoals": 1
+      }
     }
   ],
-  "predictions": [],
+  "predictions": [
+    {
+      "id": "42dd",
+      "matchId": "5b82",
+      "idPartido": "5b82",
+      "userId": "user2",
+      "idUsuario": "user2",
+      "prediction": "1",
+      "prediccion": "1",
+      "exactScore": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 1,
+        "away": 0,
+        "local": 1,
+        "visitante": 0
+      },
+      "points": 0,
+      "puntosGanados": 0,
+      "createdAt": "2026-02-08T23:13:36.428Z"
+    }
+  ],
   "users": [
     {
       "id": "user1",
@@ -135,7 +190,7 @@
       "totalPoints": 0,
       "puntosTotal": 0,
       "correctPredictions": 0,
-      "totalPredictions": 0
+      "totalPredictions": 1
     },
     {
       "id": "user3",
