@@ -8,6 +8,7 @@ import { footballApiService } from "../services/footballApiService";
 import { calcularPuntosGanados } from "../utils/pointsCalculator";
 import { validarDatosPartido, validarGoles } from "../utils/validators";
 import { Card, Button, Badge } from "../components/ui";
+import { ConfirmModal } from "../components/ui/ConfirmModal";
 import { useApp } from "../context/AppContext";
 import type {
   Partido,
@@ -60,6 +61,27 @@ export const AdminMatches = () => {
     homeGoals: 0,
     awayGoals: 0,
   });
+
+  // ESTADO PARA MODAL DE CONFIRMACIÓN
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    title: "",
+    message: "",
+    onConfirm: () => {},
+    variant: "danger" as "danger" | "warning" | "info",
+    confirmText: "Confirmar",
+  });
+
+  const abrirModal = (
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    variant: "danger" | "warning" | "info" = "danger",
+    confirmText = "Confirmar",
+  ) => {
+    setModalConfig({ title, message, onConfirm, variant, confirmText });
+    setModalOpen(true);
+  };
 
   // ESTADOS PARA SINCRONIZACIÓN CON API EXTERNA
   const [sincronizando, setSincronizando] = useState(false);
@@ -293,59 +315,60 @@ export const AdminMatches = () => {
   };
 
   // FUNCIÓN PARA IMPORTAR TODA UNA JORNADA A LA BASE DE DATOS LOCAL
-  const handleImportarJornada = async () => {
+  const handleImportarJornada = () => {
     if (partidosPreviosApi.length === 0) return;
 
-    if (
-      !window.confirm(
-        `¿DESEAS IMPORTAR LOS ${partidosPreviosApi.length} PARTIDOS DE LA JORNADA ${jornadaApi}?\n\n(TEMPORADA ${temporadaApi}/${(temporadaApi + 1).toString().slice(-2)})`,
-      )
-    )
-      return;
+    abrirModal(
+      "¿Importar Jornada?",
+      `¿DESEAS IMPORTAR LOS ${partidosPreviosApi.length} PARTIDOS DE LA JORNADA ${jornadaApi}?\n\n(TEMPORADA ${temporadaApi}/${(temporadaApi + 1).toString().slice(-2)})`,
+      async () => {
+        try {
+          setLoading(true);
+          let importados = 0;
 
-    try {
-      setLoading(true);
-      let importados = 0;
+          for (const apiMatch of partidosPreviosApi) {
+            const mapeado = footballApiService.mapApiMatchToLocal(apiMatch);
 
-      for (const apiMatch of partidosPreviosApi) {
-        const mapeado = footballApiService.mapApiMatchToLocal(apiMatch);
+            // VERIFICAR SI YA EXISTE (POR NOMBRE DE EQUIPOS Y JORNADA)
+            const existe = partidos.find(
+              (p) =>
+                p.homeTeam === mapeado.homeTeam &&
+                p.awayTeam === mapeado.awayTeam &&
+                p.matchday === mapeado.matchday,
+            );
 
-        // VERIFICAR SI YA EXISTE (POR NOMBRE DE EQUIPOS Y JORNADA)
-        const existe = partidos.find(
-          (p) =>
-            p.homeTeam === mapeado.homeTeam &&
-            p.awayTeam === mapeado.awayTeam &&
-            p.matchday === mapeado.matchday,
-        );
+            if (!existe) {
+              await matchService.create({
+                homeTeam: mapeado.homeTeam,
+                awayTeam: mapeado.awayTeam,
+                date: `JORNADA ${temporadaApi}/${(temporadaApi + 1).toString().slice(-2)}`,
+                matchday: mapeado.matchday,
+                homeLogo: mapeado.homeLogo,
+                awayLogo: mapeado.awayLogo,
+                status: "pending",
+                result: null,
+              });
+              importados++;
+            }
+          }
 
-        if (!existe) {
-          await matchService.create({
-            homeTeam: mapeado.homeTeam,
-            awayTeam: mapeado.awayTeam,
-            date: `JORNADA ${temporadaApi}/${(temporadaApi + 1).toString().slice(-2)}`,
-            matchday: mapeado.matchday,
-            homeLogo: mapeado.homeLogo,
-            awayLogo: mapeado.awayLogo,
-            status: "pending",
-            result: null,
-          });
-          importados++;
+          setSuccess(
+            `¡IMPORTACIÓN COMPLETADA! ${importados} PARTIDOS NUEVOS AGREGADOS.`,
+          );
+          setPartidosPreviosApi([]);
+          setVistaPartidos("lista");
+          cargarTodosLosDatos();
+          setTimeout(() => setSuccess(null), 5000);
+        } catch (err) {
+          console.error("ERROR EN LA IMPORTACIÓN:", err);
+          setError("HUBO UN ERROR DURANTE LA IMPORTACIÓN MASIVA.");
+        } finally {
+          setLoading(false);
         }
-      }
-
-      setSuccess(
-        `¡IMPORTACIÓN COMPLETADA! ${importados} PARTIDOS NUEVOS AGREGADOS.`,
-      );
-      setPartidosPreviosApi([]);
-      setVistaPartidos("lista");
-      cargarTodosLosDatos();
-      setTimeout(() => setSuccess(null), 5000);
-    } catch (err) {
-      console.error("ERROR EN LA IMPORTACIÓN:", err);
-      setError("HUBO UN ERROR DURANTE LA IMPORTACIÓN MASIVA.");
-    } finally {
-      setLoading(false);
-    }
+      },
+      "info",
+      "Sí, importar",
+    );
   };
 
   const handleActualizarResultado = async (e: React.FormEvent) => {
@@ -432,292 +455,294 @@ export const AdminMatches = () => {
   // FUNCION PARA SINCRONIZAR LOS RESULTADOS
   // ESTA FUNCION ES LA QUE SE ENCARGA DE SINCRONIZAR LOS RESULTADOS DE LOS PARTIDOS
   // DE LA LIGA Y ACTUALIZA AUTOMÁTICAMENTE LOS RESULTADOS Y PUNTOS
-  const handleSincronizarResultados = async () => {
-    if (
-      !window.confirm(
-        "¿Sincronizar resultados reales de La Liga?\n\nEsto buscará resultados para todas las temporadas presentes en tus partidos pendientes y repartirá puntos.",
-      )
-    )
-      return;
+  // FUNCION PARA SINCRONIZAR LOS RESULTADOS
+  // ESTA FUNCION ES LA QUE SE ENCARGA DE SINCRONIZAR LOS RESULTADOS DE LOS PARTIDOS
+  // DE LA LIGA Y ACTUALIZA AUTOMÁTICAMENTE LOS RESULTADOS Y PUNTOS
+  const handleSincronizarResultados = () => {
+    abrirModal(
+      "¿Sincronizar resultados reales?",
+      "Esto buscará resultados oficiales de La Liga para tus partidos pendientes.\n\nSi hay coincidencias, se actualizarán los marcadores y se repartirán los puntos automáticamente.",
+      async () => {
+        try {
+          setSincronizando(true);
+          setError(null);
+          setResultadoSincronizacion(null);
 
-    try {
-      setSincronizando(true);
-      setError(null);
-      setResultadoSincronizacion(null);
+          const nuestrosPartidos = partidos.filter(
+            (p) => p.status === "pending",
+          );
 
-      const nuestrosPartidos = partidos.filter((p) => p.status === "pending");
+          if (nuestrosPartidos.length === 0) {
+            setError("NO HAY PARTIDOS PENDIENTES PARA SINCRONIZAR.");
+            setSincronizando(false);
+            return;
+          }
 
-      if (nuestrosPartidos.length === 0) {
-        setError("NO HAY PARTIDOS PENDIENTES PARA SINCRONIZAR.");
-        setSincronizando(false);
-        return;
-      }
-
-      // IDENTIFICAR QUÉ TEMPORADAS TENEMOS (2022, 2023, ETC)
-      const temporadasDetectadas = new Set<number>();
-      nuestrosPartidos.forEach((p) => {
-        if (p.date.includes("JORNADA")) {
-          const año = parseInt(p.date.split(" ")[1].split("/")[0]);
-          if (!isNaN(año)) temporadasDetectadas.add(año);
-        } else {
-          // PARA PARTIDOS MANUALES, POR DEFECTO USAMOS LA TEMPORADA ACTUAL
-          temporadasDetectadas.add(2023);
-        }
-      });
-
-      let totalActualizados = 0;
-      let totalErrores = 0;
-
-      // SINCRONIZAMOS CADA TEMPORADA DETECTADA
-      for (const season of Array.from(temporadasDetectadas)) {
-        console.log(`Sincronizando temporada ${season}...`);
-        const partidosReales =
-          await footballApiService.getFinishedMatches(season);
-
-        for (const partidoReal of partidosReales) {
-          const partidoRealMapeado =
-            footballApiService.mapApiMatchToLocal(partidoReal);
-
-          const partidoLocal = nuestrosPartidos.find((p) => {
-            // VERIFICAR SI LA TEMPORADA COINCIDE
-            const pSeason = p.date.includes("JORNADA")
-              ? parseInt(p.date.split(" ")[1].split("/")[0])
-              : 2023;
-
-            if (pSeason !== season) return false;
-
-            // VERIFICAR JORNADA
-            if (p.matchday !== partidoRealMapeado.matchday) return false;
-
-            // NORMALIZAR NOMBRES PARA COMPARAR
-            const nombrar = (name: string) =>
-              name
-                .toLowerCase()
-                .replace("atletico", "atlético")
-                .replace("almeria", "almería")
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
-
-            const localNormalizado = nombrar(p.homeTeam);
-            const visitanteNormalizado = nombrar(p.awayTeam);
-            const apiLocalNormalizado = nombrar(partidoReal.teams.home.name);
-            const apiVisitanteNormalizado = nombrar(
-              partidoReal.teams.away.name,
-            );
-
-            // COINCIDENCIA SI UN NOMBRE CONTIENE AL OTRO (EJ EN DB "REAL MADRID", EN API "REAL MADRID")
-            const matchHome =
-              localNormalizado.includes(apiLocalNormalizado) ||
-              apiLocalNormalizado.includes(localNormalizado);
-            const matchAway =
-              visitanteNormalizado.includes(apiVisitanteNormalizado) ||
-              apiVisitanteNormalizado.includes(visitanteNormalizado);
-
-            return matchHome && matchAway;
+          // IDENTIFICAR QUÉ TEMPORADAS TENEMOS (2022, 2023, ETC)
+          const temporadasDetectadas = new Set<number>();
+          nuestrosPartidos.forEach((p) => {
+            if (p.date.includes("JORNADA")) {
+              const año = parseInt(p.date.split(" ")[1].split("/")[0]);
+              if (!isNaN(año)) temporadasDetectadas.add(año);
+            } else {
+              // PARA PARTIDOS MANUALES, POR DEFECTO USAMOS LA TEMPORADA ACTUAL
+              temporadasDetectadas.add(2023);
+            }
           });
 
-          if (partidoLocal && partidoReal.score.fulltime.home !== null) {
-            try {
-              const golesL = partidoReal.score.fulltime.home;
-              const golesV = partidoReal.score.fulltime.away!;
+          let totalActualizados = 0;
+          let totalErrores = 0;
 
-              await matchService.updateResult(partidoLocal.id, {
-                result: { homeGoals: golesL, awayGoals: golesV },
-                status: "finished",
+          // SINCRONIZAMOS CADA TEMPORADA DETECTADA
+          for (const season of Array.from(temporadasDetectadas)) {
+            console.log(`Sincronizando temporada ${season}...`);
+            const partidosReales =
+              await footballApiService.getFinishedMatches(season);
+
+            for (const partidoReal of partidosReales) {
+              const partidoRealMapeado =
+                footballApiService.mapApiMatchToLocal(partidoReal);
+
+              const partidoLocal = nuestrosPartidos.find((p) => {
+                // VERIFICAR SI LA TEMPORADA COINCIDE
+                const pSeason = p.date.includes("JORNADA")
+                  ? parseInt(p.date.split(" ")[1].split("/")[0])
+                  : 2023;
+
+                if (pSeason !== season) return false;
+
+                // VERIFICAR JORNADA
+                if (p.matchday !== partidoRealMapeado.matchday) return false;
+
+                // NORMALIZAR NOMBRES PARA COMPARAR
+                const nombrar = (name: string) =>
+                  name
+                    .toLowerCase()
+                    .replace("atletico", "atlético")
+                    .replace("almeria", "almería")
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+
+                const localNormalizado = nombrar(p.homeTeam);
+                const visitanteNormalizado = nombrar(p.awayTeam);
+                const apiLocalNormalizado = nombrar(
+                  partidoReal.teams.home.name,
+                );
+                const apiVisitanteNormalizado = nombrar(
+                  partidoReal.teams.away.name,
+                );
+
+                // COINCIDENCIA SI UN NOMBRE CONTIENE AL OTRO (EJ EN DB "REAL MADRID", EN API "REAL MADRID")
+                const matchHome =
+                  localNormalizado.includes(apiLocalNormalizado) ||
+                  apiLocalNormalizado.includes(localNormalizado);
+                const matchAway =
+                  visitanteNormalizado.includes(apiVisitanteNormalizado) ||
+                  apiVisitanteNormalizado.includes(visitanteNormalizado);
+
+                return matchHome && matchAway;
               });
 
-              await calcularPuntos(partidoLocal.id, golesL, golesV);
-              totalActualizados++;
-            } catch (err) {
-              console.error(`Error sync ${partidoLocal.homeTeam}:`, err);
-              totalErrores++;
+              if (partidoLocal && partidoReal.score.fulltime.home !== null) {
+                try {
+                  const golesL = partidoReal.score.fulltime.home;
+                  const golesV = partidoReal.score.fulltime.away!;
+
+                  await matchService.updateResult(partidoLocal.id, {
+                    result: { homeGoals: golesL, awayGoals: golesV },
+                    status: "finished",
+                  });
+
+                  await calcularPuntos(partidoLocal.id, golesL, golesV);
+                  totalActualizados++;
+                } catch (err) {
+                  console.error(`Error sync ${partidoLocal.homeTeam}:`, err);
+                  totalErrores++;
+                }
+              }
             }
           }
+
+          await cargarTodosLosDatos();
+          await recargarUsuario();
+
+          if (totalActualizados > 0) {
+            setResultadoSincronizacion({
+              actualizados: totalActualizados,
+              errores: totalErrores,
+            });
+            setSuccess(
+              `¡SINCRONIZACIÓN COMPLETADA! ${totalActualizados} PARTIDOS ACTUALIZADOS.`,
+            );
+            setTimeout(() => {
+              setSuccess(null);
+              setResultadoSincronizacion(null);
+            }, 5000);
+          } else {
+            setError("NO SE ENCONTRARON RESULTADOS NUEVOS PARA TUS PARTIDOS.");
+            setTimeout(() => setError(null), 5000);
+          }
+        } catch (err) {
+          console.error("Error en sincronización:", err);
+          setError("ERROR AL CONECTAR CON LA API. INTÉNTALO DE NUEVO.");
+        } finally {
+          setSincronizando(false);
         }
-      }
-
-      await cargarTodosLosDatos();
-      await recargarUsuario();
-
-      if (totalActualizados > 0) {
-        setResultadoSincronizacion({
-          actualizados: totalActualizados,
-          errores: totalErrores,
-        });
-        setSuccess(
-          `¡SINCRONIZACIÓN COMPLETADA! ${totalActualizados} PARTIDOS ACTUALIZADOS.`,
-        );
-        setTimeout(() => {
-          setSuccess(null);
-          setResultadoSincronizacion(null);
-        }, 5000);
-      } else {
-        setError("NO SE ENCONTRARON RESULTADOS NUEVOS PARA TUS PARTIDOS.");
-        setTimeout(() => setError(null), 5000);
-      }
-    } catch (err) {
-      console.error("Error en sincronización:", err);
-      setError("ERROR AL CONECTAR CON LA API. INTÉNTALO DE NUEVO.");
-    } finally {
-      setSincronizando(false);
-    }
+      },
+      "info",
+      "Sincronizar ahora",
+    );
   };
 
   // FUNCIÓN PARA ELIMINAR SOLO LOS PARTIDOS (MANTIENE PUNTOS Y PREDICCIONES)
-  const handleEliminarSoloPartidos = async () => {
+  const handleEliminarSoloPartidos = () => {
     if (partidos.length === 0) {
       setError("NO HAY PARTIDOS PARA ELIMINAR.");
       return;
     }
 
-    if (
-      !window.confirm(
-        "¿ELIMINAR SOLO LOS PARTIDOS?\n\nLas predicciones y los puntos de los usuarios se mantendrán intactos. ¡Usa esto si solo quieres limpiar la lista de encuentros!",
-      )
-    )
-      return;
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      // ELIMINAMOS CADA PARTIDO PERO NO TOCAMOS NADA MÁS
-      await Promise.all(partidos.map((p) => matchService.delete(p.id)));
-
-      setSuccess(
-        "PARTIDOS ELIMINADOS. SE HAN RESPETADO LOS PUNTOS Y APUESTAS.",
-      );
-      await cargarTodosLosDatos();
-      setTimeout(() => setSuccess(null), 5000);
-    } catch (err) {
-      console.error("ERROR AL ELIMINAR PARTIDOS:", err);
-      setError("ERROR AL INTENTAR ELIMINAR LOS PARTIDOS.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // FUNCIÓN PARA ELIMINAR TODOS LOS PARTIDOS DEL SISTEMA (RESET TOTAL)
-  // FUNCIÓN PARA ELIMINAR TODOS LOS PARTIDOS DEL SISTEMA (RESET TOTAL)
-  const handleEliminarTodosLosPartidos = async () => {
-    // MENSAJE DE ADVERTENCIA DETALLADO
-    const mensajeConfirmacion = `⚠️ ¡ATENCIÓN! ACCIÓN DESTRUCTIVA ⚠️
-
-¿ESTÁS SEGURO DE QUE DESEAS RESETEAR TODO EL SISTEMA?
-
-Esta acción es IRREVERSIBLE y realizará lo siguiente:
-1. Eliminará TODOS los partidos registrados.
-2. Eliminará TODAS las predicciones de los usuarios.
-3. Reseteará a 0 los puntos y estadísticas de TODOS los jugadores.
-
-Si procedes, se perderán todos los datos actuales del juego.
-
-¿Confirmas que quieres proceder?`;
-
-    if (!window.confirm(mensajeConfirmacion)) return;
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      // 1. ELIMINAR TODAS LAS PREDICCIONES PRIMERO
-      const todasLasPredicciones = await predictionService.getAll();
-      await Promise.all(
-        todasLasPredicciones.map((p) => predictionService.delete(p.id)),
-      );
-
-      // 2. ELIMINAMOS CADA PARTIDO
-      await Promise.all(partidos.map((p) => matchService.delete(p.id)));
-
-      // 3. RESETEAR PUNTOS DE TODOS LOS USUARIOS
-      await Promise.all(
-        usuarios.map((u) => {
-          if (u.role === "admin") return Promise.resolve();
-          return userService.updateStats(u.id, {
-            totalPoints: 0,
-            correctPredictions: 0,
-            totalPredictions: 0,
-          });
-        }),
-      );
-
-      setSuccess(
-        "SISTEMA RESETEADO: SE HAN ELIMINADO PARTIDOS, PREDICCIONES Y PUNTOS.",
-      );
-      await cargarTodosLosDatos();
-      setTimeout(() => setSuccess(null), 5000);
-    } catch (err) {
-      console.error("ERROR AL ELIMINAR TODO:", err);
-      setError("ERROR AL INTENTAR LIMPIAR EL SISTEMA.");
-      setTimeout(() => setError(null), 5000);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEliminarPartido = async (partido: Partido) => {
-    if (
-      !window.confirm(
-        `¿Eliminar "${partido.homeTeam} vs ${partido.awayTeam}"?\n\nSe eliminarán todas las predicciones asociadas.`,
-      )
-    )
-      return;
-
-    try {
-      const prediccionesDelPartido = await predictionService.getByMatch(
-        partido.id,
-      );
-
-      // RESTAR PUNTOS A LOS USUARIOS ANTES DE BORRAR
-      for (const pred of prediccionesDelPartido) {
-        if (pred.points && pred.points > 0) {
-          const u = await userService.getById(pred.userId);
-          await userService.updateStats(pred.userId, {
-            totalPoints: Math.max(0, (u.totalPoints || 0) - pred.points),
-            correctPredictions: Math.max(0, (u.correctPredictions || 0) - 1),
-            totalPredictions: Math.max(0, (u.totalPredictions || 0) - 1),
-          });
+    abrirModal(
+      "¿Eliminar solo los partidos?",
+      "Las predicciones y los puntos de los usuarios se mantendrán intactos.\n\n¡Usa esto si solo quieres limpiar la lista de encuentros!",
+      async () => {
+        try {
+          setLoading(true);
+          setError(null);
+          await Promise.all(partidos.map((p) => matchService.delete(p.id)));
+          setSuccess(
+            "PARTIDOS ELIMINADOS. SE HAN RESPETADO LOS PUNTOS Y APUESTAS.",
+          );
+          await cargarTodosLosDatos();
+          setTimeout(() => setSuccess(null), 5000);
+        } catch (err) {
+          console.error("ERROR AL ELIMINAR PARTIDOS:", err);
+          setError("ERROR AL INTENTAR ELIMINAR LOS PARTIDOS.");
+        } finally {
+          setLoading(false);
         }
-        await predictionService.delete(pred.id);
-      }
-
-      await matchService.delete(partido.id);
-      setSuccess(
-        `Partido eliminado y puntos revertidos para ${prediccionesDelPartido.length} predicciones`,
-      );
-      cargarTodosLosDatos();
-      setTimeout(() => setSuccess(null), 3000);
-    } catch (err) {
-      setError("Error al eliminar el partido");
-      console.error(err);
-    }
+      },
+      "warning",
+      "Sí, eliminar partidos",
+    );
   };
 
-  const handleEliminarUsuario = async (usuario: Usuario) => {
-    if (
-      !window.confirm(
-        `¿Eliminar al usuario "${usuario.nombre}"?\n\n⚠️ Se eliminarán todas sus predicciones.`,
-      )
-    )
-      return;
+  // FUNCIÓN PARA ELIMINAR TODOS LOS PARTIDOS DEL SISTEMA (RESET TOTAL)
+  const handleEliminarTodosLosPartidos = () => {
+    abrirModal(
+      "⚠️ ¡ATENCIÓN! ACCIÓN DESTRUCTIVA ⚠️",
+      "¿ESTÁS SEGURO DE QUE DESEAS RESETEAR TODO EL SISTEMA?\n\nEsta acción es IRREVERSIBLE y realizará lo siguiente:\n1. Eliminará TODOS los partidos registrados.\n2. Eliminará TODAS las predicciones de los usuarios.\n3. Reseteará a 0 los puntos y estadísticas de TODOS los jugadores.\n\nSi procedes, se perderán todos los datos actuales del juego.",
+      async () => {
+        try {
+          setLoading(true);
+          setError(null);
 
-    try {
-      const prediccionesUsuario = predicciones.filter(
-        (p) => p.userId === usuario.id,
-      );
-      for (const pred of prediccionesUsuario) {
-        await predictionService.delete(pred.id);
-      }
-      await userService.delete(usuario.id);
-      setSuccess(
-        `Usuario eliminado (${prediccionesUsuario.length} predicciones)`,
-      );
-      cargarTodosLosDatos();
-      setTimeout(() => setSuccess(null), 3000);
-    } catch (err) {
-      setError("Error al eliminar el usuario");
-      console.error(err);
-    }
+          // 1. ELIMINAR TODAS LAS PREDICCIONES PRIMERO
+          const todasLasPredicciones = await predictionService.getAll();
+          await Promise.all(
+            todasLasPredicciones.map((p) => predictionService.delete(p.id)),
+          );
+
+          // 2. ELIMINAMOS CADA PARTIDO
+          await Promise.all(partidos.map((p) => matchService.delete(p.id)));
+
+          // 3. RESETEAR PUNTOS DE TODOS LOS USUARIOS
+          await Promise.all(
+            usuarios.map((u) => {
+              if (u.role === "admin") return Promise.resolve();
+              return userService.updateStats(u.id, {
+                totalPoints: 0,
+                correctPredictions: 0,
+                totalPredictions: 0,
+              });
+            }),
+          );
+
+          setSuccess(
+            "SISTEMA RESETEADO: SE HAN ELIMINADO PARTIDOS, PREDICCIONES Y PUNTOS.",
+          );
+          await cargarTodosLosDatos();
+          setTimeout(() => setSuccess(null), 5000);
+        } catch (err) {
+          console.error("ERROR AL ELIMINAR TODO:", err);
+          setError("ERROR AL INTENTAR LIMPIAR EL SISTEMA.");
+          setTimeout(() => setError(null), 5000);
+        } finally {
+          setLoading(false);
+        }
+      },
+      "danger",
+      "☢️ RESETEAR TODO",
+    );
+  };
+
+  const handleEliminarPartido = (partido: Partido) => {
+    abrirModal(
+      "¿Eliminar Partido?",
+      `¿Eliminar "${partido.homeTeam} vs ${partido.awayTeam}"?\n\nSe eliminarán todas las predicciones asociadas.`,
+      async () => {
+        try {
+          const prediccionesDelPartido = await predictionService.getByMatch(
+            partido.id,
+          );
+
+          // RESTAR PUNTOS A LOS USUARIOS ANTES DE BORRAR
+          for (const pred of prediccionesDelPartido) {
+            if (pred.points && pred.points > 0) {
+              const u = await userService.getById(pred.userId);
+              await userService.updateStats(pred.userId, {
+                totalPoints: Math.max(0, (u.totalPoints || 0) - pred.points),
+                correctPredictions: Math.max(
+                  0,
+                  (u.correctPredictions || 0) - 1,
+                ),
+                totalPredictions: Math.max(0, (u.totalPredictions || 0) - 1),
+              });
+            }
+            await predictionService.delete(pred.id);
+          }
+
+          await matchService.delete(partido.id);
+          setSuccess(
+            `Partido eliminado y puntos revertidos para ${prediccionesDelPartido.length} predicciones`,
+          );
+          cargarTodosLosDatos();
+          setTimeout(() => setSuccess(null), 3000);
+        } catch (err) {
+          setError("Error al eliminar el partido");
+          console.error(err);
+        }
+      },
+      "danger",
+      "Eliminar",
+    );
+  };
+
+  const handleEliminarUsuario = (usuario: Usuario) => {
+    abrirModal(
+      "¿Eliminar Usuario?",
+      `¿Eliminar al usuario "${usuario.nombre}"?\n\n⚠️ Se eliminarán todas sus predicciones.`,
+      async () => {
+        try {
+          const prediccionesUsuario = predicciones.filter(
+            (p) => p.userId === usuario.id,
+          );
+          for (const pred of prediccionesUsuario) {
+            await predictionService.delete(pred.id);
+          }
+          await userService.delete(usuario.id);
+          setSuccess(
+            `Usuario eliminado (${prediccionesUsuario.length} predicciones)`,
+          );
+          cargarTodosLosDatos();
+          setTimeout(() => setSuccess(null), 3000);
+        } catch (err) {
+          setError("Error al eliminar el usuario");
+          console.error(err);
+        }
+      },
+      "danger",
+      "Eliminar",
+    );
   };
 
   // ESTADÍSTICAS CALCULADAS
@@ -1722,6 +1747,17 @@ Si procedes, se perderán todos los datos actuales del juego.
           </div>
         )}
       </div>
+
+      {/* MODAL DE CONFIRMACIÓN */}
+      <ConfirmModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={modalConfig.onConfirm}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        variant={modalConfig.variant}
+        confirmText={modalConfig.confirmText}
+      />
     </div>
   );
 };
