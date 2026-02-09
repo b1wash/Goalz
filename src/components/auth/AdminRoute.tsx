@@ -2,12 +2,13 @@ import { Navigate, Link } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { Button } from "../ui";
 import type { ReactNode } from "react";
-
+//DEFINIMOS QUE ESTE COMPONENTE RECIBA UN PROPS DE TIPO REACTNODE
 interface AdminRouteProps {
   children: ReactNode;
 }
 
 export const AdminRoute = ({ children }: AdminRouteProps) => {
+  //OBTENEMOS EL USUARIO ACTUAL DESDE EL CONTEXT APPCONTEXT
   const { usuarioActual } = useApp();
 
   // SI NO HAY USUARIO AUTENTICADO, REDIRIGIR A LOGIN

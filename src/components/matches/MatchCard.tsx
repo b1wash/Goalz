@@ -8,7 +8,7 @@ export interface MatchCardProps {
 }
 
 export const MatchCard = ({ match, showResult = true }: MatchCardProps) => {
-  // Formatear fecha y hora
+  // FORMATEAR FECHA Y HORA
   const formatearFecha = (fecha: string) => {
     const date = new Date(fecha);
     if (isNaN(date.getTime())) return fecha; // CARGAR ETIQUETA PERSONALIZADA (EJ: JORNADA 2023/24)
