@@ -1,4 +1,5 @@
 // COMPONENTE BADGE REUTILIZABLE
+//PARA LAS ETIQUETAS DE ESTADO DE LOS PARTIDOS
 export interface BadgeProps {
   text: string;
   variant: "primary" | "success" | "danger" | "warning" | "info";

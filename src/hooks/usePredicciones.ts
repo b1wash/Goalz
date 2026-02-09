@@ -5,7 +5,6 @@ import { predictionService } from "../services/predictionService";
 
 /**
  * HOOK PARA GESTIONAR EL ESTADO GLOBAL DE LAS PREDICCIONES
- * SUSTITUYE EL USO DE LOCALSTORAGE POR LLAMADAS A LA API REAL
  */
 export const usePredicciones = () => {
   // ESTADO PARA ALMACENAR LAS PREDICCIONES CARGADAS EN MEMORIA
@@ -32,7 +31,6 @@ export const usePredicciones = () => {
 
   /**
    * AGREGA UNA PREDICCION AL ESTADO LOCAL
-   * NOTA: LA PERSISTENCIA EN BD SE REALIZA EN EL SERVICIO ANTES DE LLAMAR A ESTA FUNCION
    */
   const agregarPrediccion = (nuevaPrediccion: Omit<Prediccion, "id">) => {
     const prediccion: Prediccion = {
