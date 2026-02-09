@@ -1,36 +1,59 @@
-// HOOK PERSONALIZADO PARA MANEJAR PREDICCIONES
+// HOOK PERSONALIZADO PARA MANEJAR LA LOGICA DE PREDICCIONES
 import { useState, useEffect } from "react";
 import type { Prediccion } from "../types";
-import { prediccionesMock } from "../utils/mockData";
+import { predictionService } from "../services/predictionService";
 
+/**
+ * HOOK PARA GESTIONAR EL ESTADO GLOBAL DE LAS PREDICCIONES
+ * SUSTITUYE EL USO DE LOCALSTORAGE POR LLAMADAS A LA API REAL
+ */
 export const usePredicciones = () => {
-  // CARGAR PREDICCIONES DESDE LOCALSTORAGE O USAR LAS DE EJEMPLO
-  const [predicciones, setPredicciones] = useState<Prediccion[]>(() => {
-    const guardadas = localStorage.getItem("goalz_predicciones");
-    return guardadas ? JSON.parse(guardadas) : prediccionesMock;
-  });
+  // ESTADO PARA ALMACENAR LAS PREDICCIONES CARGADAS EN MEMORIA
+  const [predicciones, setPredicciones] = useState<Prediccion[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // GUARDAR EN LOCALSTORAGE CADA VEZ QUE CAMBIEN LAS PREDICCIONES
+  // EFECTO PARA SINCRONIZAR CON LA BASE DE DATOS AL INICIAR
   useEffect(() => {
-    localStorage.setItem("goalz_predicciones", JSON.stringify(predicciones));
-  }, [predicciones]);
+    const cargarPredicciones = async () => {
+      try {
+        setLoading(true);
+        // OBTENER TODOS LOS DATOS DESDE EL SERVICIO API
+        const data = await predictionService.getAll();
+        setPredicciones(data);
+      } catch (err) {
+        console.error("ERROR AL CARGAR PREDICCIONES EN EL HOOK:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // FUNCION PARA AÑADIR UNA NUEVA PREDICCION
+    cargarPredicciones();
+  }, []);
+
+  /**
+   * AGREGA UNA PREDICCION AL ESTADO LOCAL
+   * NOTA: LA PERSISTENCIA EN BD SE REALIZA EN EL SERVICIO ANTES DE LLAMAR A ESTA FUNCION
+   */
   const agregarPrediccion = (nuevaPrediccion: Omit<Prediccion, "id">) => {
     const prediccion: Prediccion = {
       ...nuevaPrediccion,
-      id: Date.now().toString(),
-    };
-    setPredicciones([...predicciones, prediccion]);
+      id: Date.now().toString(), // ID TEMPORAL HASTA QUE SE RECARGUE DE LA API
+    } as Prediccion;
+
+    setPredicciones((prev) => [...prev, prediccion]);
     return prediccion;
   };
 
-  // FUNCION PARA ELIMINAR UNA PREDICCION
+  /**
+   * ELIMINA UNA PREDICCION DEL ESTADO LOCAL
+   */
   const eliminarPrediccion = (id: string) => {
-    setPredicciones(predicciones.filter((p) => p.id !== id));
+    setPredicciones((prev) => prev.filter((p) => p.id !== id));
   };
 
-  // FUNCION PARA OBTENER PREDICCIONES DE UN USUARIO
+  /**
+   * RECUPERA LAS PREDICCIONES FILTRADAS POR EL ID DE UN USUARIO
+   */
   const obtenerPrediccionesUsuario = (idUsuario: string) => {
     return predicciones.filter(
       (p) => p.userId === idUsuario || p.idUsuario === idUsuario,
@@ -39,6 +62,7 @@ export const usePredicciones = () => {
 
   return {
     predicciones,
+    loading,
     agregarPrediccion,
     eliminarPrediccion,
     obtenerPrediccionesUsuario,

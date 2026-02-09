@@ -6,7 +6,7 @@ const API_HOST = import.meta.env.VITE_FOOTBALL_API_HOST;
 const BASE_URL = `https://${API_HOST}`;
 
 const LA_LIGA_ID = 140;
-const CURRENT_SEASON = 2023; //COMO ES PLAN FREE NO SE PUEDE USAR LA TEMPORADA ACTUAL SOLO SE PUEDE USAR LA TEMPORADA DESDE 2022 HASTA 2024
+const CURRENT_SEASON = 2023; // COMO ES PLAN FREE NO SE PUEDE USAR LA TEMPORADA ACTUAL SOLO SE PUEDE USAR LA TEMPORADA DESDE 2022 HASTA 2024
 
 // ESTRUCTURA DE DATOS DE UN PARTIDO SEGÚN LA API EXTERNA
 interface ApiFootballMatch {
@@ -76,7 +76,7 @@ const getMatches = async (round?: number): Promise<ApiFootballMatch[]> => {
   if (round) {
     endpoint += `&round=Regular Season - ${round}`;
   } else {
-    // Plan Free no permite parámetro 'last', usamos rango de fechas
+    // PLAN FREE NO PERMITE PARÁMETRO 'LAST', USAMOS RANGO DE FECHAS
     const hoy = new Date();
     const hace30Dias = new Date();
     hace30Dias.setDate(hoy.getDate() - 30);
@@ -114,7 +114,7 @@ const getFinishedMatches = async (
 };
 
 /**
- * Extrae el número de jornada del formato "Regular Season - X"
+ * EXTRAE EL NÚMERO DE JORNADA DEL FORMATO "REGULAR SEASON - X"
  */
 const extractMatchday = (round: string): number => {
   const match = round.match(/Regular Season - (\d+)/);
@@ -122,7 +122,7 @@ const extractMatchday = (round: string): number => {
 };
 
 /**
- * Transforma los datos de la API al formato de la aplicación
+ * TRANSFORMA LOS DATOS DE LA API AL FORMATO DE LA APLICACIÓN
  */
 export const mapApiMatchToLocal = (apiMatch: ApiFootballMatch) => {
   const isFinished = apiMatch.fixture.status.short === "FT";

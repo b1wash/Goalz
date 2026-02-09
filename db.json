@@ -1,7 +1,7 @@
 {
   "matches": [
     {
-      "id": "5b82",
+      "id": "f94b",
       "homeTeam": "Almeria",
       "awayTeam": "Rayo Vallecano",
       "date": "JORNADA 2023/24",
@@ -15,7 +15,7 @@
       }
     },
     {
-      "id": "aa4d",
+      "id": "63fb",
       "homeTeam": "Sevilla",
       "awayTeam": "Valencia",
       "date": "JORNADA 2023/24",
@@ -29,7 +29,7 @@
       }
     },
     {
-      "id": "6540",
+      "id": "e6c9",
       "homeTeam": "Real Sociedad",
       "awayTeam": "Girona",
       "date": "JORNADA 2023/24",
@@ -43,7 +43,7 @@
       }
     },
     {
-      "id": "125d",
+      "id": "26ef",
       "homeTeam": "Las Palmas",
       "awayTeam": "Mallorca",
       "date": "JORNADA 2023/24",
@@ -57,7 +57,7 @@
       }
     },
     {
-      "id": "65f6",
+      "id": "c734",
       "homeTeam": "Athletic Club",
       "awayTeam": "Real Madrid",
       "date": "JORNADA 2023/24",
@@ -71,7 +71,7 @@
       }
     },
     {
-      "id": "c1a9",
+      "id": "1072",
       "homeTeam": "Celta Vigo",
       "awayTeam": "Osasuna",
       "date": "JORNADA 2023/24",
@@ -85,7 +85,7 @@
       }
     },
     {
-      "id": "4596",
+      "id": "6cc0",
       "homeTeam": "Villarreal",
       "awayTeam": "Real Betis",
       "date": "JORNADA 2023/24",
@@ -99,7 +99,7 @@
       }
     },
     {
-      "id": "4802",
+      "id": "a042",
       "homeTeam": "Getafe",
       "awayTeam": "Barcelona",
       "date": "JORNADA 2023/24",
@@ -113,7 +113,7 @@
       }
     },
     {
-      "id": "c460",
+      "id": "68b1",
       "homeTeam": "Cadiz",
       "awayTeam": "Alaves",
       "date": "JORNADA 2023/24",
@@ -127,7 +127,7 @@
       }
     },
     {
-      "id": "8b04",
+      "id": "e9bb",
       "homeTeam": "Atletico Madrid",
       "awayTeam": "Granada CF",
       "date": "JORNADA 2023/24",
@@ -143,28 +143,28 @@
   ],
   "predictions": [
     {
-      "id": "42dd",
-      "matchId": "5b82",
-      "idPartido": "5b82",
+      "id": "f7d3",
+      "matchId": "f94b",
+      "idPartido": "f94b",
       "userId": "user2",
       "idUsuario": "user2",
-      "prediction": "1",
-      "prediccion": "1",
+      "prediction": "2",
+      "prediccion": "2",
       "exactScore": {
-        "home": 1,
-        "away": 0,
-        "local": 1,
-        "visitante": 0
+        "home": 0,
+        "away": 2,
+        "local": 0,
+        "visitante": 2
       },
       "marcadorExacto": {
-        "home": 1,
-        "away": 0,
-        "local": 1,
-        "visitante": 0
+        "home": 0,
+        "away": 2,
+        "local": 0,
+        "visitante": 2
       },
-      "points": 0,
-      "puntosGanados": 0,
-      "createdAt": "2026-02-08T23:13:36.428Z"
+      "points": 5,
+      "puntosGanados": 5,
+      "createdAt": "2026-02-08T23:59:58.987Z"
     }
   ],
   "users": [
@@ -187,9 +187,9 @@
       "email": "kerrly@goalz.com",
       "password": "kerrly123",
       "role": "user",
-      "totalPoints": 0,
+      "totalPoints": 5,
       "puntosTotal": 0,
-      "correctPredictions": 0,
+      "correctPredictions": 1,
       "totalPredictions": 1
     },
     {
