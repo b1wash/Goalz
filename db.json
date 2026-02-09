@@ -1,140 +1,148 @@
 {
   "matches": [
     {
-      "id": "3566",
-      "homeTeam": "Osasuna",
-      "awayTeam": "Sevilla",
-      "date": "JORNADA 2022/23",
+      "id": "7f66",
+      "homeTeam": "ASDASD",
+      "awayTeam": "ASD",
+      "equipoLocal": "ASDASD",
+      "equipoVisitante": "ASD",
+      "date": "2026-02-11T17:24:00.000Z",
+      "fecha": "2026-02-11T18:24",
       "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/727.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/536.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "da4b",
-      "homeTeam": "Celta Vigo",
-      "awayTeam": "Espanyol",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/538.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/540.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "a95e",
-      "homeTeam": "Valladolid",
-      "awayTeam": "Villarreal",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/720.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/533.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "085b",
-      "homeTeam": "Barcelona",
-      "awayTeam": "Rayo Vallecano",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/529.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/728.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "97f0",
-      "homeTeam": "Cadiz",
-      "awayTeam": "Real Sociedad",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/724.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/548.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "2cc2",
-      "homeTeam": "Valencia",
-      "awayTeam": "Girona",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/532.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/547.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "592b",
-      "homeTeam": "Almeria",
-      "awayTeam": "Real Madrid",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/723.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/541.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "a142",
-      "homeTeam": "Athletic Club",
-      "awayTeam": "Mallorca",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/531.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/798.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "e5af",
-      "homeTeam": "Getafe",
-      "awayTeam": "Atletico Madrid",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/546.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/530.png",
-      "status": "pending",
-      "result": null
-    },
-    {
-      "id": "9c3c",
-      "homeTeam": "Real Betis",
-      "awayTeam": "Elche",
-      "date": "JORNADA 2022/23",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/543.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/797.png",
-      "status": "pending",
-      "result": null
+      "homeLogo": "",
+      "awayLogo": "",
+      "status": "finished",
+      "estado": "finalizado",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 1
+      },
+      "resultado": {
+        "homeGoals": 0,
+        "awayGoals": 1
+      }
     }
   ],
   "predictions": [
     {
-      "id": "f7d3",
+      "id": "286d",
       "matchId": null,
-      "idPartido": "f94b",
+      "idPartido": "11bd",
       "userId": "user2",
       "idUsuario": "user2",
-      "prediction": "2",
-      "prediccion": "2",
+      "prediction": "X",
+      "prediccion": "X",
       "exactScore": {
         "home": 0,
-        "away": 2,
+        "away": 0,
         "local": 0,
-        "visitante": 2
+        "visitante": 0
       },
       "marcadorExacto": {
         "home": 0,
-        "away": 2,
+        "away": 0,
         "local": 0,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": 5,
+      "createdAt": "2026-02-09T17:05:06.053Z"
+    },
+    {
+      "id": "258a",
+      "matchId": null,
+      "idPartido": "783b",
+      "userId": "user2",
+      "idUsuario": "user2",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "points": 5,
+      "puntosGanados": 5,
+      "createdAt": "2026-02-09T17:08:06.707Z"
+    },
+    {
+      "id": "1ed1",
+      "matchId": null,
+      "idPartido": "6273",
+      "userId": "user3",
+      "idUsuario": "user3",
+      "prediction": "2",
+      "prediccion": "2",
+      "exactScore": {
+        "home": 1,
+        "away": 2,
+        "local": 1,
+        "visitante": 2
+      },
+      "marcadorExacto": {
+        "home": 1,
+        "away": 2,
+        "local": 1,
         "visitante": 2
       },
       "points": 5,
       "puntosGanados": 5,
-      "createdAt": "2026-02-08T23:59:58.987Z"
+      "createdAt": "2026-02-09T17:20:49.831Z"
+    },
+    {
+      "id": "74a9",
+      "matchId": null,
+      "idPartido": "e9de",
+      "userId": "user3",
+      "idUsuario": "user3",
+      "prediction": "1",
+      "prediccion": "1",
+      "exactScore": {
+        "home": 2,
+        "away": 0,
+        "local": 2,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 2,
+        "away": 0,
+        "local": 2,
+        "visitante": 0
+      },
+      "points": 0,
+      "puntosGanados": 0,
+      "createdAt": "2026-02-09T17:21:09.905Z"
+    },
+    {
+      "id": "384b",
+      "matchId": "7f66",
+      "idPartido": "7f66",
+      "userId": "user2",
+      "idUsuario": "user2",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "points": 0,
+      "puntosGanados": 0,
+      "createdAt": "2026-02-09T17:27:13.088Z"
     }
   ],
   "users": [
@@ -157,10 +165,10 @@
       "email": "kerrly@goalz.com",
       "password": "kerrly123",
       "role": "user",
-      "totalPoints": 5,
+      "totalPoints": 10,
       "puntosTotal": 0,
-      "correctPredictions": 1,
-      "totalPredictions": 1
+      "correctPredictions": 2,
+      "totalPredictions": 3
     },
     {
       "id": "user3",
@@ -169,10 +177,10 @@
       "email": "sergio@goalz.com",
       "password": "sergio123",
       "role": "user",
-      "totalPoints": 0,
+      "totalPoints": 5,
       "puntosTotal": 0,
-      "correctPredictions": 0,
-      "totalPredictions": 0
+      "correctPredictions": 1,
+      "totalPredictions": 2
     },
     {
       "id": "user4",

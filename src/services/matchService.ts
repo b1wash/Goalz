@@ -57,9 +57,14 @@ export const matchService = {
     id: string,
     data: ActualizarResultadoDTO,
   ): Promise<Partido> => {
-    return api.patch<Partido>(`/matches/${id}`, data);
+    // SINCRONIZACION AUTOMATICA
+    const updatePayload = {
+      ...data,
+      estado: data.status === "finished" ? "finalizado" : "pendiente",
+      resultado: data.result,
+    };
+    return api.patch<Partido>(`/matches/${id}`, updatePayload);
   },
-
   // ELIMINAR UN REGISTRO DE PARTIDO DEL SISTEMA
   delete: async (id: string): Promise<void> => {
     return api.delete<void>(`/matches/${id}`);

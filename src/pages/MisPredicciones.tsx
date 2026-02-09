@@ -113,14 +113,18 @@ export const MisPredicciones = () => {
   }, [filtro, busqueda]);
 
   // CALCULOS EN TIEMPO REAL PARA EL RESUMEN SUPERIOR
-  const totalPredicciones = todasLasPredicciones.length;
-  const acertadas = todasLasPredicciones.filter(
-    (p) => (p.points ?? p.puntosGanados ?? 0) > 0,
-  ).length;
-  const puntosTotal = todasLasPredicciones.reduce(
-    (sum, p) => sum + (p.points ?? p.puntosGanados ?? 0),
-    0,
-  );
+
+  const prediccionesConPartido = todasLasPredicciones.filter((pred) => {
+    const partidoId = pred.matchId || pred.idPartido;
+    return partidoId && obtenerPartido(partidoId);
+  });
+
+  const totalPredicciones = prediccionesConPartido.length;
+
+  const acertadas = usuarioActual?.correctPredictions ?? 0;
+
+  const puntosTotal =
+    usuarioActual?.totalPoints ?? usuarioActual?.puntosTotal ?? 0;
 
   // PANTALLA DE CARGA ESTILIZADA
   if (loading) {
@@ -217,20 +221,21 @@ export const MisPredicciones = () => {
               {
                 id: "pendientes",
                 label: "PENDIENTES",
-                count:
-                  totalPredicciones -
-                  (acertadas +
-                    todasLasPredicciones.filter(
-                      (p) =>
-                        (p.points ?? p.puntosGanados) === 0 &&
-                        (p.points ?? p.puntosGanados) !== null,
-                    ).length),
+                count: prediccionesConPartido.filter(
+                  (p) => (p.points ?? p.puntosGanados) === null,
+                ).length,
               },
-              { id: "acertadas", label: "ACERTADAS", count: acertadas },
+              {
+                id: "acertadas",
+                label: "ACERTADAS",
+                count: prediccionesConPartido.filter(
+                  (p) => (p.points ?? p.puntosGanados ?? 0) > 0,
+                ).length,
+              },
               {
                 id: "falladas",
                 label: "FALLADAS",
-                count: todasLasPredicciones.filter(
+                count: prediccionesConPartido.filter(
                   (p) =>
                     (p.points ?? p.puntosGanados ?? 0) === 0 &&
                     (p.points ?? p.puntosGanados) !== null,
@@ -270,14 +275,33 @@ export const MisPredicciones = () => {
               const partido = obtenerPartido(
                 prediccion.matchId || prediccion.idPartido || "",
               );
-              if (!partido) return null;
+              //SI EL PARTIDO NO EXISTE, CREAR UN PLACEHOLDER PARA MOSTRAR EL HISTORIAL
+              const partidoAMostrar = partido || {
+                id: prediccion.matchId || prediccion.idPartido || "",
+                homeTeam: "Partido",
+                awayTeam: "Eliminado",
+                equipoLocal: "Partido",
+                equipoVisitante: "Eliminado",
+                date: "-",
+                fecha: "-",
+                matchday: 0,
+                homeLogo: "",
+                awayLogo: "",
+                status: "finished" as const,
+                estado: "finalizado" as const,
+                result: null,
+                resultado: null,
+              };
 
               return (
                 <div
                   key={prediccion.id}
                   className="transform hover:-translate-y-2 transition-transform duration-300"
                 >
-                  <PredictionCard prediction={prediccion} match={partido} />
+                  <PredictionCard
+                    prediction={prediccion}
+                    match={partidoAMostrar}
+                  />
                 </div>
               );
             })

@@ -679,32 +679,14 @@ export const AdminMatches = () => {
   const handleEliminarPartido = (partido: Partido) => {
     abrirModal(
       "¿Eliminar Partido?",
-      `¿Eliminar "${partido.homeTeam} vs ${partido.awayTeam}"?\n\nSe eliminarán todas las predicciones asociadas.`,
+      `¿Eliminar "${partido.homeTeam} vs ${partido.awayTeam}"?\n\nLas predicciones y puntos de los usuarios se mantendrán para su historial.`,
       async () => {
         try {
-          const prediccionesDelPartido = await predictionService.getByMatch(
-            partido.id,
-          );
-
-          // RESTAR PUNTOS A LOS USUARIOS ANTES DE BORRAR
-          for (const pred of prediccionesDelPartido) {
-            if (pred.points && pred.points > 0) {
-              const u = await userService.getById(pred.userId);
-              await userService.updateStats(pred.userId, {
-                totalPoints: Math.max(0, (u.totalPoints || 0) - pred.points),
-                correctPredictions: Math.max(
-                  0,
-                  (u.correctPredictions || 0) - 1,
-                ),
-                totalPredictions: Math.max(0, (u.totalPredictions || 0) - 1),
-              });
-            }
-            await predictionService.delete(pred.id);
-          }
-
+          // BORRAR SOLO EL PARTIDO (Las predicciones se quedan para el historial de los usuarios)
           await matchService.delete(partido.id);
+
           setSuccess(
-            `Partido eliminado y puntos revertidos para ${prediccionesDelPartido.length} predicciones`,
+            `Partido eliminado. Los usuarios mantienen sus predicciones y puntos.`,
           );
           cargarTodosLosDatos();
           setTimeout(() => setSuccess(null), 3000);
