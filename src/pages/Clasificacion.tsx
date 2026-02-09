@@ -1,7 +1,7 @@
 // VISTA DE LA CLASIFICACION DE LOS USUARIOS (LEADERBOARD)
 import { useState, useEffect } from "react";
 import { userService } from "../services/userService";
-import { useApp } from "../context/AppContext";
+import { useApp } from "../hooks/useApp";
 import { Card, Badge } from "../components/ui";
 import type { Usuario } from "../types";
 
@@ -83,7 +83,7 @@ export const Clasificacion = () => {
   // RENDERIZADO DE CARGA
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
         <div className="text-primary text-2xl font-black animate-pulse uppercase">
           Actualizando ranking...
         </div>
@@ -92,7 +92,7 @@ export const Clasificacion = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* CABECERA DE LA PAGINA */}
         <div className="mb-8">
@@ -227,7 +227,7 @@ export const Clasificacion = () => {
                     >
                       <div className="flex items-center gap-4">
                         {/* INDICADOR DE POSICION */}
-                        <div className="flex-shrink-0 w-12 text-center">
+                        <div className="shrink-0 w-12 text-center">
                           <span className="text-xl font-black text-slate-400 dark:text-gray-600 italic">
                             #{posicion}
                           </span>
@@ -235,7 +235,7 @@ export const Clasificacion = () => {
 
                         {/* AVATAR ESTILIZADO */}
                         <div
-                          className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-lg font-black text-white shadow-md bg-gradient-to-br ${obtenerColorPosicion(posicion)}`}
+                          className={`shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-lg font-black text-white shadow-md bg-linear-to-br ${obtenerColorPosicion(posicion)}`}
                         >
                           {(usuario.nombre || usuario.name || "U")
                             .charAt(0)
@@ -313,7 +313,7 @@ export const Clasificacion = () => {
                         <button
                           key={numero}
                           onClick={() => setPaginaActual(numero)}
-                          className={`min-w-[40px] px-3 py-2 rounded-lg font-black text-sm transition-all ${
+                          className={`min-w-10 px-3 py-2 rounded-lg font-black text-sm transition-all ${
                             paginaActual === numero
                               ? "bg-primary text-white border-2 border-primary scale-110"
                               : "bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5"

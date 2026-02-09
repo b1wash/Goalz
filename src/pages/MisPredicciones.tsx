@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { matchService } from "../services/matchService";
 import { predictionService } from "../services/predictionService";
-import { useApp } from "../context/AppContext";
+import { useApp } from "../hooks/useApp";
 import { PredictionCard } from "../components/predictions";
 import { Card, Button } from "../components/ui";
 import type { Partido, Prediccion } from "../types";
@@ -129,7 +129,7 @@ export const MisPredicciones = () => {
   // PANTALLA DE CARGA ESTILIZADA
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           <div className="text-primary font-black uppercase tracking-widest">
@@ -141,7 +141,7 @@ export const MisPredicciones = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* CABECERA DE LA VISTA */}
         <div className="mb-8">
@@ -337,7 +337,7 @@ export const MisPredicciones = () => {
                   <button
                     key={num}
                     onClick={() => setPaginaActual(num)}
-                    className={`min-w-[40px] px-3 py-2 rounded-lg font-black text-sm transition-all ${
+                    className={`min-w-10 px-3 py-2 rounded-lg font-black text-sm transition-all ${
                       paginaActual === num
                         ? "bg-primary text-white border-2 border-primary scale-110"
                         : "bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-white/5"

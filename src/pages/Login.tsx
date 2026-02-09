@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useApp } from "../context/AppContext";
+import { useApp } from "../hooks/useApp";
 import { Card, Button } from "../components/ui";
 
 export const Login = () => {
@@ -54,14 +54,14 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center py-12 px-4 transition-colors duration-150">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-150 flex items-center justify-center">
       <div className="w-full max-w-md">
         {/* LOGO CENTRADO */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center gap-3 mb-4">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full"></div>
-              <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-primary via-emerald-400 to-primary flex items-center justify-center shadow-lg shadow-primary/50">
+              <div className="relative w-16 h-16 bg-linear-to-br from-primary to-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-primary/30 transform rotate-6 group-hover:rotate-0 transition-transform duration-300">
                 <span className="text-3xl filter drop-shadow-lg">⚽</span>
               </div>
             </div>

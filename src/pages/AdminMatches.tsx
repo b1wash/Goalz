@@ -9,13 +9,14 @@ import { calcularPuntosGanados } from "../utils/pointsCalculator";
 import { validarDatosPartido, validarGoles } from "../utils/validators";
 import { Card, Button, Badge } from "../components/ui";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
-import { useApp } from "../context/AppContext";
+import { useApp } from "../hooks/useApp";
 import type {
   Partido,
   DatosFormularioPartido,
   DatosFormularioResultado,
   Usuario,
   Prediccion,
+  PartidoApi,
 } from "../types";
 
 export const AdminMatches = () => {
@@ -96,7 +97,9 @@ export const AdminMatches = () => {
   );
   const [jornadaApi, setJornadaApi] = useState<number>(1);
   const [temporadaApi, setTemporadaApi] = useState<number>(2023);
-  const [partidosPreviosApi, setPartidosPreviosApi] = useState<any[]>([]);
+  const [partidosPreviosApi, setPartidosPreviosApi] = useState<PartidoApi[]>(
+    [],
+  );
   const [loadingApiPartidos, setLoadingApiPartidos] = useState(false);
 
   // ESTADOS PARA BUSQUEDA EN TIEMPO REAL
@@ -277,7 +280,7 @@ export const AdminMatches = () => {
       };
 
       // 5. PERSISTENCIA
-      await matchService.create(nuevoPartido as any);
+      await matchService.create(nuevoPartido as Omit<Partido, "id">);
 
       // 6. ÉXITO Y RESET
       setSuccessFormCrear("¡PARTIDO CREADO EXITOSAMENTE!");
@@ -756,7 +759,7 @@ export const AdminMatches = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
         <div className="text-primary text-2xl font-black animate-pulse uppercase tracking-widest">
           CARGANDO PANEL...
         </div>
@@ -765,7 +768,7 @@ export const AdminMatches = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* HEADER */}
         <div className="mb-8">
@@ -980,7 +983,7 @@ export const AdminMatches = () => {
                 <Button
                   onClick={handleSincronizarResultados}
                   disabled={sincronizando}
-                  className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-black px-6 py-2 shadow-lg"
+                  className="bg-linear-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-black px-6 py-2 shadow-lg"
                 >
                   {sincronizando ? (
                     <>
@@ -1012,7 +1015,7 @@ export const AdminMatches = () => {
 
             {/* RESULTADO DE LA SINCRONIZACIÓN */}
             {resultadoSincronizacion && (
-              <Card className="p-4 mb-8 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-500/30">
+              <Card className="p-4 mb-8 bg-linear-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border-emerald-500/30">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">📊</span>
                   <div>
@@ -1500,36 +1503,38 @@ export const AdminMatches = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {partidosPreviosApi.map((p: any, idx: number) => (
-                            <div
-                              key={idx}
-                              className="p-4 bg-white dark:bg-dark-card rounded-xl border border-slate-200 dark:border-white/5 flex gap-4 items-center shadow-sm"
-                            >
-                              <div className="flex-1 flex items-center justify-end gap-2 w-2/5">
-                                <span className="text-[10px] font-black dark:text-gray-300 uppercase truncate">
-                                  {p.teams.home.name}
+                          {partidosPreviosApi.map(
+                            (p: PartidoApi, idx: number) => (
+                              <div
+                                key={idx}
+                                className="p-4 bg-white dark:bg-dark-card rounded-xl border border-slate-200 dark:border-white/5 flex gap-4 items-center shadow-sm"
+                              >
+                                <div className="flex-1 flex items-center justify-end gap-2 w-2/5">
+                                  <span className="text-[10px] font-black dark:text-gray-300 uppercase truncate">
+                                    {p.teams.home.name}
+                                  </span>
+                                  <img
+                                    src={p.teams.home.logo}
+                                    alt=""
+                                    className="w-8 h-8 object-contain"
+                                  />
+                                </div>
+                                <span className="bg-slate-100 dark:bg-dark-bg px-2 py-1 rounded-lg font-black text-primary text-[10px]">
+                                  VS
                                 </span>
-                                <img
-                                  src={p.teams.home.logo}
-                                  alt=""
-                                  className="w-8 h-8 object-contain"
-                                />
+                                <div className="flex-1 flex items-center justify-start gap-2 w-2/5">
+                                  <img
+                                    src={p.teams.away.logo}
+                                    alt=""
+                                    className="w-8 h-8 object-contain"
+                                  />
+                                  <span className="text-[10px] font-black dark:text-gray-300 uppercase truncate">
+                                    {p.teams.away.name}
+                                  </span>
+                                </div>
                               </div>
-                              <span className="bg-slate-100 dark:bg-dark-bg px-2 py-1 rounded-lg font-black text-primary text-[10px]">
-                                VS
-                              </span>
-                              <div className="flex-1 flex items-center justify-start gap-2 w-2/5">
-                                <img
-                                  src={p.teams.away.logo}
-                                  alt=""
-                                  className="w-8 h-8 object-contain"
-                                />
-                                <span className="text-[10px] font-black dark:text-gray-300 uppercase truncate">
-                                  {p.teams.away.name}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
+                            ),
+                          )}
                         </div>
                       </div>
                     )}
@@ -1660,7 +1665,7 @@ export const AdminMatches = () => {
                 <Card key={usuario.id} hover className="border-primary/20">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-white font-black text-xl">
+                      <div className="w-14 h-14 rounded-full bg-linear-to-br from-primary to-emerald-600 flex items-center justify-center text-white font-black text-xl">
                         {usuario.nombre.charAt(0).toUpperCase()}
                       </div>
                       <div>

@@ -13,7 +13,7 @@ export const Footer = () => {
           {/* COLUMNA 1: LOGO Y DESCRIPCION */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center shadow-lg shadow-primary/30">
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-emerald-600 flex items-center justify-center shadow-lg shadow-primary/30">
                 <span className="text-xl">⚽</span>
               </div>
               <span className="text-2xl font-black text-slate-900 dark:text-white transition-colors duration-150">

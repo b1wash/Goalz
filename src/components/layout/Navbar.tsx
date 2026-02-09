@@ -1,7 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDarkMode } from "../../hooks/useDarkMode";
-import { useApp } from "../../context/AppContext";
+import { useApp } from "../../hooks/useApp";
 import type { Usuario } from "../../types";
 
 interface BarraNavegacionProps {
@@ -29,12 +29,12 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
             {/* LOGO */}
             <Link
               to="/"
-              className="flex items-center gap-2 sm:gap-3 group flex-shrink-0 relative z-10"
+              className="flex items-center gap-2 sm:gap-3 group shrink-0 relative z-10"
             >
               {/* ICONO LOGO*/}
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full group-hover:bg-primary/50 transition-all duration-300"></div>
-                <div className="relative w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-primary via-emerald-400 to-primary flex items-center justify-center shadow-lg shadow-primary/50 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-linear-to-br from-primary via-emerald-400 to-primary flex items-center justify-center shadow-lg shadow-primary/50 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                   <span className="text-xl sm:text-2xl lg:text-3xl filter drop-shadow-lg">
                     ⚽
                   </span>
@@ -146,7 +146,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
               {usuarioActual?.role !== "admin" && (
                 <Link
                   to="/hacer-prediccion"
-                  className="group relative overflow-hidden px-4 sm:px-5 lg:px-6 xl:px-8 py-2 lg:py-2.5 xl:py-3 bg-gradient-to-r from-primary via-emerald-500 to-primary bg-size-200 bg-pos-0 hover:bg-pos-100 text-dark-bg font-black text-xs sm:text-sm lg:text-base rounded-full shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center"
+                  className="group relative overflow-hidden px-4 sm:px-5 lg:px-6 xl:px-8 py-2 lg:py-2.5 xl:py-3 bg-linear-to-r from-primary via-emerald-500 to-primary bg-size-200 bg-pos-0 hover:bg-pos-100 text-dark-bg font-black text-xs sm:text-sm lg:text-base rounded-full shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     <span className="text-base sm:text-lg lg:text-xl">⚡</span>
@@ -160,7 +160,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
               {usuarioActual ? (
                 <div className="hidden lg:flex items-center gap-3 xl:gap-4 pl-4 xl:pl-6 border-l-2 border-primary/30">
                   <div className="text-right hidden xl:block">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight truncate max-w-[120px]">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight truncate max-w-30">
                       {usuarioActual.nombre}
                     </p>
                     {/* MOSTRAR PUNTOS SOLO SI NO ES ADMIN */}
@@ -183,7 +183,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                     title={usuarioActual.nombre}
                   >
                     <div className="absolute inset-0 bg-primary/30 blur-md rounded-full group-hover/avatar:bg-primary/50 transition-all"></div>
-                    <div className="relative w-10 h-10 xl:w-11 xl:h-11 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-base xl:text-lg shadow-lg border-2 border-primary/50">
+                    <div className="relative w-10 h-10 xl:w-11 xl:h-11 rounded-full bg-linear-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-base xl:text-lg shadow-lg border-2 border-primary/50">
                       {(usuarioActual.nombre || usuarioActual.name || "U")
                         .charAt(0)
                         .toUpperCase()}
@@ -317,7 +317,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
               <Link
                 to="/hacer-prediccion"
                 onClick={() => setMenuAbierto(false)}
-                className="flex items-center justify-center gap-2 w-full px-4 py-4 mt-4 bg-gradient-to-r from-primary via-emerald-500 to-primary text-dark-bg font-black text-base rounded-xl shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 active:scale-95 transition-all duration-200"
+                className="flex items-center justify-center gap-2 w-full px-4 py-4 mt-4 bg-linear-to-r from-primary via-emerald-500 to-primary text-dark-bg font-black text-base rounded-xl shadow-lg shadow-primary/50 hover:shadow-xl hover:shadow-primary/70 active:scale-95 transition-all duration-200"
               >
                 <span className="text-xl">⚡</span>
                 <span>Hacer Predicción</span>
@@ -330,7 +330,7 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                 <div className="flex items-center gap-3 px-4 py-4 mt-4 bg-slate-100 dark:bg-dark-bg/50 rounded-xl border-2 border-slate-300 dark:border-primary/20">
                   <div className="relative">
                     <div className="absolute inset-0 bg-primary/30 blur-md rounded-full"></div>
-                    <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-xl shadow-lg">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-emerald-600 flex items-center justify-center shadow-lg shadow-primary/30 text-dark-bg font-black text-xl">
                       {(usuarioActual.nombre || usuarioActual.name)
                         .charAt(0)
                         .toUpperCase()}

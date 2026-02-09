@@ -1,5 +1,5 @@
 import { Navigate, Link } from "react-router-dom";
-import { useApp } from "../../context/AppContext";
+import { useApp } from "../../hooks/useApp";
 import { Button } from "../ui";
 import type { ReactNode } from "react";
 //DEFINIMOS QUE ESTE COMPONENTE RECIBA UN PROPS DE TIPO REACTNODE

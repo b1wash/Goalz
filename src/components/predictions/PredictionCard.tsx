@@ -56,7 +56,7 @@ export const PredictionCard = ({ prediction, match }: PredictionCardProps) => {
                 <span className="text-xl">🏠</span>
               )}
             </div>
-            <p className="text-center font-black text-slate-900 dark:text-white text-[11px] uppercase leading-tight line-clamp-2 min-h-[2rem] flex items-center justify-center">
+            <p className="text-center font-black text-slate-900 dark:text-white text-[11px] uppercase leading-tight line-clamp-2 min-h-8 flex items-center justify-center">
               {match.homeTeam || match.equipoLocal}
             </p>
           </div>
@@ -91,7 +91,7 @@ export const PredictionCard = ({ prediction, match }: PredictionCardProps) => {
                 <span className="text-xl">✈️</span>
               )}
             </div>
-            <p className="text-center font-black text-slate-900 dark:text-white text-[11px] uppercase leading-tight line-clamp-2 min-h-[2rem] flex items-center justify-center">
+            <p className="text-center font-black text-slate-900 dark:text-white text-[11px] uppercase leading-tight line-clamp-2 min-h-8 flex items-center justify-center">
               {match.awayTeam || match.equipoVisitante}
             </p>
           </div>

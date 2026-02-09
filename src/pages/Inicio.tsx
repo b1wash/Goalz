@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { matchService } from "../services/matchService";
-import { useApp } from "../context/AppContext";
+import { useApp } from "../hooks/useApp";
 import { MatchCard } from "../components/matches";
 import { Card, Button } from "../components/ui";
 import type { Partido } from "../types";
@@ -66,7 +66,7 @@ export const Inicio = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg transition-colors duration-150">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-150">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8">
         {/* MENSAJE DE ERROR GLOBAL */}
         {error && (

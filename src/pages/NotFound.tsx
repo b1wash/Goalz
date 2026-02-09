@@ -6,7 +6,7 @@ const NotFound = () => {
       {/* TARJETA ROJA ANIMADA */}
       <div className="relative mb-8 group">
         <div className="absolute inset-0 bg-danger blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500 rounded-full"></div>
-        <div className="relative w-32 h-44 bg-gradient-to-br from-red-500 to-red-700 rounded-lg shadow-2xl transform rotate-12 group-hover:rotate-6 transition-transform duration-300 flex items-center justify-center border-2 border-white/20">
+        <div className="relative w-32 h-44 bg-linear-to-br from-red-500 to-red-700 rounded-lg shadow-2xl transform rotate-12 group-hover:rotate-6 transition-transform duration-300 flex items-center justify-center border-2 border-white/20">
           <span className="text-6xl font-black text-white/90 drop-shadow-lg">
             404
           </span>

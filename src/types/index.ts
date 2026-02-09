@@ -103,3 +103,42 @@ export interface DatosFormularioResultado {
   homeGoals: number;
   awayGoals: number;
 }
+
+// INTERFAZ: PARTIDO DESDE LA API EXTERNA DE FOOTBALL
+// SE USA CUANDO SE IMPORTAN PARTIDOS DESDE LA API DE FOOTBALL
+export interface PartidoApi {
+  fixture: {
+    id: number;
+    date: string;
+    status: {
+      short: string;
+    };
+  };
+  teams: {
+    home: {
+      id: number;
+      name: string;
+      logo: string;
+    };
+    away: {
+      id: number;
+      name: string;
+      logo: string;
+    };
+  };
+  league: {
+    id: number;
+    name: string;
+    round: string;
+  };
+  goals: {
+    home: number | null;
+    away: number | null;
+  };
+  score: {
+    fulltime: {
+      home: number | null;
+      away: number | null;
+    };
+  };
+}

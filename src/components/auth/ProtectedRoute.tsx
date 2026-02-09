@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useApp } from "../../context/AppContext";
+import { useApp } from "../../hooks/useApp";
 import type { ReactNode } from "react";
 
 interface ProtectedRouteProps {

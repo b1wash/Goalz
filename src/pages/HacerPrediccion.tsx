@@ -1,7 +1,7 @@
 // VISTA PARA HACER UNA PREDICCION
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useApp } from "../context/AppContext";
+import { useApp } from "../hooks/useApp";
 import { matchService } from "../services/matchService";
 import { predictionService } from "../services/predictionService";
 import { validarCoherenciaMarcador, validarGoles } from "../utils/validators";
@@ -178,7 +178,7 @@ export const HacerPrediccion = () => {
 
   if (loading && partidos.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
         <div className="text-primary text-2xl font-black animate-pulse uppercase tracking-widest">
           Cargando partidos...
         </div>
@@ -189,7 +189,7 @@ export const HacerPrediccion = () => {
   // BLOQUEAR ACCESO SI ES ADMIN
   if (usuarioActual?.role === "admin") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-8 transition-colors duration-150">
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="min-h-[70vh] flex items-center justify-center">
             <div className="text-center max-w-md animate-in fade-in zoom-in duration-500">
@@ -215,11 +215,11 @@ export const HacerPrediccion = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-6 transition-colors duration-150">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg py-6 transition-colors duration-150">
       <div className="w-full max-w-2xl mx-auto px-4 sm:px-6">
         {/* CABECERA - COMPACTA */}
         <div className="mb-6 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-3 bg-gradient-to-r from-slate-900 via-primary to-slate-900 dark:from-white dark:via-primary dark:to-white bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-3 bg-linear-to-r from-slate-900 via-primary to-slate-900 dark:from-white dark:via-primary dark:to-white bg-clip-text text-transparent">
             ⚡ Hacer Predicción
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg font-bold uppercase tracking-wider">
@@ -312,7 +312,7 @@ export const HacerPrediccion = () => {
 
                 {/* DROPDOWN MENU (EL DESPLEGABLE) */}
                 {dropdownAbierto && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1a1c2e] border-2 border-slate-100 dark:border-primary/20 rounded-2xl shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 backdrop-blur-xl">
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1a1c2e] border-2 border-slate-100 dark:border-primary/20 rounded-2xl shadow-2xl z-100 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 backdrop-blur-xl">
                     {/* BUSCADOR DENTRO DEL DROPDOWN */}
                     <div className="p-3 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-black/20">
                       <div className="relative">
@@ -401,7 +401,7 @@ export const HacerPrediccion = () => {
                 {/* OVERLAY PARA CERRAR AL HACER CLIC FUERA */}
                 {dropdownAbierto && (
                   <div
-                    className="fixed inset-0 z-[90]"
+                    className="fixed inset-0 z-90"
                     onClick={() => setDropdownAbierto(false)}
                   ></div>
                 )}
@@ -466,7 +466,7 @@ export const HacerPrediccion = () => {
                     key={opt.id}
                     className={`relative flex flex-col items-center justify-center p-2.5 border-2 rounded-xl cursor-pointer transition-all duration-300 ${
                       prediccion === opt.id
-                        ? `${opt.border} bg-gradient-to-b ${opt.color} shadow-sm scale-102`
+                        ? `${opt.border} bg-linear-to-b ${opt.color} shadow-sm scale-102`
                         : "border-slate-100 dark:border-white/5 opacity-60 hover:opacity-100 hover:border-slate-200"
                     }`}
                   >
