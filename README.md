@@ -73,54 +73,37 @@ npm run dev
 
 **URLs de acceso:**
 
+- **Aplicación (Vercel)**: [https://goalz-dllb.vercel.app/](https://goalz-dllb.vercel.app/)
+- **Aplicación (Netlify)**: [https://goalz-predictor.netlify.app/](https://goalz-predictor.netlify.app/)
 - **Aplicación (Local)**: http://localhost:5173
-- **Aplicación (Deploy)**: https://goalz-predictor.netlify.app/
 - **API REST**: http://localhost:3001
 
 ## 📂 Estructura del Proyecto
 
 ```
 goalz-app/
+├── public/                 # Iconos y archivos públicos estáticos
 ├── src/
+│   ├── assets/             # Imágenes y recursos locales
 │   ├── components/
-│   │   ├── auth/              # Protección de rutas
-│   │   │   ├── AdminRoute.tsx        # Solo administradores
-│   │   │   └── ProtectedRoute.tsx    # Usuarios autenticados
-│   │   ├── layout/            # Estructura general
-│   │   │   ├── Navbar.tsx
-│   │   │   └── Footer.tsx
-│   │   ├── matches/           # Componentes de partidos
-│   │   ├── predictions/       # Componentes de predicciones
-│   │   └── ui/                # Componentes atómicos reutilizables
-│   ├── pages/                 # Vistas principales
-│   │   ├── Inicio.tsx         # Dashboard personalizado
-│   │   ├── Clasificacion.tsx  # Ranking de jugadores
-│   │   ├── MisPredicciones.tsx # Historial con paginación
-│   │   ├── HacerPrediccion.tsx # Formulario de predicción
-│   │   ├── AdminMatches.tsx    # Panel de gestión con tabs
-│   │   ├── Login.tsx
-│   │   └── Register.tsx
-│   ├── services/              # Comunicación con API
-│   │   ├── api.ts
-│   │   ├── footballApiService.ts  # Conexión con API real
-│   │   ├── matchService.ts
-│   │   ├── predictionService.ts
-│   │   └── userService.ts
-│   ├── context/               # Estado global (Sesión, Usuario)
-│   │   └── AppContext.tsx
-│   ├── hooks/                 # Custom Hooks
-│   │   ├── useDarkMode.ts
-│   │   └── usePredicciones.ts
-│   ├── types/                 # Definiciones TypeScript
-│   │   └── index.ts
-│   ├── utils/                 # Funciones auxiliares
-│   │   ├── pointsCalculator.ts
-│   │   └── validators.ts
-│   ├── App.tsx
-│   └── main.tsx
-├── db.json                     # Base de datos simulada
-├── tailwind.config.js
-└── package.json
+│   │   ├── auth/           # Protección de rutas (AdminRoute, ProtectedRoute)
+│   │   ├── layout/         # Estructura general (Navbar, Footer)
+│   │   ├── matches/        # Tarjetas y listas de partidos
+│   │   ├── predictions/    # Visualización de apuestas realizadas
+│   │   └── ui/             # Componentes base (Botones, Modales, Badges)
+│   ├── pages/              # Vistas principales de la aplicación
+│   ├── services/           # Lógica de comunicación con la API y servicios
+│   ├── context/            # Estado global de la aplicación (Auth, Usuario)
+│   ├── hooks/              # Hooks personalizados (Puntos, Modo Oscuro)
+│   ├── types/              # Definiciones de interfaces TypeScript
+│   ├── utils/              # Calculadora de puntos, validadores y mocks
+│   ├── App.tsx             # Enrutador principal y estructura base
+│   └── main.tsx            # Punto de entrada del proyecto
+├── .env.example            # Plantilla para variables de entorno (API Keys)
+├── db.json                 # Base de datos local (JSON Server)
+├── index.html              # Archivo HTML principal
+├── tailwind.config.js      # Configuración de estilos Tailwind
+└── tsconfig.json           # Configuración de TypeScript
 ```
 
 ## 📖 Uso de la Aplicación
@@ -245,25 +228,29 @@ Debido al plan gratuito de la **API-Football**, la sincronización de datos real
 
 Desarrollado para la asignatura **Desarrollo Web en Entorno Cliente (DWEC)**. Cumple con todos los requisitos técnicos y funcionales, incluyendo múltiples ampliaciones de lógica compleja y diseño premium.
 
-### Mejoras de Desarrollo
+### 🚀 Mejoras y Ampliaciones (Ampliaciones Voluntarias)
 
-- [x] **Integración de API Real**: Sincronización con temporadas 22/23 y 23/24.
-- [x] **Integridad de Puntos**: Sistema para evitar duplicados y función de recálculo masivo.
-- [x] **Validación de Predicciones**: Restricción de una única apuesta por partido y usuario.
-- [x] **Gestión Avanzada de Partidos**:
-  - Prevención de partidos duplicados (mismo local, visitante y jornada).
-  - Mensajes de feedback contextuales (en formulario vs globales).
-- [x] **Optimización de Imágenes**:
-  - Compresión y redimensionamiento automático de logos en cliente.
-  - Soporte para imágenes de cualquier tamaño y formato (JPG, PNG, WEBP).
-- [x] **Herramientas de Administración**:
-  - Reset total del sistema con advertencias de seguridad detalladas.
-  - Borrado selectivo y matching de partidos.
-  - Limpieza de base de datos incluso sin partidos registrados.
-- [x] **Paginación Global**: Implementada en Inicio, Clasificación y Mis Predicciones.
-- [x] **Evolución Visual**: Logos de equipos, contexto de temporada y optimización para monitores grandes.
-- [x] **Persistencia de Preferencias**: El tema (oscuro/claro) se mantiene tras recargar la página.
-- [x] **Gestión de Errores (404)**: Página "Fuera de Juego" personalizada con temática de fútbol para rutas no existentes.
+He implementado una serie de mejoras técnicas para elevar la calidad del proyecto más allá de los requisitos mínimos:
+
+#### ⚙️ Lógica y Gestión de Datos
+
+- [x] **Integración de API Real**: Sincronización con resultados y escudos de las temporadas 22/23 y 23/24.
+- [x] **Integridad de Puntos**: Sistema para evitar duplicados y función de recálculo masivo automatizado.
+- [x] **Validación Estricta**: Restricción de una única apuesta por partido y usuario para garantizar la limpieza de datos.
+- [x] **Paginación Global**: Implementada en las secciones de Inicio, Clasificación e Historial para mayor fluidez.
+
+#### 🔧 Herramientas de Administración
+
+- [x] **Control Avanzado**: Prevención de partidos duplicados y sistema de matching inteligente.
+- [x] **Mantenimiento Pro**: Herramientas de reset total del sistema y borrado selectivo con advertencias de seguridad.
+- [x] **Feedback Contextual**: Mensajes de error y éxito diferenciados según el tipo de acción.
+
+#### 🎨 Experiencia de Usuario (UI/UX)
+
+- [x] **Optimización Multimedia**: Compresión y redimensionamiento automático de logos de equipos.
+- [x] **Evolución Visual**: Diseño optimizado para monitores Ultrawide, logos circulares y contexto de temporada.
+- [x] **Persistencia**: El tema (oscuro/claro) se mantiene guardado tras recargar la página.
+- [x] **Manejo de Errores**: Página "Fuera de Juego" (404) personalizada con temática deportiva.
 
 ---
 

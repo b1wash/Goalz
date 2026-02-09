@@ -1,150 +1,120 @@
 {
   "matches": [
     {
-      "id": "f94b",
-      "homeTeam": "Almeria",
-      "awayTeam": "Rayo Vallecano",
-      "date": "JORNADA 2023/24",
+      "id": "3566",
+      "homeTeam": "Osasuna",
+      "awayTeam": "Sevilla",
+      "date": "JORNADA 2022/23",
       "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/723.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/728.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 0,
-        "awayGoals": 2
-      }
+      "homeLogo": "https://media.api-sports.io/football/teams/727.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/536.png",
+      "status": "pending",
+      "result": null
     },
     {
-      "id": "63fb",
-      "homeTeam": "Sevilla",
-      "awayTeam": "Valencia",
-      "date": "JORNADA 2023/24",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/536.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/532.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 2
-      }
-    },
-    {
-      "id": "e6c9",
-      "homeTeam": "Real Sociedad",
-      "awayTeam": "Girona",
-      "date": "JORNADA 2023/24",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/548.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/547.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 1
-      }
-    },
-    {
-      "id": "26ef",
-      "homeTeam": "Las Palmas",
-      "awayTeam": "Mallorca",
-      "date": "JORNADA 2023/24",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/534.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/798.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 1
-      }
-    },
-    {
-      "id": "c734",
-      "homeTeam": "Athletic Club",
-      "awayTeam": "Real Madrid",
-      "date": "JORNADA 2023/24",
-      "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/531.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/541.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 0,
-        "awayGoals": 2
-      }
-    },
-    {
-      "id": "1072",
+      "id": "da4b",
       "homeTeam": "Celta Vigo",
-      "awayTeam": "Osasuna",
-      "date": "JORNADA 2023/24",
+      "awayTeam": "Espanyol",
+      "date": "JORNADA 2022/23",
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/538.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/727.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 0,
-        "awayGoals": 2
-      }
+      "awayLogo": "https://media.api-sports.io/football/teams/540.png",
+      "status": "pending",
+      "result": null
     },
     {
-      "id": "6cc0",
-      "homeTeam": "Villarreal",
-      "awayTeam": "Real Betis",
-      "date": "JORNADA 2023/24",
+      "id": "a95e",
+      "homeTeam": "Valladolid",
+      "awayTeam": "Villarreal",
+      "date": "JORNADA 2022/23",
       "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/533.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/543.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 2
-      }
+      "homeLogo": "https://media.api-sports.io/football/teams/720.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/533.png",
+      "status": "pending",
+      "result": null
     },
     {
-      "id": "a042",
-      "homeTeam": "Getafe",
-      "awayTeam": "Barcelona",
-      "date": "JORNADA 2023/24",
+      "id": "085b",
+      "homeTeam": "Barcelona",
+      "awayTeam": "Rayo Vallecano",
+      "date": "JORNADA 2022/23",
       "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/546.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/529.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 0,
-        "awayGoals": 0
-      }
+      "homeLogo": "https://media.api-sports.io/football/teams/529.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/728.png",
+      "status": "pending",
+      "result": null
     },
     {
-      "id": "68b1",
+      "id": "97f0",
       "homeTeam": "Cadiz",
-      "awayTeam": "Alaves",
-      "date": "JORNADA 2023/24",
+      "awayTeam": "Real Sociedad",
+      "date": "JORNADA 2022/23",
       "matchday": 1,
       "homeLogo": "https://media.api-sports.io/football/teams/724.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/542.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 1,
-        "awayGoals": 0
-      }
+      "awayLogo": "https://media.api-sports.io/football/teams/548.png",
+      "status": "pending",
+      "result": null
     },
     {
-      "id": "e9bb",
-      "homeTeam": "Atletico Madrid",
-      "awayTeam": "Granada CF",
-      "date": "JORNADA 2023/24",
+      "id": "2cc2",
+      "homeTeam": "Valencia",
+      "awayTeam": "Girona",
+      "date": "JORNADA 2022/23",
       "matchday": 1,
-      "homeLogo": "https://media.api-sports.io/football/teams/530.png",
-      "awayLogo": "https://media.api-sports.io/football/teams/715.png",
-      "status": "finished",
-      "result": {
-        "homeGoals": 3,
-        "awayGoals": 1
-      }
+      "homeLogo": "https://media.api-sports.io/football/teams/532.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/547.png",
+      "status": "pending",
+      "result": null
+    },
+    {
+      "id": "592b",
+      "homeTeam": "Almeria",
+      "awayTeam": "Real Madrid",
+      "date": "JORNADA 2022/23",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/723.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/541.png",
+      "status": "pending",
+      "result": null
+    },
+    {
+      "id": "a142",
+      "homeTeam": "Athletic Club",
+      "awayTeam": "Mallorca",
+      "date": "JORNADA 2022/23",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/531.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/798.png",
+      "status": "pending",
+      "result": null
+    },
+    {
+      "id": "e5af",
+      "homeTeam": "Getafe",
+      "awayTeam": "Atletico Madrid",
+      "date": "JORNADA 2022/23",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/546.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/530.png",
+      "status": "pending",
+      "result": null
+    },
+    {
+      "id": "9c3c",
+      "homeTeam": "Real Betis",
+      "awayTeam": "Elche",
+      "date": "JORNADA 2022/23",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/543.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/797.png",
+      "status": "pending",
+      "result": null
     }
   ],
   "predictions": [
     {
       "id": "f7d3",
-      "matchId": "f94b",
+      "matchId": null,
       "idPartido": "f94b",
       "userId": "user2",
       "idUsuario": "user2",

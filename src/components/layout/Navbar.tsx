@@ -158,9 +158,9 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
 
               {/* MOSTRAR USUARIO PARA PANTALLA PC */}
               {usuarioActual ? (
-                <div className="hidden lg:flex items-center gap-4 pl-6 border-l-2 border-primary/30">
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                <div className="hidden lg:flex items-center gap-3 xl:gap-4 pl-4 xl:pl-6 border-l-2 border-primary/30">
+                  <div className="text-right hidden xl:block">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight truncate max-w-[120px]">
                       {usuarioActual.nombre}
                     </p>
                     {/* MOSTRAR PUNTOS SOLO SI NO ES ADMIN */}
@@ -172,17 +172,19 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                     ) : (
                       <p className="text-xs font-semibold text-accent flex items-center justify-end gap-1">
                         <span>🔧</span>
-                        Administrador
+                        Admin
                       </p>
                     )}
                   </div>
 
                   {/* PARA MOSTRAR LA LETRA INICIAL DEL USUARIO */}
-
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-primary/30 blur-md rounded-full"></div>
-                    <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-lg shadow-lg border-2 border-primary/50">
-                      {(usuarioActual.nombre || usuarioActual.name)
+                  <div
+                    className="relative group/avatar cursor-help"
+                    title={usuarioActual.nombre}
+                  >
+                    <div className="absolute inset-0 bg-primary/30 blur-md rounded-full group-hover/avatar:bg-primary/50 transition-all"></div>
+                    <div className="relative w-10 h-10 xl:w-11 xl:h-11 rounded-full bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-dark-bg font-black text-base xl:text-lg shadow-lg border-2 border-primary/50">
+                      {(usuarioActual.nombre || usuarioActual.name || "U")
                         .charAt(0)
                         .toUpperCase()}
                     </div>
@@ -191,11 +193,11 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                   {/* BOTON LOGOUT */}
                   <button
                     onClick={handleLogout}
-                    className="px-4 py-2 bg-danger/10 hover:bg-danger/20 border border-danger/30 hover:border-danger text-danger font-bold text-sm rounded-lg transition-all duration-200 flex items-center gap-2"
+                    className="flex items-center gap-2 px-3 py-2 xl:px-4 bg-danger/10 hover:bg-danger/20 border border-danger/30 hover:border-danger text-danger font-bold text-sm rounded-lg transition-all duration-200"
                     title="Cerrar sesión"
                   >
-                    <span>🚪</span>
-                    <span className="hidden 2xl:inline">Salir</span>
+                    <span className="text-lg">🚪</span>
+                    <span className="hidden xl:inline">Salir</span>
                   </button>
                 </div>
               ) : (
@@ -356,10 +358,12 @@ export const BarraNavegacion: React.FC<BarraNavegacionProps> = () => {
                 {/* BOTON LOGOUT MOVIL */}
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-4 mt-2 bg-danger/10 hover:bg-danger/20 border-2 border-danger/30 hover:border-danger text-danger font-black text-base rounded-xl transition-all duration-200"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 sm:py-4 mt-2 bg-danger/10 hover:bg-danger/20 border-2 border-danger/30 hover:border-danger text-danger font-bold text-sm sm:text-base rounded-xl transition-all duration-200"
                 >
-                  <span className="text-xl">🚪</span>
-                  <span>CERRAR SESIÓN</span>
+                  <span className="text-lg sm:text-xl">🚪</span>
+                  <span className="uppercase tracking-wider">
+                    Cerrar Sesión
+                  </span>
                 </button>
               </>
             ) : (
