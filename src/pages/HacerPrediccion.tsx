@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 import { useApp } from "../hooks/useApp";
 import { matchService } from "../services/matchService";
 import { predictionService } from "../services/predictionService";
+import { userService } from "../services/userService";
 import { validarCoherenciaMarcador, validarGoles } from "../utils/validators";
 import { Card, Button } from "../components/ui";
 import type { Partido, Prediccion } from "../types";
 
 export const HacerPrediccion = () => {
   // OBTENER FUNCIONES Y DATOS DEL CONTEXTO GLOBAL
-  const { agregarPrediccion, usuarioActual } = useApp();
+  const { agregarPrediccion, usuarioActual, recargarUsuario } = useApp();
 
   // ESTADOS DEL FORMULARIO Y DATOS
   const [partidos, setPartidos] = useState<Partido[]>([]);
@@ -151,7 +152,16 @@ export const HacerPrediccion = () => {
       // REGISTRAR EN LA API
       await predictionService.create(nuevaPrediccion);
 
-      // ACTUALIZAR ESTADO GLOBAL
+      // ACTUALIZAR ESTADISTICAS DEL USUARIO (INCREMENTAR TOTAL)
+      if (usuarioActual) {
+        await userService.updateStats(usuarioActual.id, {
+          totalPredictions: (usuarioActual.totalPredictions || 0) + 1,
+        });
+        // RECARGAR DATOS DEL USUARIO EN EL CONTEXTO
+        await recargarUsuario();
+      }
+
+      // ACTUALIZAR ESTADO GLOBAL DE PREDICCIONES
       agregarPrediccion(nuevaPrediccion);
 
       // ACTUALIZAR ESTADO LOCAL PARA BLOQUEAR DUPLICADOS INMEDIATAMENTE

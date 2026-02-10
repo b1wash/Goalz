@@ -1,25 +1,196 @@
 {
   "matches": [
     {
-      "id": "7f66",
-      "homeTeam": "ASDASD",
-      "awayTeam": "ASD",
-      "equipoLocal": "ASDASD",
-      "equipoVisitante": "ASD",
-      "date": "2026-02-11T17:24:00.000Z",
-      "fecha": "2026-02-11T18:24",
+      "id": "571b",
+      "homeTeam": "Sevilla",
+      "awayTeam": "Valencia",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/536.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/532.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 2
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 1,
+        "awayGoals": 2
+      }
+    },
+    {
+      "id": "e32a",
+      "homeTeam": "Real Sociedad",
+      "awayTeam": "Girona",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/548.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/547.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 1
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 1,
+        "awayGoals": 1
+      }
+    },
+    {
+      "id": "91db",
+      "homeTeam": "Las Palmas",
+      "awayTeam": "Mallorca",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/534.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/798.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 1
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 1,
+        "awayGoals": 1
+      }
+    },
+    {
+      "id": "6d05",
+      "homeTeam": "Athletic Club",
+      "awayTeam": "Real Madrid",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/531.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/541.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 2
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 0,
+        "awayGoals": 2
+      }
+    },
+    {
+      "id": "34e6",
+      "homeTeam": "Celta Vigo",
+      "awayTeam": "Osasuna",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/538.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/727.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 2
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 0,
+        "awayGoals": 2
+      }
+    },
+    {
+      "id": "a71d",
+      "homeTeam": "Villarreal",
+      "awayTeam": "Real Betis",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/533.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/543.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 2
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 1,
+        "awayGoals": 2
+      }
+    },
+    {
+      "id": "90c7",
+      "homeTeam": "Getafe",
+      "awayTeam": "Barcelona",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/546.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/529.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 0,
+        "awayGoals": 0
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 0,
+        "awayGoals": 0
+      }
+    },
+    {
+      "id": "40c8",
+      "homeTeam": "Cadiz",
+      "awayTeam": "Alaves",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/724.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/542.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 1,
+        "awayGoals": 0
+      }
+    },
+    {
+      "id": "b485",
+      "homeTeam": "Atletico Madrid",
+      "awayTeam": "Granada CF",
+      "date": "JORNADA 2023/24",
+      "matchday": 1,
+      "homeLogo": "https://media.api-sports.io/football/teams/530.png",
+      "awayLogo": "https://media.api-sports.io/football/teams/715.png",
+      "status": "finished",
+      "result": {
+        "homeGoals": 3,
+        "awayGoals": 1
+      },
+      "estado": "finalizado",
+      "resultado": {
+        "homeGoals": 3,
+        "awayGoals": 1
+      }
+    },
+    {
+      "id": "39ac",
+      "homeTeam": "asdasd",
+      "awayTeam": "asdads",
+      "equipoLocal": "asdasd",
+      "equipoVisitante": "asdads",
+      "date": "2026-02-20T00:30:00.000Z",
+      "fecha": "2026-02-20T01:30",
       "matchday": 1,
       "homeLogo": "",
       "awayLogo": "",
       "status": "finished",
       "estado": "finalizado",
       "result": {
-        "homeGoals": 0,
-        "awayGoals": 1
+        "homeGoals": 4,
+        "awayGoals": 0
       },
       "resultado": {
-        "homeGoals": 0,
-        "awayGoals": 1
+        "homeGoals": 4,
+        "awayGoals": 0
       }
     }
   ],
@@ -122,7 +293,7 @@
     },
     {
       "id": "384b",
-      "matchId": "7f66",
+      "matchId": null,
       "idPartido": "7f66",
       "userId": "user2",
       "idUsuario": "user2",
@@ -143,6 +314,78 @@
       "points": 0,
       "puntosGanados": 0,
       "createdAt": "2026-02-09T17:27:13.088Z"
+    },
+    {
+      "id": "6424",
+      "matchId": null,
+      "idPartido": "eb4b",
+      "userId": "user4",
+      "idUsuario": "user4",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 2,
+        "away": 2,
+        "local": 2,
+        "visitante": 2
+      },
+      "marcadorExacto": {
+        "home": 2,
+        "away": 2,
+        "local": 2,
+        "visitante": 2
+      },
+      "points": 3,
+      "puntosGanados": 3,
+      "createdAt": "2026-02-10T00:06:49.063Z"
+    },
+    {
+      "id": "7b91",
+      "matchId": null,
+      "idPartido": "e126",
+      "userId": "user2",
+      "idUsuario": "user2",
+      "prediction": "2",
+      "prediccion": "2",
+      "exactScore": {
+        "home": 1,
+        "away": 2,
+        "local": 1,
+        "visitante": 2
+      },
+      "marcadorExacto": {
+        "home": 1,
+        "away": 2,
+        "local": 1,
+        "visitante": 2
+      },
+      "points": 5,
+      "puntosGanados": 5,
+      "createdAt": "2026-02-10T00:24:12.898Z"
+    },
+    {
+      "id": "21fe",
+      "matchId": "39ac",
+      "idPartido": "39ac",
+      "userId": "user2",
+      "idUsuario": "user2",
+      "prediction": "X",
+      "prediccion": "X",
+      "exactScore": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "marcadorExacto": {
+        "home": 0,
+        "away": 0,
+        "local": 0,
+        "visitante": 0
+      },
+      "points": 0,
+      "puntosGanados": 0,
+      "createdAt": "2026-02-10T00:30:51.894Z"
     }
   ],
   "users": [
@@ -165,10 +408,10 @@
       "email": "kerrly@goalz.com",
       "password": "kerrly123",
       "role": "user",
-      "totalPoints": 10,
+      "totalPoints": 15,
       "puntosTotal": 0,
-      "correctPredictions": 2,
-      "totalPredictions": 3
+      "correctPredictions": 3,
+      "totalPredictions": 5
     },
     {
       "id": "user3",
@@ -189,10 +432,10 @@
       "email": "esteban@goalz.com",
       "password": "esteban123",
       "role": "user",
-      "totalPoints": 0,
+      "totalPoints": 3,
       "puntosTotal": 0,
-      "correctPredictions": 0,
-      "totalPredictions": 0
+      "correctPredictions": 1,
+      "totalPredictions": 1
     },
     {
       "id": "c472",
@@ -323,6 +566,18 @@
       "role": "user",
       "totalPoints": 0,
       "puntosTotal": 30,
+      "correctPredictions": 0,
+      "totalPredictions": 0
+    },
+    {
+      "id": "af8b",
+      "name": "Pepe",
+      "nombre": "Pepe",
+      "email": "pepe@ejemplo.com",
+      "password": "123456",
+      "role": "user",
+      "totalPoints": 0,
+      "puntosTotal": 0,
       "correctPredictions": 0,
       "totalPredictions": 0
     }

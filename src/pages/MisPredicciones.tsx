@@ -119,7 +119,8 @@ export const MisPredicciones = () => {
     return partidoId && obtenerPartido(partidoId);
   });
 
-  const totalPredicciones = prediccionesConPartido.length;
+  // EL CUADRO GRANDE MUESTRA EL TOTAL HISTORICO (EL REGISTRO DEL PERFIL)
+  const totalPredicciones = usuarioActual?.totalPredictions ?? 0;
 
   const acertadas = usuarioActual?.correctPredictions ?? 0;
 
@@ -217,7 +218,11 @@ export const MisPredicciones = () => {
           {/* BOTONES DE FILTRO */}
           <div className="bg-white/50 dark:bg-dark-card/50 backdrop-blur-md border border-slate-200 dark:border-primary/20 rounded-2xl p-2 flex flex-wrap gap-2">
             {[
-              { id: "todas", label: "VER TODAS", count: totalPredicciones },
+              {
+                id: "todas",
+                label: "VER TODAS",
+                count: prediccionesConPartido.length,
+              },
               {
                 id: "pendientes",
                 label: "PENDIENTES",

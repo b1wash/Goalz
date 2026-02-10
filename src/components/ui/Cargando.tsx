@@ -15,7 +15,7 @@ export const Cargando = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <div
           className={`${sizeClasses[size]} border-4 border-primary border-t-transparent rounded-full animate-spin`}

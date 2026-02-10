@@ -24,6 +24,6 @@ export const calcularPuntosGanados = (
   if (pred === resultadoReal) {
     return 3;
   }
-  // 4. NO ACERTO NADA (0 PUNTOS)
+  // 4. 0 PUNTOS SI NO ACIERTA
   return 0;
 };

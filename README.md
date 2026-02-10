@@ -82,28 +82,42 @@ npm run dev
 
 ```
 goalz-app/
-├── public/                 # Iconos y archivos públicos estáticos
+├── public/                 # Iconos, fuentes y archivos estáticos
 ├── src/
-│   ├── assets/             # Imágenes y recursos locales
+│   ├── assets/             # Imágenes y recursos multimedia locales
 │   ├── components/
-│   │   ├── auth/           # Protección de rutas (AdminRoute, ProtectedRoute)
-│   │   ├── layout/         # Estructura general (Navbar, Footer)
-│   │   ├── matches/        # Tarjetas y listas de partidos
-│   │   ├── predictions/    # Visualización de apuestas realizadas
-│   │   └── ui/             # Componentes base (Botones, Modales, Badges)
-│   ├── pages/              # Vistas principales de la aplicación
-│   ├── services/           # Lógica de comunicación con la API y servicios
-│   ├── context/            # Estado global de la aplicación (Auth, Usuario)
-│   ├── hooks/              # Hooks personalizados (Puntos, Modo Oscuro)
-│   ├── types/              # Definiciones de interfaces TypeScript
-│   ├── utils/              # Calculadora de puntos, validadores y mocks
-│   ├── App.tsx             # Enrutador principal y estructura base
-│   └── main.tsx            # Punto de entrada del proyecto
-├── .env.example            # Plantilla para variables de entorno (API Keys)
-├── db.json                 # Base de datos local (JSON Server)
-├── index.html              # Archivo HTML principal
-├── tailwind.config.js      # Configuración de estilos Tailwind
-└── tsconfig.json           # Configuración de TypeScript
+│   │   ├── auth/           # Guardianes de ruta (AdminRoute, ProtectedRoute)
+│   │   ├── layout/         # Componentes estructurales (Navbar, Footer)
+│   │   ├── matches/        # UI de partidos (MatchCard, FilterBar)
+│   │   ├── predictions/    # UI de apuestas (PredictionCard)
+│   │   └── ui/             # Kit de componentes base (Buttons, Modals, Badges)
+│   ├── context/            # Lógica de Estado Global
+│   │   ├── AppContext.ts   # Definición de interfaces y creación del contexto
+│   │   └── AppProvider.tsx # Implementación del Proveedor (Lógica Auth y Usuarios)
+│   ├── hooks/              # Hooks Personalizados (Abstracción de Lógica)
+│   │   ├── useApp.ts       # Hook principal para consumir el contexto global
+│   │   ├── usePredicciones.ts # Gestión de estado de apuestas
+│   │   └── useDarkMode.ts  # Control de tema visual claro/oscuro
+│   ├── pages/              # Vistas Principales (Page Components)
+│   │   ├── Inicio.tsx      # Dashboard del jugador
+│   │   ├── Clasificacion.tsx # Tabla de líderes y podio
+│   │   ├── HacerPrediccion.tsx # Formulario de apuestas
+│   │   ├── MisPredicciones.tsx # Historial personal filtrable
+│   │   └── AdminMatches.tsx # Panel de gestión premium
+│   ├── services/           # Capa de Comunicación (API Cliente)
+│   │   ├── api.ts          # Configuración base de Axios/Fetch
+│   │   ├── matchService.ts # CRUD de partidos y resultados
+│   │   ├── userService.ts  # Gestión de perfiles y estadísticas
+│   │   ├── predictionService.ts # Registro de apuestas
+│   │   └── footballApiService.ts # Integración con API-Football externa
+│   ├── types/              # Tipado Estricto (Interfaces TypeScript)
+│   ├── utils/              # Funciones Puras (Calculadoras, Validadores)
+│   ├── App.tsx             # Enrutador y Layout de la aplicación
+│   └── main.tsx            # Punto de montaje del DOM (React 19)
+├── .env.example            # Plantilla de configuración de variables
+├── db.json                 # Almacenamiento JSON Server (Base de datos)
+├── tailwind.config.js      # Configuración de diseño v4
+└── tsconfig.json           # Configuración del compilador TS
 ```
 
 ## 📖 Uso de la Aplicación

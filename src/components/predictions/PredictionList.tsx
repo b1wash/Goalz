@@ -36,7 +36,6 @@ export const PredictionList = ({
       {/* RECORREMOS EL ARRAY DE PREDICCIONES PARA GENERAR LAS TARJETAS */}
       {predictions.map((prediction) => {
         // BUSQUEDA: ENCONTRAMOS EL PARTIDO AL QUE PERTENECE ESTA PREDICCION
-        // EL JOIN SE HACE COMPARANDO EL ID DEL PARTIDO CON EL matchId DE LA PREDICCION
         const match = matches.find(
           (m) => m.id === (prediction.matchId || prediction.idPartido),
         );

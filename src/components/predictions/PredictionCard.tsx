@@ -112,7 +112,7 @@ export const PredictionCard = ({ prediction, match }: PredictionCardProps) => {
           {/* RESULTADO PREDICHO (1X2) CON COLOR PRIMARY */}
           <span className="font-black text-primary text-base">
             {/* LLAMA A LA FUNCION getResultText PARA CONVERTIR EL CODIGO A TEXTO */}
-            {/* USA OPERADOR || PARA COMPATIBILIDAD CON DIFERENTES FORMATOS */}
+            {/* OPERADOR || PARA COMPATIBILIDAD CON DIFERENTES FORMATOS */}
             {getResultText(
               prediction.prediction || prediction.prediccion || "1",
             )}
@@ -120,7 +120,7 @@ export const PredictionCard = ({ prediction, match }: PredictionCardProps) => {
 
           {/* MARCADOR EXACTO PREDICHO - TAMAÑO GRANDE (3XL) PARA DESTACAR */}
           <span className="text-3xl font-black text-slate-900 dark:text-white">
-            {/* OPERADOR ?? (NULLISH COALESCING) PARA OBTENER EL VALOR CORRECTO */}
+            {/* OPERADOR ?? PARA OBTENER EL VALOR CORRECTO */}
             {/* INTENTA: exactScore.home, LUEGO marcadorExacto.home, FINALMENTE 0 */}
             {prediction.exactScore?.home ??
               prediction.marcadorExacto?.home ??

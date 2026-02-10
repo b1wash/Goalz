@@ -451,7 +451,6 @@ export const AdminMatches = () => {
             puntos > 0
               ? (usuario.correctPredictions || 0) + 1
               : usuario.correctPredictions || 0,
-          totalPredictions: (usuario.totalPredictions || 0) + 1,
         });
       }
     } catch (err) {
