@@ -57,7 +57,7 @@ export const Inicio = () => {
   // RENDERIZADO DE CARGA PREVIO AL CONTENIDO
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-dark-bg dark:via-dark-card dark:to-dark-bg flex items-center justify-center">
         <div className="text-primary text-3xl font-black animate-pulse uppercase tracking-[0.25em]">
           GOALZ...
         </div>

@@ -15,5 +15,5 @@ export interface AppContextType {
 }
 
 // CREACION DEL CONTEXTO
-// SE EXPORTA DESDE UN ARCHIVO .TS PARA CUMPLIR CON LAS REGLAS DE FAST REFRESH
+// SE EXPORTA DESDE UN ARCHIVO .TS
 export const AppContext = createContext<AppContextType | undefined>(undefined);
